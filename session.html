@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    
+    <title>Session</title>
+    
+<body>
+
+    <h1>EXPERIMENTAL PAGE - FIGURING OUT SESSION ID'S</h1>
+
+<p>Apparently I can't run this unless it's on the server. Testing with local files = PHP doesn't function.</p>
+
+<br>
+
+This button will create a new session with a predetermined username, the number 75, and the time of creation.		
+    <p><form action="page1.php" method="post">
+    <input type="submit" value="Run page1.php">
+    </form></p>
+
+    <br>
+
+This button will let you see your session's information.
+
+    <p><form action="page2.php" method="post">
+    <input type="submit" value="Run page2.php">
+    </form></p>
+
+<p>Session -> page 1 -> page 2 = shows info correctly
+<br>
+Session -> page 1 -> page 2 -> Session (don't use Back) -> Page 2 = shows previous session info
+<br>
+Re-open browser -> Session -> page 2 = never opened a new session. No username, no #75, and time defaults to the 31st December 1969 17:00:00.
+</p>
+
+</body>
+
+</html>
