@@ -1,14 +1,12 @@
 <?php
-	//session_start();
-	//if($_REQUEST['username']=="user" && $_REQUEST['password']=="12345") {
-	//	$_SESSION['username'] = "user";
-	//	$_SESSION['password'] = "12345";
-	//	header("Location: content.php");
-	//}
-	//session_start();
-	//if(isset($_SESSION['username']) && isset($_SESSION['password'])) {
-	//	header("Location: content.php");
-	//}
+	session_start();
+	$sql = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
+		or die("Connect failed: ".$sql->connect_error);
+	$username = strip_tags(stripslashes($sql->escape_string($_REQUEST["username"])));
+	// only 5.3, need 5.5
+	//$password = password_hash($_REQUEST["password"], PASSWORD_DEFAULT);
+	// no: salt first!
+	$password = crypt($_REQUEST["password"]);
 ?>
 <!doctype html>
 
@@ -16,34 +14,51 @@
 <head>
 <meta charset = "UTF-8">
 <meta name = "Author" content = "Neil">
-<title>Test</title>
+<title>Login</title>
 </head>
 
 <body>
-<p>Test</p>
-<form method="post" action="login.php">
-<p>
-Username: <input type="text" name="username">
-</p>
-<p>
-Password: <input <input type="password" name="password">
-</p>
-<p>
-<input type="submit" name="login" value="Login">
-<input type="reset" name="reset" value="Reset">
-</p>
-</form>
+<div>Login!</div>
+
+<div>
 <?php
-	echo "Hello";
-	session_start();
-	$id = session_id();
-	echo "$id";
-	if(isset($_SESSION['views']))
-		$_SESSION['views'] = $_SESSION['views']+ 1;
-	else
-		$_SESSION['views'] = 1;
-	session_destroy();
+	printf("Host information: %s;<br/>\n", $sql->host_info);
+
+	echo "You have specified:<br/>\n";
+	if($username != "") {
+		echo "$username; $password<br/>\n";
+	} else {
+		echo "No user.<br/>\n";
+	}
+	echo "<br/>\n";
+
+	$query = "SELECT * FROM users";
+	$result = $sql->query($query);
+	echo "No of hits of '$query': ".$result->num_rows."<br/>\n";
+	echo "These are the users:<br/>\n";
+	while($row = $result->fetch_array()) {
+		echo $row["username"]."; ".$row["password"]."; ".$row["first_name"]." ".$row["last_name"]."<br/>\n";
+	}
+	$result->close();
+
+	$query = "SELECT * FROM users WHERE username='$username'";// and password='$password'";
+	$result = $sql->query($query);
+	$entries = $result->num_rows;
+	echo "No of hits of '$query': ".$entries."<br/>\n";
+	$result->close();
+
+	$sql->close();
+
+	if($entries == 1) {
+	//	session_register("username");
+	//		header("location:content.php");
+		echo "Success<br/>\n";
+	} else {
+	//		header("location:index.php?message=invalid");
+		echo "Failed<br/>\n";
+	}
 ?>
+</div>
 
 </body>
 

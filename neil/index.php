@@ -1,43 +1,58 @@
-<?php
-	//session_start();
-	//if(isset($_SESSION['username']) && isset($_SESSION['password'])) {
-	//	header(“Location: content.php\n\n”);
-	//}
-?>
 <!doctype html>
 
 <html>
 <head>
 <meta charset = "UTF-8">
 <meta name = "Author" content = "Neil">
-<title>Test</title>
+<title>Index</title>
 </head>
 
 <body>
 <p>Test</p>
-<form method="post" action="login.php">
-<p>
-Username: <input type="text" name="username">
-</p>
-<p>
-Password: <input <input type="password" name="password">
-</p>
-<p>
-<input type="submit" name="login" value="Login">
-<input type="reset" name="reset" value="Reset">
-</p>
-</form>
+
+<div>
 <?php
-	echo "Hello";
-	session_start();
-	$id = session_id();
-	echo "$id";
-	if(isset($_SESSION['views']))
-		$_SESSION['views'] = $_SESSION['views']+ 1;
-	else
-		$_SESSION['views'] = 1;
-	session_destroy();
+	echo $_SERVER['HTTP_USER_AGENT']." ";
+	$message = htmlspecialchars($_REQUEST["message"]);
+	if($message) {
+		echo $message."\n";
+	} else {
+		echo "No message.\n";
+	}
+	echo (int)"42";
 ?>
+</div>
+
+<form method = "get" action = "index.php">
+<div>
+Message: <input type = "text" name = "message" value = "Foo">
+</div>
+<div>
+<input type = "submit" value = "Okay">
+<input type = "reset" value = "Reset">
+</div>
+</form>
+
+<hr>
+
+<form method = "get" action = "login.php">
+<div>
+Username: <input type = "text" name = "username">
+</div>
+<div>
+Password: <input <input type = "password" name = "password">
+</div>
+<div>
+<input type = "submit" value = "Login">
+<input type = "reset" value = "Reset">
+</div>
+</form>
+
+<div>
+<?php
+	phpinfo();
+?> 
+</div>
 
 </body>
 
