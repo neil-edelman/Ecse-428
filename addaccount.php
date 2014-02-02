@@ -45,7 +45,7 @@ and open the template in the editor.
                 if (!(empty($username) || empty($password) || empty($firstname) || empty($lastname) || empty($email))){
 
                         // Create connection
-                        $server= mysqli_connect("localhost","root","mushroom","payomca_rms");
+                        $server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
 
                         // Check connection
                         if (mysqli_connect_errno())
