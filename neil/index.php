@@ -32,7 +32,9 @@ Message: <input type = "text" name = "message" value = "Foo">
 </div>
 </form>
 
-<hr>
+<hr/>
+
+Logon:
 
 <form method = "get" action = "login.php">
 <div>
@@ -43,6 +45,28 @@ Password: <input <input type = "password" name = "password">
 </div>
 <div>
 <input type = "submit" value = "Login">
+<input type = "reset" value = "Reset">
+</div>
+</form>
+
+<hr/>
+
+New:
+
+<form method = "get" action = "new.php">
+<div>
+Username: <input type = "text" name = "username">
+</div>
+<div>
+Password: <input <input type = "password" name = "password">
+</div>
+<div>
+First: <input <input type = "text" name = "first_name">
+Last: <input <input type = "text" name = "last_name">
+</div>
+
+<div>
+<input type = "submit" value = "New">
 <input type = "reset" value = "Reset">
 </div>
 </form>
