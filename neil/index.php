@@ -19,7 +19,6 @@
 	} else {
 		echo "No message.\n";
 	}
-	echo (int)"42";
 ?>
 </div>
 
