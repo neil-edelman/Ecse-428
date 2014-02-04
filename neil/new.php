@@ -1,19 +1,29 @@
 <?php
 	/** this is not needed for versions > 5.3 */
-	private function password($plain) {
-		$salt = strtr(base64_encode(mcrypt_create_iv(22/*16*/, MCRYPT_DEV_URANDOM)), '+', '.');
+	function password_hash($plain) {
+		/* no php 5.5 avilable
+		$password = password_hash($_REQUEST["password"], PASSWORD_DEFAULT); */
+		/* mcrypt is not installed
+		$salt = strtr(base64_encode(mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)), '+', '.'); */
+		/* not cross-platform
+		$fp = fopen('/dev/urandom', 'r');
+		$random = fread($fp, 22);
+		fclose($fp);*/
+		$salt = bin2hex(openssl_random_pseudo_bytes(22, $isCrypto));
+		if($isCrypto != true) die("No cryptography on this server.");
 		/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
 		return crypt($plain, "$2a$07$".$salt);
 	}
 
 	session_start();
+
 	$db = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
 		or die("Connect failed: ".$sql->connect_error);
 
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
-	$password = encrypt($_REQUEST["password"]);
-	/* no php 5.5 avilable
-	$password = password_hash($_REQUEST["password"], PASSWORD_DEFAULT); */
+	$password = password_hash($_REQUEST["password"]);
+	$first    = strip_tags(stripslashes($db->escape_string($_REQUEST["first_name"])));
+	$last     = strip_tags(stripslashes($db->escape_string($_REQUEST["last_name"])));
 
 	/* uhn weird */
 	/*$salt = openssl_random_pseudo_bytes(22);
@@ -22,10 +32,6 @@
 	/* good enough */
 	/*$salt = uniqid(mt_rand(), true);*/
 
-	/* good */
-	/*$fp = fopen('/dev/urandom', 'r');
-	$random = fread($fp, 32);
-	fclose($fp);*/
 
 	/*private $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -43,13 +49,6 @@
 
 		return $rand;
 	}*/
-
-
-
-	if ($password_hash === crypt($form->password, $password_hash))
-    // password is correct
-	else
-    // password is wrong
 ?>
 <!doctype html>
 
@@ -57,53 +56,21 @@
 <head>
 <meta charset = "UTF-8">
 <meta name = "Author" content = "Neil">
-<title>Index</title>
+<title>New</title>
 </head>
 
 <body>
-<p>Test</p>
 
 <div>
 <?php
-	echo $_SERVER['HTTP_USER_AGENT']." ";
-	$message = htmlspecialchars($_REQUEST["message"]);
-	if($message) {
-		echo $message."\n";
+	echo "<tt>$username</tt>, <tt>$password</tt>, <tt>$first</tt>, <tt>$last</tt>\n";
+	echo "Password is 12345? ";
+	if(crypt("12345", $password) == $password) {
+		echo "yes";
 	} else {
-		echo "No message.\n";
+		echo "no";
 	}
 ?>
-</div>
-
-<form method = "get" action = "index.php">
-<div>
-Message: <input type = "text" name = "message" value = "Foo">
-</div>
-<div>
-<input type = "submit" value = "Okay">
-<input type = "reset" value = "Reset">
-</div>
-</form>
-
-<hr>
-
-<form method = "get" action = "login.php">
-<div>
-Username: <input type = "text" name = "username">
-</div>
-<div>
-Password: <input <input type = "password" name = "password">
-</div>
-<div>
-<input type = "submit" value = "Login">
-<input type = "reset" value = "Reset">
-</div>
-</form>
-
-<div>
-<?php
-	phpinfo();
-?> 
 </div>
 
 </body>
