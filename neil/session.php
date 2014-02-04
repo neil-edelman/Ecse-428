@@ -9,8 +9,11 @@
 
 	/** you will have to $db->close() */
 	function db_login() {
-		$db = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
-			or die("Connect failed: ".$sql->connect_error);
+			
+		$db = @mysqli_connect("localhost", "payomca_rms", "mushroom", "payomca_rms");		
+		if (!$db) {							
+			die("Connect failed: " . mysqli_connect_errno());
+		}		
 		return $db;
 	}
 
@@ -31,32 +34,8 @@
 		return crypt($plain, "$2a$07$".$salt);
 	}
 
-	function password_verify($plain, $hash) {
+	function password_verify($plain, $hash) {		
 		return crypt($plain, $hash) == $hash;
-	}
-
-	/** checks all the login stuff */
-	function check_login($db) {
-
-		$query  = "SELECT * FROM session WHERE session_id='".session_id()."'";
-		$result = $db->query($query);
-
-		/* this session exists */
-		if($result->num_rows != 1) {
-			header("Location: index.php?message=NotLoggedIn");
-			return;
-		}
-		$entry = $db->fetch_array($result);
-
-		/* it's for this ip */
-		/* fixme */
-
-		/* it's not expired */
-		/* fixme */
-
-		$result->close();
-
-		return -1;
 	}
 
 	/** logs you out (no checking anything) */
@@ -65,22 +44,4 @@
 		header("Location: index.php");
 	}
 
-	/** new user? assumes valid input */
-	function new_user($db, $user, $pass, $first, $last) {
-		$stmt = $db->prepare("INSERT INTO "
-							 ."users(username, password, first_name, last_name)"
-							 ." VALUES (?, ?, ?, ?)");
-		if(!$stmt) die($db->error);
-		$ok   = $stmt->bind_param("ssss",
-								  $db->escape_string($user),
-								  $db->escape_string($pass),
-								  $db->escape_string($first),
-								  $db->escape_string($last));
-		if($ok && $stmt->execute()) {
-			return true;
-		} else {
-			echo "Error: ".$db->error;
-			return false;
-		}
-	}
 ?>

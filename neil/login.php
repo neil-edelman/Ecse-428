@@ -2,8 +2,10 @@
 	
 	include "session.php";
 	
+	//local session creation
 	session_start();
 
+	//database login function from session.php
 	$db = db_login();
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 	$password = $_REQUEST["password"];
