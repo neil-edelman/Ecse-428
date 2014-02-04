@@ -1,0 +1,78 @@
+/* colours; pretty fonts; encompases the page in a box */
+body {
+	background-color: white;
+	color: #464D6E;
+	font: small Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	margin: 0.5em auto;
+	width: 528px;
+}
+/* affects the link, alink, vlink, etc */
+a { color: #232637; }
+/* turns off borders */
+img { border: 0px; }
+/* affects the top paragraph; if it has an image, it alings it to that */
+p { margin-top: 0; }
+/* general centre thing */
+p.centre { text-align: center; }
+/* clears all the floats above */
+div.clear { clear: both; }
+/* sets the image to the left or the right */
+img.right {
+	float: right;
+	clear: right;
+}
+img.left {
+	float: left;
+	clear: left;
+}
+
+/* forms */
+div label {
+    display: inline-block;
+    width: 100px;
+}
+div input {
+    width: 300px;
+}
+
+/* the inset things; fixed width */
+div.sidebar {
+	float: right;
+	clear: right;
+	width: 160px;
+	background: #555 url(rounded-bottom-160.jpg) repeat-x bottom;
+	margin: 0em 0em 0em 1em;
+}
+div.sidebar div {
+	padding: 8px 8px 0px 8px;
+	overflow: hidden;
+	background: url(rounded-top-160.jpg) repeat-x top;
+}
+div.file {
+	float: left;
+	width: 100%;
+	clear: both;
+	padding-top: 1em;
+}
+div.file-leftfixed {
+	float: left;
+	width: 240px;
+	text-align: right;
+}
+div.file-leftfixed div {
+	line-height: 32px;
+	font-weight: bold;
+	text-align: center;
+	background: #555 url(rounded-left-32.jpg) repeat-y top left;
+}
+div.file-leftfixed div div {
+	padding: 0px 8px 0px 8px;
+	overflow: hidden;
+	background: url(rounded-right-32.jpg) repeat-y bottom right;
+}
+div.file-rightfixed {
+	float: right;
+	width: 280px;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}

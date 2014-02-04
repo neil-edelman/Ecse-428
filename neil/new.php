@@ -1,54 +1,15 @@
 <?php
-	/** this is not needed for versions > 5.3 */
-	function password_hash($plain) {
-		/* no php 5.5 avilable
-		$password = password_hash($_REQUEST["password"], PASSWORD_DEFAULT); */
-		/* mcrypt is not installed
-		$salt = strtr(base64_encode(mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)), '+', '.'); */
-		/* not cross-platform
-		$fp = fopen('/dev/urandom', 'r');
-		$random = fread($fp, 22);
-		fclose($fp);*/
-		$salt = bin2hex(openssl_random_pseudo_bytes(22, $isCrypto));
-		if($isCrypto != true) die("No cryptography on this server.");
-		/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
-		return crypt($plain, "$2a$07$".$salt);
-	}
+
+	include "session.php";
 
 	session_start();
 
-	$db = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
-		or die("Connect failed: ".$sql->connect_error);
-
+	$db = db_login();
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 	$password = password_hash($_REQUEST["password"]);
 	$first    = strip_tags(stripslashes($db->escape_string($_REQUEST["first_name"])));
 	$last     = strip_tags(stripslashes($db->escape_string($_REQUEST["last_name"])));
 
-	/* uhn weird */
-	/*$salt = openssl_random_pseudo_bytes(22);
-	$salt = '$2a$%13$' . strtr($salt, array('_' => '.', '~' => '/'));*/
-
-	/* good enough */
-	/*$salt = uniqid(mt_rand(), true);*/
-
-
-	/*private $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-	private function base62char($num) {
-		return $chars[$num];
-	}
-
-	public function random_string($letters) {
-		$rand = "";
-
-		for($i = 0; $i < $letters; $i++) {
-			$char  = base62char(mt_rand(0, 61));
-			$rand .= $char;
-		}
-
-		return $rand;
-	}*/
 ?>
 <!doctype html>
 
@@ -56,21 +17,70 @@
 <head>
 <meta charset = "UTF-8">
 <meta name = "Author" content = "Neil">
+<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
+<link rel = "stylesheet" type = "text/css" href = "style.css">
 <title>New</title>
 </head>
 
 <body>
 
 <div>
+<form method = "get" action = "new.php">
 <?php
-	echo "<tt>$username</tt>, <tt>$password</tt>, <tt>$first</tt>, <tt>$last</tt>\n";
-	echo "Password is 12345? ";
-	if(crypt("12345", $password) == $password) {
-		echo "yes";
-	} else {
-		echo "no";
+	$isReady = true;
+	$len = strlen($username);
+	if($len <= 0) {
+		$isReady = false;
+	} else if($len > $user_length) {
+		echo "Username is maximum $user_length characters.<br/>\n";
+		$isReady = false;
 	}
 ?>
+<label>Username:</label>
+<input type = "text" name = "username" value = "<?php echo $username?>"><br/>
+<label>Password:</label>
+<input type = "password" name = "password"><br/>
+<?php
+	$len = strlen($first);
+	if($len <= 0) {
+		$isReady = false;
+	} else if($len > $first_length) {
+		echo "First name is maximum $first_length characters.<br/>\n";
+		$isReady = false;
+	}
+?>
+<label>First:</label>
+<input type = "text" name = "first_name" value = "<?php echo $first?>"><br/>
+<?php
+	$len = strlen($last);
+	if($len <= 0) {
+		$isReady = false;
+	} else if($len > $last_length) {
+		echo "Last name is maximum $last_length characters.<br/>\n";
+		$isReady = false;
+	}
+?>
+<label>Last:</label>
+<input type = "text" name = "last_name" value = "<?php echo $last?>"><br/>
+<?php
+	$isDone = false;
+	/* fixme: overwrites user if already exists */
+	echo "<p class = 'centre'>\n";
+	if($isReady && new_user($db, $username, $password, $first, $last)) {
+		echo "Created user &quot;$first $last&quot; as &quot;$username&quot;.<br/>\n";
+		echo "Click to <a href = 'index.php'>return to the login</a>.\n";
+	} else {
+?>
+<input type = "submit" value = "New">
+<input type = "reset" value = "Reset">
+<?php
+	}
+	echo "</p>\n";
+	$db->close();
+?>
+
+</div>
+</form>
 </div>
 
 </body>

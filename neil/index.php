@@ -4,6 +4,8 @@
 <head>
 <meta charset = "UTF-8">
 <meta name = "Author" content = "Neil">
+<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
+<link rel = "stylesheet" type = "text/css" href = "style.css">
 <title>Index</title>
 </head>
 
@@ -53,25 +55,12 @@ Password: <input <input type = "password" name = "password">
 
 New:
 
-<form method = "get" action = "new.php">
-<div>
-Username: <input type = "text" name = "username">
-</div>
-<div>
-Password: <input <input type = "password" name = "password">
-</div>
-<div>
-First: <input <input type = "text" name = "first_name">
-Last: <input <input type = "text" name = "last_name">
-</div>
+<p>
+Click <a href = "new.php">here to create a new user</a>.
+</p>
 
-<div>
-<input type = "submit" value = "New">
-<input type = "reset" value = "Reset">
-</div>
-</form>
+<hr/>
 
-<div>
 <?php
 	phpinfo();
 ?> 
