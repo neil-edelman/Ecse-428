@@ -14,6 +14,7 @@
 		if (!$db) {							
 			die("Connect failed: " . mysqli_connect_errno());
 		}		
+
 		return $db;
 	}
 

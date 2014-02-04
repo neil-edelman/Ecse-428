@@ -54,11 +54,13 @@
 
 		echo session_id()."<br/>\n";
 
+		/* local version */
 		$session                          = session_id();
 					$_SESSION["username"] = $username;
 		$ip       = $_SESSION["ip"]       = $_SERVER['REMOTE_ADDR'];
 		$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
 
+		/* store on the server */
 		$stmt = $db->prepare("INSERT INTO "
 							 ."session(session_id, username, ip, activity)"
 							 ." VALUES (?, ?, ?, ?)");
@@ -81,7 +83,7 @@
 	$result->close();
 	
 	$db->close();
-	?>
+?>
 </div>
 
 </body>
