@@ -40,6 +40,8 @@ Login Page
 					$sqlSession = "DELETE FROM payomca_rms . SessionID WHERE SessionID . session_id = '$session_id'";
 					mysqli_query($server, $sqlSession);
 
+					session_destroy();
+
 					echo "YES";
 					header("Location: loginpage.php");
 					die();
