@@ -1,4 +1,19 @@
 <?php
+	/** this is not needed for versions > 5.3 */
+	private function password($plain) {
+		$salt = strtr(base64_encode(mcrypt_create_iv(22/*16*/, MCRYPT_DEV_URANDOM)), '+', '.');
+		/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
+		return crypt($plain, "$2a$07$".$salt);
+	}
+
+	session_start();
+	$db = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
+		or die("Connect failed: ".$sql->connect_error);
+
+	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
+	$password = encrypt($_REQUEST["password"]);
+	/* no php 5.5 avilable
+	$password = password_hash($_REQUEST["password"], PASSWORD_DEFAULT); */
 
 	/* uhn weird */
 	/*$salt = openssl_random_pseudo_bytes(22);
@@ -12,7 +27,7 @@
 	$random = fread($fp, 32);
 	fclose($fp);*/
 
-	private $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	/*private $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	private function base62char($num) {
 		return $chars[$num];
@@ -27,16 +42,9 @@
 		}
 
 		return $rand;
-	}
+	}*/
 
-	/** this is not needed for versions > 5.3 */
-	public function password_hash($plain) {
-		$salt = strtr(base64_encode(mcrypt_create_iv(22/*16*/, MCRYPT_DEV_URANDOM)), '+', '.');
-		/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
-		return crypt($plain, "$2a$07$".$salt);
-	}
 
-	$password = password_hash($password);
 
 	if ($password_hash === crypt($form->password, $password_hash))
     // password is correct
