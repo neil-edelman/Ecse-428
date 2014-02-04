@@ -9,7 +9,8 @@
 
 	/** you will have to $db->close() */
 	function db_login() {
-		$db = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
+		//$db = new mysqli("127.0.0.1", "public", "12345", "ecse-428")
+		$db = new mysqli("127.0.0.1", "payca_rms", "mushroom", "payomca_rms")
 			or die("Connect failed: ".$sql->connect_error);
 		return $db;
 	}
