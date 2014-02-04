@@ -48,7 +48,7 @@
 		} else {
 			echo "No! go home.";
 		}
-		echo " logged in.<br/>\n";
+		echo "<br/>\n";
 
 		echo session_id()."<br/>\n";
 
