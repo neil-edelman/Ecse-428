@@ -77,9 +77,10 @@
 								  $db->escape_string($first),
 								  $db->escape_string($last));
 		if($ok && $stmt->execute()) {
+			return true;
+		} else {
 			echo "Error: ".$db->error;
 			return false;
 		}
-		return true;
 	}
 ?>
