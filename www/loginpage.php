@@ -29,8 +29,8 @@ Login Page
         </form>
         
         <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST"){             			
-				
+            if($_SERVER["REQUEST_METHOD"] == "POST"){             			
+
                 $db = db_login();
               
                 $username = strip_tags(stripslashes($db->escape_string($_POST['username'])));                 
