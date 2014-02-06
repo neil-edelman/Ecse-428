@@ -52,18 +52,18 @@
 
 	/** logs you out (no checking anything) */
 	function do_logout($db) {
-/*		$stmt = $db->prepare("DELETE FROM "
+		$stmt = $db->prepare("DELETE FROM "
 							 ."session WHERE session_id = ? LIMIT 1");
 		if(!$stmt) die($db->error);
 		$ok   = $stmt->bind_param("s",
-								  $db->escape_string($session_id());
+								  $db->escape_string($session_id()));
 		if($ok && $stmt->execute()) {
-			header "Location: index.php?message=Loggedoff";
+			header("Location: index.php?message=Loggedoff");
 		} else {
-			header "Location: index.php?message=NotLoggedoff";//.$db->error;
+			header("Location: index.php?message=NotLoggedoff");//.$db->error;
 		}
 
 		session_destroy();
-*/	}
+	}
 
 ?>
