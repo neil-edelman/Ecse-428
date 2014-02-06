@@ -7,17 +7,28 @@
 	$first_length = 64;
 	$last_length  = 64;
 
-	/** you will have to $db->close() */
+	/** you will have to $db->close()
+	 @depreciated use link_database(); it's confusing */
 	function db_login() {
 			
-		$db = @mysqli_connect("localhost", "payomca_rms", "mushroom", "payomca_rms");		
-		if (!$db) {							
+		$db = @mysqli_connect("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
+		if (!$db) {					
 			die("Connect failed: " . mysqli_connect_errno());
 		}		
 		return $db;
 	}
 
-	/** this is not needed for versions > 5.3 */
+	/** you will have to $db->close() */
+	function link_database() {
+
+		$db = new mysqli("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
+		if (!$db) {
+			die("Connect failed: (".$db->connect_errno.") ".$db->connect_error);
+		}		
+		return $db;
+	}
+
+	/** this is a alias of versions > 5.3 */
 	function password_hash($plain) {
 		/* no php 5.5 avilable
 		 $password = password_hash($_REQUEST["password"], PASSWORD_DEFAULT); */
@@ -34,14 +45,25 @@
 		return crypt($plain, "$2a$07$".$salt);
 	}
 
+	/** this is a alias of versions > 5.3 */
 	function password_verify($plain, $hash) {		
 		return crypt($plain, $hash) == $hash;
 	}
 
 	/** logs you out (no checking anything) */
-	function do_logout() {
+	function do_logout($db) {
+		$stmt = $db->prepare("DELETE FROM "
+							 ."session WHERE session_id = ? LIMIT 1");
+		if(!$stmt) die($db->error);
+		$ok   = $stmt->bind_param("s",
+								  $db->escape_string($session_id());
+		if($ok && $stmt->execute()) {
+			header "Location: index.php?message=Loggedoff";
+		} else {
+			header "Location: index.php?message=NotLoggedoff";//.$db->error;
+		}
+
 		session_destroy();
-		header("Location: index.php");
 	}
 
 ?>
