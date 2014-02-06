@@ -4,7 +4,7 @@
 
 	persistent_session_start();
 
-	$db = db_login();
+	$db = link_database();
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 	$password = password_hash($_REQUEST["password"]);
 	$first    = strip_tags(stripslashes($db->escape_string($_REQUEST["first_name"])));

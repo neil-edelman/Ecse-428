@@ -11,15 +11,15 @@
 		session_set_cookie_params($cookie_time/*, "/", "payom.ca" <- final */);
 		session_start();
 	}
-
-	/** @depreciated use link_database(); this is a confusing name */
-	function db_login() {
-
-		$db = @mysqli_connect("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
-		if (!$db) {					
-			die("Connect failed: " . mysqli_connect_errno());
-		}
-		return $db;
+	
+	/** are you logged in? */
+	function is_logged_in($db) {
+		$stmt = $db->prepare("SELECT FROM "
+							 ."session WHERE session_id = ?");// LIMIT 1");
+		if(!$stmt) die("Statement error: ".$db->error);
+		$ok   = $stmt->bind_param("s",
+								  $db->escape_string($session_id()));
+		if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
 	}
 
 	/** you will have to $db->close() */
