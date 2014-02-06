@@ -54,6 +54,10 @@ Login Page
 					header("Location: addaccount.php");
 					die();
 				}
+				
+				if (isset($_POST['viewaccount'])) {
+					
+				}
 			}
         ?>
         
