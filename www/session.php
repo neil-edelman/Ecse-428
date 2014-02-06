@@ -1,14 +1,11 @@
 <?php
 
-	$isLoggedIntoDB = false;
-
 	/* database things */
 	$user_length  = 64;
 	$first_length = 64;
 	$last_length  = 64;
 
-	/** you will have to $db->close()
-	 @depreciated use link_database(); it's confusing */
+	/** @depreciated use link_database(); this is a confusing name */
 	function db_login() {
 			
 		$db = @mysqli_connect("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
