@@ -2,7 +2,7 @@
 
 	include "session.php";
 
-	session_start();
+	persistent_session_start();
 
 	$db = db_login();
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));

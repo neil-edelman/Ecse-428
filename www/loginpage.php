@@ -1,6 +1,6 @@
 <?php
 	include "session.php";	
-	session_start();
+	persistent_session_start();
 ?>
 
 <!DOCTYPE html>
@@ -29,9 +29,10 @@ Login Page
         </form>
         
         <?php
-            if($_SERVER["REQUEST_METHOD"] == "POST"){             			
-
-                $db = db_login();
+			echo "heeloo";
+            if ($_SERVER["REQUEST_METHOD"] == "POST"){             			
+				
+                $db = link_database();
               
                 $username = strip_tags(stripslashes($db->escape_string($_POST['username'])));                 
                 $password = $_POST['password'];            
@@ -53,15 +54,15 @@ Login Page
 							$session_id = session_id();
 							$_SESSION["username"] = $username;
 							$ip = $_SESSION["ip"] = $_SERVER['REMOTE_ADDR'];
-							$activity = $_SESSION["activity"] = gmdate("M d Y H:i:s");						
-												
-							$sqlSession = $db->prepare("INSERT INTO payomca_rms.SessionID (session_id, username, ip, activity) VALUES (?, ?, ?, ?)");
+							//$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s"/* lol no "M d Y H:i:s"*/);						
+				
+							$sqlSession = $db->prepare("INSERT INTO payomca_rms.SessionID (session_id, username, ip, activity) VALUES (?, ?, ?, now())");
 							
 							if (!$sqlSession) {
 								die($db->error);
 							}
 							
-							$ok = $sqlSession->bind_param("ssss", $db->escape_string($session_id), $db->escape_string($username), $db->escape_string($ip), $db->escape_string($activity));
+							$ok = $sqlSession->bind_param("sss", $db->escape_string($session_id), $db->escape_string($username), $db->escape_string($ip));
 							
 							if ($ok && $sqlSession->execute()) {													
 								header("Location: mainmenu.php");

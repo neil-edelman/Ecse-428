@@ -4,14 +4,21 @@
 	$user_length  = 64;
 	$first_length = 64;
 	$last_length  = 64;
+	$cookie_time  = 60;//43200; /* 60s/m * 60m/h * 12h (seconds) */
+
+	/** called first */
+	function persistent_session_start() {
+		session_set_cookie_params($cookie_time/*, "/", "payom.ca" <- final */);
+		session_start();
+	}
 
 	/** @depreciated use link_database(); this is a confusing name */
 	function db_login() {
-			
+
 		$db = @mysqli_connect("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
 		if (!$db) {					
 			die("Connect failed: " . mysqli_connect_errno());
-		}		
+		}
 		return $db;
 	}
 
@@ -21,7 +28,10 @@
 		$db = new mysqli("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
 		if (!$db) {
 			die("Connect failed: (".$db->connect_errno.") ".$db->connect_error);
-		}		
+		}
+		/* sane TZ! don't have to worry about DST */
+		$db->query("SET time_zone='+0:00'");
+
 		return $db;
 	}
 
