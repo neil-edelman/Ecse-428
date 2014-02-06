@@ -29,7 +29,6 @@ Login Page
 			
             if ($_SERVER["REQUEST_METHOD"] == "POST"){
 				if (isset($_POST['logout'])) {
-					//DELETE FROM `payomca_rms`.`SessionID` WHERE `SessionID`.`session_id` = 'krcngtko6d53i4u8g9irokcl75'
 					$session_id = session_id();
 					$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
 					if (mysqli_connect_errno()) {
