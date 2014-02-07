@@ -2,13 +2,14 @@
 
 	include "session.php";
 
-	session_start();
+	persistent_session_start();
 
 	$db = db_login();
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 	$password = password_hash($_REQUEST["password"]);
-	$first    = strip_tags(stripslashes($db->escape_string($_REQUEST["first_name"])));
-	$last     = strip_tags(stripslashes($db->escape_string($_REQUEST["last_name"])));
+	$first    = strip_tags(stripslashes($db->escape_string($_REQUEST["firstname"])));
+	$last     = strip_tags(stripslashes($db->escape_string($_REQUEST["lastname"])));
+	$email    = $_REQUEST["email"];
 
 ?>
 <!doctype html>
@@ -50,7 +51,7 @@
 	}
 ?>
 <label>First:</label>
-<input type = "text" name = "first_name" value = "<?php echo $first?>"><br/>
+<input type = "text" name = "firstname" value = "<?php echo $first?>"><br/>
 <?php
 	$len = strlen($last);
 	if($len <= 0) {
@@ -61,7 +62,16 @@
 	}
 ?>
 <label>Last:</label>
-<input type = "text" name = "last_name" value = "<?php echo $last?>"><br/>
+<input type = "text" name = "lastname" value = "<?php echo $last?>"><br/>
+<label>E-Mail:</label>
+<input type = "text" name = "email" value = "<?php echo $email?>"><br/>
+<label>Privilege:</label>
+<select name="privilege">
+<option value="wait">Wait Staff</option>
+<option value="cook">Cook Staff</option>
+<option value="manager">Manager</option>
+<option value="admin">System Admin</option>
+</select><br/>
 <?php
 	$isDone = false;
 	/* fixme: overwrites user if already exists */
