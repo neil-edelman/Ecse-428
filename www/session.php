@@ -16,7 +16,7 @@
 	/** @depreciated use link_database(); this is a confusing name */
 	function db_login() {
 
-		$db = @mysqli_connect("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
+		$db = @mysqli_connect("127.0.0.1"/*:3306"*/, "payomca_rms", "mushroom", "payomca_rms");
 		if (!$db) {					
 			die("Connect failed: " . mysqli_connect_errno());
 		}
@@ -26,7 +26,7 @@
 	/** you will have to $db->close() */
 	function link_database() {
 
-		$db = new mysqli("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
+		$db = new mysqli("127.0.0.1", "payomca_rms", "mushroom", "payomca_rms");		
 		if (!$db) {
 			die("Connect failed: (".$db->connect_errno.") ".$db->connect_error);
 		}
