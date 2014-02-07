@@ -25,7 +25,8 @@
 	/** you will have to $db->close() */
 	function link_database() {
 
-		$db = new mysqli("127.0.0.1:3306", "payomca_rms", "mushroom", "payomca_rms");		
+		/* :3306? */
+		$db = new mysqli("127.0.0.1", "payomca_rms", "mushroom", "payomca_rms");		
 		if (!$db) {
 			die("Connect failed: (".$db->connect_errno.") ".$db->connect_error);
 		}
