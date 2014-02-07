@@ -26,12 +26,12 @@
 <?php
 	$query = "SELECT * FROM users";
 	$result = $db->query($query);
-	echo "No of hits of '$query': ".$result->num_rows."<br/>\n";
-	echo "These are the users:<br/>\n";
-	while($row = $result->fetch_array()) {
-		echo $row["username"]."; ".$row["password"]."; ".$row["first_name"]." ".$row["last_name"]."<br/>\n";
-	}
-	$result->close();
+//	echo "No of hits of '$query': ".$result->num_rows."<br/>\n";
+//	echo "These are the users:<br/>\n";
+//	while($row = $result->fetch_array()) {
+//		echo $row["username"]."; ".$row["password"]."; ".$row["firstname"]." ".$row["lastname"]."<br/>\n";
+//	}
+//	$result->close();
 
 	echo "You have specified: ";
 	if($username != "") {

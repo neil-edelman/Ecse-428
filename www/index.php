@@ -20,6 +20,7 @@
 <body>
 <p>
 <?php
+	echo "Server version: ".$db->server_info."\n";
 	if($message = htmlspecialchars($_REQUEST["message"])) {
 		echo $message."<br/>\n";
 	} else {

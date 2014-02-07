@@ -14,13 +14,21 @@
 	
 	/** are you logged in? */
 	function is_logged_in($db) {
+		echo "sid:".session_id()." db:".$db->server_info;
 		$stmt = $db->prepare("SELECT * FROM "
-							 ."session WHERE session_id = ? LIMIT 1");
+							 ."session WHERE session_id = ?");
 		if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
+		echo "a";
 		$ok   = $stmt->bind_param("s",
 								  $db->escape_string(session_id()));
+		echo "b";
 		if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
-		$result = $stmt->get_result();
+		echo "c";
+		$stmt->bind_result($colid, $coluser, $colip, $colact);
+		if(!$stmt->fetch()) return false;
+		//$result = $stmt->get_result();
+		//if($result == false) die("Crazy".$db.error);
+		echo "d";
 		/* there is no record of it on the server (ie the user hasn't logged in) */
 		echo "numrows".$result->num_rows."; ";
 		if($result->num_rows <= 0) return false;
@@ -67,45 +75,62 @@
 
 	/** log in */
 	function login($db, $user, $pass) {
-		$stmt = $db->prepare("SELECT * FROM "
+		echo "a";
+		$stmt = $db->prepare("SELECT password FROM "
 							 ."users WHERE username = ? LIMIT 1");
+		echo "b";
 		if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
+		echo "c";
 		$ok   = $stmt->bind_param("s",
 								  $db->escape_string($user));
+		echo "d";
 		if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
-		$result = $stmt->get_result();
+		echo "e";
+		$stmt->bind_result($pass);
+		echo "f";
+		if(!$stmt->fetch()) return false;
+		echo "g";
+		//$result = $stmt->get_result();
 		$return = false;
 		for( ; ; ) {
+			echo "x";
 			/* there is no record of it on the server;
 			 the user hasn't logged in */
-			if($result->num_rows <= 0) break;
-			$entry = $result->fetch_array();
+			//if($result->num_rows <= 0) break;
+			//$entry = $result->fetch_array();
 			if(!password_verify($pass, $entry["password"])) break;
 
+			echo "h";
 			/* local version */
 			$session                          = session_id();
 			$_SESSION["username"]             = $user;
 			$ip       = $_SESSION["ip"]       = $_SERVER['REMOTE_ADDR'];
 			$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
 			
+			echo "i";
 			/* store on the server */
 			$stmt = $db->prepare("INSERT INTO "
 								 ."session(session_id, username, ip, activity)"
 								 ." VALUES (?, ?, ?, ?)");
 			if(!$stmt) die($db->error);
+			echo "j";
 			$ok   = $stmt->bind_param("ssss",
 									  $db->escape_string($session),
 									  $db->escape_string($username),
 									  $db->escape_string($ip),
 									  $db->escape_string($activity));
+			echo "k";
 			if($ok && $stmt->execute()) {
 				$return = true;
 			} else {
 				echo "Error: ".$db->error;
 				$return = false;
 			}
+			echo "l";
+			break;
 		}
-		$result->close();
+		//$result->close();
+		echo "z";
 		return $return;
 	}
 
@@ -114,7 +139,7 @@
 
 		/* :3306? not working */
 		$db = new mysqli("127.0.0.1", "payomca_rms", "mushroom", "payomca_rms");		
-		if (!$db) {
+		if(!$db) {
 			die("Connect failed: (".$db->connect_errno.") ".$db->connect_error);
 		}
 		/* sane TZ! don't have to worry about DST */
