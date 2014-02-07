@@ -39,8 +39,14 @@
 	} else {
 		echo "No user.<br/>\n";
 	}
-	
-	$query = "SELECT * FROM users WHERE username='$username'";
+
+	if(login($db, $username, $password)) {
+		echo "Rejoyce!";
+	} else {
+		echo "Not authorised.";
+	}
+
+/*	$query = "SELECT * FROM users WHERE username='$username'";
 	$result = $db->query($query);
 	if($result->num_rows == 1) {
 		$entry = $result->fetch_array();
@@ -54,13 +60,11 @@
 
 		echo session_id()."<br/>\n";
 
-		/* local version */
 		$session                          = session_id();
 					$_SESSION["username"] = $username;
 		$ip       = $_SESSION["ip"]       = $_SERVER['REMOTE_ADDR'];
 		$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
 
-		/* store on the server */
 		$stmt = $db->prepare("INSERT INTO "
 							 ."session(session_id, username, ip, activity)"
 							 ." VALUES (?, ?, ?, ?)");
@@ -80,8 +84,8 @@
 		echo "Failed<br/>\n";
 		//header("location:index.php?message=invalid");
 	}
-	$result->close();
-	
+	$result->close();*/
+
 	$db->close();
 ?>
 </div>

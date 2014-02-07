@@ -3,7 +3,7 @@
 	include "session.php";
 
 	persistent_session_start();
-	
+
 	$db = link_database();
 ?>
 <!doctype html>
@@ -18,24 +18,31 @@
 </head>
 
 <body>
+<p>
+<?php
+	if($message = htmlspecialchars($_REQUEST["message"])) {
+		echo $message."<br/>\n";
+	} else {
+		echo "No message.<br/>\n";
+	}
+?>
+</p>
+
 <p>Are you logged in?</p>
 
 <div>
 <?php
 	if(is_logged_in($db)) {
 ?>
-Yes
+Yes.<br/>
+<form method = "get" action = "logoff.php">
+<input type = "submit" value = "Logoff?">
+</form>
+
 <?php
 	} else {
-		$message = htmlspecialchars($_REQUEST["message"]);
-		if($message) {
-			echo $message."\n";
-		} else {
-			echo "No message.\n";
-		}
 ?>
-No.
-Logon:
+No; login:<br/>
 
 <form method = "get" action = "login.php">
 <div>
