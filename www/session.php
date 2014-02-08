@@ -1,6 +1,10 @@
 <?php
 
 	/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
+	define("SERVER",      "127.0.0.1");
+	define("USERNAME",    "payomca_rms");
+	define("PASSWORD",    "mushroom");
+	define("DATABASE",    "payomca_rms");
 	define("COOKIE_TIME", 43200);
 
 	/** create new exception; this is sytactic sugar */
@@ -19,7 +23,7 @@
 	function link_database() {
 
 		/* :3306? not working */
-		$db = new mysqli("127.0.0.1", "payomca_rms", "mushroom", "payomca_rms");		
+		$db = new mysqli(SERVER, USERNAME, PASSWORD, DATABASE);		
 		if($db->connect_errno) {
 			die("link_database connect failed: (".$db->connect_errno.") ".$db->connect_error);
 		}
