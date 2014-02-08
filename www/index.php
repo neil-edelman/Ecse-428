@@ -27,11 +27,14 @@
 
 <div>
 <?php
-	if(is_logged_in($db)) {
+	if($user = get_logged_in_user($db)) {
+		echo "<h1>Welcome ".$user."</h1>\n";
 ?>
+<p>
 <form method = "get" action = "logoff.php">
-<input type = "submit" value = "Logoff?">
+<input type = "submit" value = "Log Off">
 </form>
+</p>
 
 <?php
 	} else {

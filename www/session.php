@@ -9,8 +9,8 @@
 		session_start();
 	}
 	
-	/** are you logged in? fixme: returns the logged in user; fixme: timeout */
-	function is_logged_in($db) {
+	/** returns the logged in user or null; fixme: timeout */
+	function get_logged_in_user($db) {
 		/* debug! */
 		/*if(!($stmt = $db->prepare("SELECT session_id, ip, activity, username FROM "
 								  ."SessionID"))) {
@@ -32,31 +32,31 @@
 		if(!($stmt = $db->prepare("SELECT session_id, ip, activity, username FROM "
 								  ."SessionID WHERE session_id = ? LIMIT 1"))) {
 			echo "is_logged_in prepare failed: (".$db->errno.") ".$db->error;
-			return false;
+			return null;
 		}
 		if(!$stmt->bind_param("s", session_id())) {
 			echo "is_logged_in binding failed: (".$stmt->errno.") ".$stmt->error;
 			$stmt->close();
-			return false;
+			return null;
 		}
 		if(!$stmt->execute()) {
 			echo "is_logged_in execute failed: (".$stmt->errno.") ".$stmt->error;
 			$stmt->close();
-			return false;
+			return null;
 		}
 		$stmt->bind_result($session_id, $ip, $activity, $username);
 		/* there is no record of it on the server; the user hasn't logged in */
 		if(!$stmt->fetch()) {
 			$stmt->close();
-			echo "is_logged_in didn't find session";
-			return false;
+			//echo "is_logged_in didn't find session";
+			return null;
 		}
 		/* is the ip address the same? somethings shady if it isn't */
 		if($ip != $_SERVER["REMOTE_ADDR"])  {
 			echo "is_logged_in checks failed: the ip address of this "
 				 ."connection is different from the one that originally made the session";
 			$stmt->close();
-			return false;
+			return null;
 		}
 		/* if the user has been active */
 		/* working with datetimes is SO ANNOYING AND DEOSN'T WORK AT ALL */
@@ -86,30 +86,27 @@
 		//			return false;
 		//		}
 		//		echo "user is active!";
-		/* cool; it is valid */
-		echo "cool! you are ".$username."<br/>\n";
-		echo "sid:".session_id()." db:".$db->server_info;
 		$stmt->close();
 
 		/* update the active to now */
 		if(!($stmt = $db->prepare("UPDATE SessionID SET activity = now() "
 							 ."WHERE session_id = ? LIMIT 1"))) {
 			echo "is_logged_in update time prepare failed: (".$db->errno.") ".$db->error;
-			return true;
+			return $username;
 		}
 		if(!$stmt->bind_param("s", session_id())) {
 			echo "is_logged_in update time binding failed: (".$stmt->errno.") ".$stmt->error;
 			$stmt->close();
-			return true;
+			return $username;
 		}
 		if(!$stmt->execute()) {
 			echo "is_logged_in update time execute failed: (".$stmt->errno.") ".$stmt->error;
 			$stmt->close();
-			return true;
+			return $username;
 		}
 		$stmt->close();
 
-		return true;
+		return $username;
 	}
 
 	/** log in */
