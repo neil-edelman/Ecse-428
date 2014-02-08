@@ -36,21 +36,22 @@
 <?php
 	} else {
 ?>
-You must login!<br/>
+<h1>Log In</h1>
 
 <form method = "get" action = "login.php">
-<div>
-Username: <input type = "text" name = "username">
-</div>
-<div>
-Password: <input <input type = "password" name = "password">
-</div>
-<div>
+
+<h2>Username</h2>
+<p>Please enter the username.</p>
+<p><label>Username:</label><input type = "text" name = "username"></p>
+<h2>Password</h2>
+<p>Please enter the password.</p>
+<p><label>Password:</label><input type = "password" name = "password"></p>
+<p>
 <input type = "submit" value = "Login">
 <input type = "reset" value = "Reset">
-</div>
+</p>
+
 </form>
-</div>
 
 <?php
 	}

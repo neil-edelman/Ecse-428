@@ -9,7 +9,7 @@
 		session_start();
 	}
 	
-	/** are you logged in? fixme: timeout */
+	/** are you logged in? fixme: returns the logged in user; fixme: timeout */
 	function is_logged_in($db) {
 		/* debug! */
 		/*if(!($stmt = $db->prepare("SELECT session_id, ip, activity, username FROM "
