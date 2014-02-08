@@ -11,17 +11,18 @@
 <html>
 <head>
 <meta charset = "UTF-8">
-<meta name = "Author" content = "Neil">
+<meta name = "Author" content = "Team RMS">
 <link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
 <link rel = "stylesheet" type = "text/css" href = "style.css">
-<title>Index!</title>
+<title>RMS</title>
 </head>
 
 <body>
 <p>
 <?php
 	echo "Server version: ".$db->server_info."\n";
-	if($message = htmlspecialchars($_REQUEST["message"])) {
+	if(isset($_REQUEST["message"])) {
+		$message = htmlspecialchars($_REQUEST["message"]);
 		echo $message."<br/>\n";
 	} else {
 		echo "No message.<br/>\n";

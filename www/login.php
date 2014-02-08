@@ -1,37 +1,46 @@
 <?php
-	
+
 	include "session.php";
-	
-	//local session creation
+
+	/* see if the required info was sent */
+	if(!isset($_REQUEST["username"]) || !isset($_REQUEST["password"])) {
+		header("Location: index.php?message=CredentialsRequired");
+	}
+
 	persistent_session_start();
 
-	//database login function from session.php
 	$db = link_database();
+
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 	$password = $_REQUEST["password"];
+
 ?>
 <!doctype html>
 
 <html>
 <head>
 <meta charset = "UTF-8">
-<meta name = "Author" content = "Neil">
+<meta name = "Author" content = "Team RMS">
+<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
+<link rel = "stylesheet" type = "text/css" href = "style.css">
 <title>Login</title>
 </head>
 
 <body>
-<div>Login!</div>
+<div>Login</div>
 
 <div>
 <?php
-	$query = "SELECT * FROM users";
-	$result = $db->query($query);
-//	echo "No of hits of '$query': ".$result->num_rows."<br/>\n";
-//	echo "These are the users:<br/>\n";
-//	while($row = $result->fetch_array()) {
-//		echo $row["username"]."; ".$row["password"]."; ".$row["firstname"]." ".$row["lastname"]."<br/>\n";
-//	}
-//	$result->close();
+	/* debug! remove */
+	$query = "SELECT * FROM Users";
+	$result = $db->query($db->escape_string($query));
+	echo "No of hits of '$query': ".$result->num_rows."<br/>\n";
+	echo "These are the users:<br/>\n";
+	/* omg  */
+	while($row = $result->fetch_array()) {
+		echo $row["username"]."; ".$row["password"]."; ".$row["FirstName"]." ".$row["LastName"]."<br/>\n";
+	}
+	$result->close();
 
 	echo "You have specified: ";
 	if($username != "") {

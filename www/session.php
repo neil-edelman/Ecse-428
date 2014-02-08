@@ -1,22 +1,21 @@
 <?php
 
 	/* database things */
-	$user_length  = 64;
-	$first_length = 64;
-	$last_length  = 64;
-	$cookie_time  = 60;//43200; /* 60s/m * 60m/h * 12h (seconds) */
+	const COOKIE_TIME = 60; //43200; /* 60s/m * 60m/h * 12h (seconds) */
 
 	/** called first */
 	function persistent_session_start() {
-		session_set_cookie_params($cookie_time/*, "/", "payom.ca" <- final */);
+		session_set_cookie_params(COOKIE_TIME/*, "/", "payom.ca" <- final */);
 		session_start();
 	}
 	
 	/** are you logged in? */
 	function is_logged_in($db) {
 		echo "sid:".session_id()." db:".$db->server_info;
+		/*$stmt = $db->prepare("SELECT * FROM "
+							 ."session WHERE session_id = ?");*/
 		$stmt = $db->prepare("SELECT * FROM "
-							 ."session WHERE session_id = ?");
+							 ."SessionID WHERE session_id = ?");
 		if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
 		echo "a";
 		$ok   = $stmt->bind_param("s",
@@ -64,7 +63,9 @@
 //		}
 //		echo "user is active!";
 		/* update the active to now */
-		$stmt = $db->prepare("UPDATE session SET activity = now() "
+		/*$stmt = $db->prepare("UPDATE session SET activity = now() "
+							 ."WHERE session_id = ? LIMIT 1");*/
+		$stmt = $db->prepare("UPDATE SessionID SET activity = now() "
 							 ."WHERE session_id = ? LIMIT 1");
 		if(!$stmt) die($db->error);
 		$ok   = $stmt->bind_param("s",
@@ -75,63 +76,86 @@
 
 	/** log in */
 	function login($db, $user, $pass) {
-		echo "a";
-		$stmt = $db->prepare("SELECT password FROM "
-							 ."users WHERE username = ? LIMIT 1");
-		echo "b";
-		if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
-		echo "c";
-		$ok   = $stmt->bind_param("s",
-								  $db->escape_string($user));
-		echo "d";
-		if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
-		echo "e";
-		$stmt->bind_result($pass);
-		echo "f";
-		if(!$stmt->fetch()) return false;
-		echo "g";
-		//$result = $stmt->get_result();
-		$return = false;
-		for( ; ; ) {
-			echo "x";
-			/* there is no record of it on the server;
-			 the user hasn't logged in */
-			//if($result->num_rows <= 0) break;
-			//$entry = $result->fetch_array();
-			if(!password_verify($pass, $entry["password"])) break;
 
-			echo "h";
-			/* local version */
-			$session                          = session_id();
-			$_SESSION["username"]             = $user;
-			$ip       = $_SESSION["ip"]       = $_SERVER['REMOTE_ADDR'];
-			$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
-			
-			echo "i";
-			/* store on the server */
-			$stmt = $db->prepare("INSERT INTO "
-								 ."session(session_id, username, ip, activity)"
-								 ." VALUES (?, ?, ?, ?)");
-			if(!$stmt) die($db->error);
-			echo "j";
-			$ok   = $stmt->bind_param("ssss",
-									  $db->escape_string($session),
-									  $db->escape_string($username),
-									  $db->escape_string($ip),
-									  $db->escape_string($activity));
-			echo "k";
-			if($ok && $stmt->execute()) {
-				$return = true;
-			} else {
-				echo "Error: ".$db->error;
-				$return = false;
-			}
-			echo "l";
-			break;
+		/* does the user exist in the database */
+		if(!($stmt = $db->prepare("SELECT password FROM "
+								  ."Users WHERE username = ? LIMIT 1"))) {
+			echo "login.1 prepare failed: (".$db->errno.") ".$db->error;
+			return false;
 		}
-		//$result->close();
-		echo "z";
-		return $return;
+		if(!$stmt->bind_param("s", $user)) {
+			echo "login.1 binding failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		if(!$stmt->execute()) {
+			echo "login.1 execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		$stmt->bind_result($server_pass);
+		if(!$stmt->fetch()) {
+			echo "login.1 fetching failed: (".$db->errno.") ".$db->error;
+			$stmt->close();
+			return false;
+		}
+		/* there is no record of it on the server; the user hasn't logged in */
+		if(!password_verify($pass, $server_pass)) {
+			$stmt->close();
+			return false;
+		}
+		$stmt->close();
+
+		/* store the session - local version */
+		$session                          = session_id();
+		$_SESSION["username"]             = $user;
+		$ip       = $_SESSION["ip"]       = $_SERVER['REMOTE_ADDR'];
+		$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
+
+		/* store on the server */
+		if(!($stmt = $db->prepare("INSERT INTO "
+								  ."SessionID(session_id, username, ip, activity)"
+								  ." VALUES (?, ?, ?, ?)"))) {
+			echo "login.2 prepare failed: (".$db->errno.") ".$db->error;
+			return false;
+		}
+		if(!$stmt->bind_param("ssss", $session, $user, $ip, $activity)) {
+			echo "login.2 binding failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		if(!$stmt->execute()) {
+			echo "login.2 execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		$stmt->close();
+
+		return true;
+	}
+
+	/** logs you out (no checking anything) */
+	function logoff($db) {
+		if(!($stmt = $db->prepare("DELETE FROM "
+								  ."SessionID WHERE session_id = ? LIMIT 1"))) {
+			echo "logoff prepare failed: (".$db->errno.") ".$db->error;
+			return false;
+		}
+		if(!$stmt->bind_param("s", session_id())) {
+			echo "logoff binding failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		if(!$stmt->execute()) {
+			echo "logoff execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		$stmt->close();
+
+		session_destroy();
+
+		return true;
 	}
 
 	/** you will have to $db->close() */
@@ -139,8 +163,8 @@
 
 		/* :3306? not working */
 		$db = new mysqli("127.0.0.1", "payomca_rms", "mushroom", "payomca_rms");		
-		if(!$db) {
-			die("Connect failed: (".$db->connect_errno.") ".$db->connect_error);
+		if($db->connect_errno) {
+			die("link_database connect failed: (".$db->connect_errno.") ".$db->connect_error);
 		}
 		/* sane TZ! don't have to worry about DST */
 		$db->query("SET time_zone='+0:00'");
@@ -161,40 +185,26 @@
 		return crypt($plain, $hash) == $hash;
 	}
 
-	/** logs you out (no checking anything) */
-	function logoff($db) {
-		$stmt = $db->prepare("DELETE FROM "
-							 ."session WHERE session_id = ? LIMIT 1");
-		if(!$stmt) die($db->error);
-		$ok   = $stmt->bind_param("s",
-								  $db->escape_string(session_id()));
-		if(!($ok && $stmt->execute())) {
-			echo "Error logout: (".$db->errno.") ".$db->error;
-			return false;
-		}
-
-		session_destroy();
-
-		return true;
-	}
-
 	/** new user? assumes valid input */
 	function new_user($db, $user, $pass, $first, $last) {
-		$stmt = $db->prepare("INSERT INTO "
-							 ."users(username, password, firstname, lastname)"
-							 ." VALUES (?, ?, ?, ?)");
-		if(!$stmt) die($db->error);
-		$ok   = $stmt->bind_param("ssss",
-								  $db->escape_string($user),
-								  $db->escape_string($pass),
-								  $db->escape_string($first),
-								  $db->escape_string($last));
-		if($ok && $stmt->execute()) {
-			return true;
-		} else {
-			echo "Error: ".$db->error;
+		if(!($stmt = $db->prepare("INSERT INTO "
+								  ."Users(username, password, FirstName, LastName)"
+								  ." VALUES (?, ?, ?, ?)"))) {
+			echo "new_user prepare failed: (".$db->errno.") ".$db->error;
 			return false;
 		}
+		if(!$stmt->bind_param("ssss", $user, $pass, $first, $last)) {
+			echo "new_user binding failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		if(!$stmt->execute()) {
+			echo "new_user execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		$stmt->close();
+		return true;
 	}
 
 ?>
