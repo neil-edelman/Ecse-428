@@ -1,7 +1,7 @@
 <?php
 
 	/* database things */
-	const COOKIE_TIME = 60; //43200; /* 60s/m * 60m/h * 12h (seconds) */
+	const COOKIE_TIME = 43200; /* 60s/m * 60m/h * 12h (seconds) */
 
 	/** called first */
 	function persistent_session_start() {
@@ -9,68 +9,106 @@
 		session_start();
 	}
 	
-	/** are you logged in? */
+	/** are you logged in? fixme: timeout */
 	function is_logged_in($db) {
-		echo "sid:".session_id()." db:".$db->server_info;
-		/*$stmt = $db->prepare("SELECT * FROM "
-							 ."session WHERE session_id = ?");*/
-		$stmt = $db->prepare("SELECT * FROM "
-							 ."SessionID WHERE session_id = ?");
-		if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
-		echo "a";
-		$ok   = $stmt->bind_param("s",
-								  $db->escape_string(session_id()));
-		echo "b";
-		if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
-		echo "c";
-		$stmt->bind_result($colid, $coluser, $colip, $colact);
-		if(!$stmt->fetch()) return false;
-		//$result = $stmt->get_result();
-		//if($result == false) die("Crazy".$db.error);
-		echo "d";
-		/* there is no record of it on the server (ie the user hasn't logged in) */
-		echo "numrows".$result->num_rows."; ";
-		if($result->num_rows <= 0) return false;
-		/* is the ip address the same? (somethings' shady going on if it isn't) */
-		if(!isset($_SESSION['ip']) || $_SESSION['ip'] != $_SERVER['REMOTE_ADDR']) return false;
-		echo "the ip is the same! ";
+		/* debug! */
+		/*if(!($stmt = $db->prepare("SELECT session_id, ip, activity, username FROM "
+								  ."SessionID"))) {
+			echo "is_logged_in debug prepare failed: (".$db->errno.") ".$db->error;
+			return false;
+		}
+		if(!$stmt->execute()) {
+			echo "is_logged_in debug execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		$stmt->store_result();
+		$stmt->bind_result($session_id, $ip, $activity, $username);
+		while($result = $stmt->fetch()) {
+			echo $session_id."; ".$username."<br/>\n";
+		}
+		$stmt->close();*/
+
+		if(!($stmt = $db->prepare("SELECT session_id, ip, activity, username FROM "
+								  ."SessionID WHERE session_id = ? LIMIT 1"))) {
+			echo "is_logged_in prepare failed: (".$db->errno.") ".$db->error;
+			return false;
+		}
+		if(!$stmt->bind_param("s", session_id())) {
+			echo "is_logged_in binding failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		if(!$stmt->execute()) {
+			echo "is_logged_in execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return false;
+		}
+		$stmt->bind_result($session_id, $ip, $activity, $username);
+		/* there is no record of it on the server; the user hasn't logged in */
+		if(!$stmt->fetch()) {
+			$stmt->close();
+			echo "is_logged_in didn't find session";
+			return false;
+		}
+		/* is the ip address the same? somethings shady if it isn't */
+		if($ip != $_SERVER["REMOTE_ADDR"])  {
+			echo "is_logged_in checks failed: the ip address of this "
+				 ."connection is different from the one that originally made the session";
+			$stmt->close();
+			return false;
+		}
 		/* if the user has been active */
 		/* working with datetimes is SO ANNOYING AND DEOSN'T WORK AT ALL */
 		/* fixme!!! */
 		/*$now = gmdate("Y-m-d H:i:s");
-		if(!isset($_SESSION["activity"])) return false;
-		$stmt = $db->prepare("SELECT TIMESTAMPDIFF(SECOND,now(),?)");
-		if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
-		$ok   = $stmt->bind_param("s",
-								  $db->escape_string($_SESSION["activity"]));
-		if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
-		$result = $stmt->get_result();
-		echo $result->num_rows;
-		$now = gmdate("Y-m-d H:i:s");
+		 if(!isset($_SESSION["activity"])) return false;
+		 $stmt = $db->prepare("SELECT TIMESTAMPDIFF(SECOND,now(),?)");
+		 if(!$stmt) die("Statement error: (".$db->errno.") ".$db->error);
+		 $ok   = $stmt->bind_param("s",
+		 $db->escape_string($_SESSION["activity"]));
+		 if(!($ok && $stmt->execute())) die("Database error: ".$db->error);
+		 $result = $stmt->get_result();
+		 echo $result->num_rows;
+		 $now = gmdate("Y-m-d H:i:s");
+		 
+		 $diff = $now - $_SESSION["activity"];
+		 echo "now ".$now." then ".$_SESSION["activity"]." diff ".$diff;*/
 		
-		$diff = $now - $_SESSION["activity"];
-		echo "now ".$now." then ".$_SESSION["activity"]." diff ".$diff;*/
+		//		if($diff >= $timeout) {
+		//			echo "timeout!".$diff;
+		//			$stmt = $db->prepare("DELETE FROM "
+		//								 ."session WHERE session_id = ? LIMIT 1");
+		//			if(!$stmt) die($db->error);
+		//			$ok   = $stmt->bind_param("s",
+		//									  $db->escape_string(session_id()));
+		//			$stmt->execute(); /* not sure what to do if it fails */
+		//			return false;
+		//		}
+		//		echo "user is active!";
+		/* cool; it is valid */
+		echo "cool! you are ".$username."<br/>\n";
+		echo "sid:".session_id()." db:".$db->server_info;
+		$stmt->close();
 
-//		if($diff >= $timeout) {
-//			echo "timeout!".$diff;
-//			$stmt = $db->prepare("DELETE FROM "
-//								 ."session WHERE session_id = ? LIMIT 1");
-//			if(!$stmt) die($db->error);
-//			$ok   = $stmt->bind_param("s",
-//									  $db->escape_string(session_id()));
-//			$stmt->execute(); /* not sure what to do if it fails */
-//			return false;
-//		}
-//		echo "user is active!";
 		/* update the active to now */
-		/*$stmt = $db->prepare("UPDATE session SET activity = now() "
-							 ."WHERE session_id = ? LIMIT 1");*/
-		$stmt = $db->prepare("UPDATE SessionID SET activity = now() "
-							 ."WHERE session_id = ? LIMIT 1");
-		if(!$stmt) die($db->error);
-		$ok   = $stmt->bind_param("s",
-								  $db->escape_string(session_id()));
-		$stmt->execute(); /* not sure what to do if it fails */
+		if(!($stmt = $db->prepare("UPDATE SessionID SET activity = now() "
+							 ."WHERE session_id = ? LIMIT 1"))) {
+			echo "is_logged_in update time prepare failed: (".$db->errno.") ".$db->error;
+			return true;
+		}
+		if(!$stmt->bind_param("s", session_id())) {
+			echo "is_logged_in update time binding failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return true;
+		}
+		if(!$stmt->execute()) {
+			echo "is_logged_in update time execute failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->close();
+			return true;
+		}
+		$stmt->close();
+
 		return true;
 	}
 
@@ -134,7 +172,7 @@
 		return true;
 	}
 
-	/** logs you out (no checking anything) */
+	/** logs you out of your session */
 	function logoff($db) {
 		if(!($stmt = $db->prepare("DELETE FROM "
 								  ."SessionID WHERE session_id = ? LIMIT 1"))) {

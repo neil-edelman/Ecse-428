@@ -18,25 +18,17 @@
 </head>
 
 <body>
-<p>
 <?php
-	echo "Server version: ".$db->server_info."\n";
 	if(isset($_REQUEST["message"])) {
 		$message = htmlspecialchars($_REQUEST["message"]);
-		echo $message."<br/>\n";
-	} else {
-		echo "No message.<br/>\n";
+		echo "<p>".$message."</p>\n";
 	}
 ?>
-</p>
-
-<p>Are you logged in?</p>
 
 <div>
 <?php
 	if(is_logged_in($db)) {
 ?>
-Yes.<br/>
 <form method = "get" action = "logoff.php">
 <input type = "submit" value = "Logoff?">
 </form>
@@ -44,7 +36,7 @@ Yes.<br/>
 <?php
 	} else {
 ?>
-No; login:<br/>
+You must login!<br/>
 
 <form method = "get" action = "login.php">
 <div>
@@ -69,6 +61,8 @@ Password: <input <input type = "password" name = "password">
 New:
 
 <p>
+(We probably should limit this to admins, but we have to provide a initial
+ login; perhaps check if the table of users is empty?)
 Click <a href = "new.php">here to create a new user</a>.
 </p>
 

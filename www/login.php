@@ -2,15 +2,16 @@
 
 	include "session.php";
 
+	persistent_session_start();
+
 	/* see if the required info was sent */
 	if(!isset($_REQUEST["username"]) || !isset($_REQUEST["password"])) {
 		header("Location: index.php?message=CredentialsRequired");
 	}
 
-	persistent_session_start();
-
 	$db = link_database();
 
+	/* Neil: I don't know if these escapes are correct */
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 	$password = $_REQUEST["password"];
 
@@ -43,60 +44,19 @@
 	$result->close();
 
 	echo "You have specified: ";
-	if($username != "") {
-		echo "$username; $password<br/>\n";
-	} else {
-		echo "No user.<br/>\n";
-	}
+	echo session_id()."; $username; $password<br/>\n";
 
 	if(login($db, $username, $password)) {
-		echo "Rejoyce!";
+		echo "authorised<br/>\n";
+		//header("Location: index.php?message=Denyed");
 	} else {
-		echo "Not authorised.";
+		//header("Location: index.php?message=Authorised";
+		echo "denyed<br/>\n";
 	}
-
-/*	$query = "SELECT * FROM users WHERE username='$username'";
-	$result = $db->query($query);
-	if($result->num_rows == 1) {
-		$entry = $result->fetch_array();
-		echo "The supplied pw: '".$password."' the pw entry ".$entry["password"]."<br/>\n";
-		if(password_verify($password, $entry["password"])) {
-			echo "Yes! authorised.";
-		} else {
-			echo "No! go home.";
-		}
-		echo "<br/>\n";
-
-		echo session_id()."<br/>\n";
-
-		$session                          = session_id();
-					$_SESSION["username"] = $username;
-		$ip       = $_SESSION["ip"]       = $_SERVER['REMOTE_ADDR'];
-		$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
-
-		$stmt = $db->prepare("INSERT INTO "
-							 ."session(session_id, username, ip, activity)"
-							 ." VALUES (?, ?, ?, ?)");
-		if(!$stmt) die($db->error);
-		$ok   = $stmt->bind_param("ssss",
-								  $db->escape_string($session),
-								  $db->escape_string($username),
-								  $db->escape_string($ip),
-								  $db->escape_string($activity));
-		if($ok && $stmt->execute()) {
-			echo "Success<br/>\n";
-		} else {
-			echo "Error: ".$db->error;
-		}
-		//header('Location: content.php');
-	} else {
-		echo "Failed<br/>\n";
-		//header("location:index.php?message=invalid");
-	}
-	$result->close();*/
-
 	$db->close();
+
 ?>
+Go to <a href = "index.php">here</a>.
 </div>
 
 </body>

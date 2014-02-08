@@ -1,11 +1,9 @@
 <?php
-	
+
 	include "session.php";
-	
-	//local session creation
+
 	persistent_session_start();
 
-	//database login function from session.php
 	$db = link_database();
 ?>
 <!doctype html>
@@ -13,23 +11,29 @@
 <html>
 <head>
 <meta charset = "UTF-8">
-<meta name = "Author" content = "Neil">
+<meta name = "Author" content = "Team RMS">
+<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
+<link rel = "stylesheet" type = "text/css" href = "style.css">
 <title>Logoff</title>
 </head>
 
 <body>
-<div>Logoff!</div>
+<div>Logoff</div>
 
 <div>
 <?php
 	if(logoff($db)) {
-		echo "Rejoyce!";
+		echo "You have been logged off.<br/>\n";
 	} else {
-		echo "Not authorised.";
+		echo "You have not been logged off.<br/>\n";
 	}
 	$db->close();
 ?>
 </div>
+
+<p>
+Go to <a href = "index.php">the logon page</a>.
+</p>
 
 </body>
 
