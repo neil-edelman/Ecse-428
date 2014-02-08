@@ -1,6 +1,10 @@
 <?php
 	include "session.php";	
 	persistent_session_start();
+	$loggeduser = check_login();	// $loggeduser stores the logged username. Use freely.
+	if ($loggeduser != "null") {	// If someone is logged in, go to mainmenu.
+		header("Location: mainmenu.php");
+	}	
 ?>
 
 <!DOCTYPE html>

@@ -1,7 +1,17 @@
 
 <?php
-	
+	session_start();
 	include "session.php";
+
+	$loggeduser = check_login();	// $loggeduser stores the logged username. Use freely.
+	if ($loggeduser == "null") {	// If no one is logged in, return to loginpage.
+		header("Location: loginpage.php");
+		die();
+	}
+	$privilege = check_privilege($loggeduser);	// $privilege stores the user's privilege. Use freely.
+	if ($privilege == "wait" || $privilege == "cook") {	// If insufficient privilege, return to mainmenu.
+		header("Location: mainmenu.php");
+	}
 ?>
 <!DOCTYPE html>
 <!--

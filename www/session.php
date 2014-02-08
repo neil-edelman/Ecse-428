@@ -93,4 +93,46 @@
 		}
 	}
 
+	// Returns the username of the currently logged in user. Returns "null" otherwise; as in an actual STRING called "null".
+	function check_login() {
+		$session_id = session_id();
+		$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+		if (mysqli_connect_errno()) {
+			echo "Failed to connect to MySQL: " . mysqli_connect_error();
+		}
+
+		$sqlQuery = "SELECT * FROM SessionID WHERE SessionID . session_id = '$session_id';";                        
+		$result = mysqli_query($server, $sqlQuery);
+		
+		if (mysqli_num_rows($result) == 1) {		// Must CHECK if there's one and only row of results
+			$theresult = mysqli_fetch_row($result);	// Must GET the one and only row of results
+			$loggeduser = $theresult[1];			// Acquire said row's SECOND data field. Ie. the username.
+		}
+		else {
+			$loggeduser = "null";	// Reached if no session is found. 
+		}
+		
+		return $loggeduser;
+	}
+	
+	// Obtains the privilege status of the given username.
+	function check_privilege($user) {
+		$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+		if (mysqli_connect_errno()) {
+			echo "Failed to connect to MySQL: " . mysqli_connect_error();
+		}
+
+		$sqlQuery = "SELECT * FROM Users WHERE Username = '$user';";
+		$result = mysqli_query($server, $sqlQuery);
+		
+		if (mysqli_num_rows($result) == 1) {		// Must CHECK if there's one and only row of results
+			$theresult = mysqli_fetch_row($result);	// Must GET the one and only row of results
+			$privilege = $theresult[5];		// Acquire said row's FIFTH field. Ie. the privilege.
+		}
+		else {
+			$privilege = "null";
+		}
+		return $privilege;
+	}
+
 ?>
