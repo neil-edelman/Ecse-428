@@ -1,10 +1,10 @@
 <?php
 
-	/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 	define("SERVER",      "127.0.0.1");
 	define("USERNAME",    "payomca_rms");
 	define("PASSWORD",    "mushroom");
 	define("DATABASE",    "payomca_rms");
+	/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 	define("COOKIE_TIME", 43200);
 
 	/** create new exception; this is sytactic sugar */
@@ -14,6 +14,11 @@
 
 	/** called first! */
 	function persistent_session_start() {
+		error_reporting(E_ALL);
+		ini_set("log_errors", 1);
+		ini_set("error_log", "/Users/neil/Sites/www/error");
+		//ini_set("error_log", "error_log");
+		//ini_set("display_errors" , 1);
 		/* probably should do this: set_error_handler("error_handler");*/
 		session_set_cookie_params(COOKIE_TIME/*, "/", "payom.ca" <- final */);
 		session_start();
@@ -44,30 +49,27 @@
 								 ."FROM SessionID "
 								 ."WHERE session_id = ? "
 								 ."LIMIT 1") or throw_exception("prepare");
-			try {
-				$stmt->bind_param("s", session_id()) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-				$stmt->bind_result($session_id, $ip, $activity, $username);
-				/* there is no record of it on the server; the user hasn't logged in */
-				if($stmt->fetch()) {
-					/* is the ip address the same? somethings shady if it isn't */
-					$ip == $_SERVER["REMOTE_ADDR"] or throw_exception("ip");
-					/* fixme!!! */
-					/* if the user has been active */
-					/* working with datetimes is SO ANNOYING AND DEOSN'T WORK AT ALL */
-					/* fixme: clean up all the other sessions */
-					$logged = $username;
-				}
-			} catch(Exception $e) {
-				/* fixme: this is not the way to handle; set_error_handler? create a function error()? */
-				echo "is_logged_in ".$e->getMessage()." failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->bind_param("s", session_id()) or throw_exception("binding");
+			$stmt->execute() or throw_exception("execute");
+			$stmt->bind_result($session_id, $ip, $activity, $username);
+			/* there is no record of it on the server; the user hasn't logged in */
+			if($stmt->fetch()) {
+				/* is the ip address the same? somethings shady if it isn't */
+				$ip == $_SERVER["REMOTE_ADDR"] or throw_exception("ip");
+				/* fixme!!! */
+				/* if the user has been active */
+				/* working with datetimes is SO ANNOYING AND DEOSN'T WORK AT ALL */
+				/* fixme: clean up all the other sessions */
+				$logged = $username;
 			}
-			$stmt->close();
 		} catch(Exception $e) {
-			echo "is_logged_in ".$e->getMessage()." failed: (".$db->errno.") ".$db->error;
+			/* fixme: this is not the way to handle; set_error_handler? create a function error()? */
+			$errno = ($stmt ? $stmt->errno : $db->errno);
+			$error = ($stmt ? $stmt->error : $db->error);
+			echo "is_logged_in ".$e->getMessage()." failed: (".$errno.") ".$error;
 		}
+		$stmt and $stmt->close();
 
-		/* we are not logged in */
 		if(!$logged) return null;
 
 		/* update the active time to now */
@@ -75,16 +77,14 @@
 			$stmt = $db->prepare("UPDATE SessionID SET activity = now() "
 								 ."WHERE session_id = ? "
 								 ."LIMIT 1") or throw_exception("prepare");
-			try {
-				$stmt->bind_param("s", session_id()) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-			} catch(Exception $e) {
-				echo "is_logged_in ".$e->getMessage()." update time failed: (".$stmt->errno.") ".$stmt->error;
-			}
-			$stmt->close();
+			$stmt->bind_param("s", session_id()) or throw_exception("binding");
+			$stmt->execute() or throw_exception("execute");
 		} catch(Exception $e) {
-			echo "is_logged_in ".$e->getMessage()." update time failed: (".$db->errno.") ".$db->error;
+			$errno = ($stmt ? $stmt->errno : $db->errno);
+			$error = ($stmt ? $stmt->error : $db->error);
+			echo "is_logged_in ".$e->getMessage()." update time failed: (".$errno.") ".$error;
 		}
+		$stmt and $stmt->close();
 
 		return $logged;
 	}
@@ -98,20 +98,18 @@
 			$stmt = $db->prepare("SELECT password FROM "
 								 ."Users WHERE username = ? "
 								 ."LIMIT 1") or throw_exception("prepare");
-			try {
-				$stmt->bind_param("s", $user) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-				$stmt->bind_result($server_pass);
-				if($stmt->fetch() && password_verify($pass, $server_pass)) {
-					$return = true;
-				}
-			} catch(Exception $e) {
-				echo "login search ".$e->getMessage()." failed: (".$stmt->errno.") ".$stmt->error;
+			$stmt->bind_param("s", $user) or throw_exception("binding");
+			$stmt->execute() or throw_exception("execute");
+			$stmt->bind_result($server_pass);
+			if($stmt->fetch() && password_verify($pass, $server_pass)) {
+				$return = true;
 			}
-			$stmt->close();
 		} catch(Exception $e) {
-			echo "login search ".$e->getMessage()." failed: (".$db->errno.") ".$db->error;
+			$errno = ($stmt ? $stmt->errno : $db->errno);
+			$error = ($stmt ? $stmt->error : $db->error);
+			echo "login search ".$e->getMessage()." failed: (".$errno.") ".$error;
 		}
+		$stmt and $stmt->close();
 
 		if(!$return) return false;
 
@@ -127,17 +125,15 @@
 			$stmt = $db->prepare("INSERT INTO "
 								 ."SessionID(session_id, username, ip, activity)"
 								 ." VALUES (?, ?, ?, ?)") or throw_exception("prepare");
-			try {
-				$stmt->bind_param("ssss", $session, $user, $ip, $activity) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-				$return = true;
-			} catch(Exception $e) {
-				echo "login store ".$e->getMessage()." failed: (".$stmt->errno.") ".$stmt->error;
-			}
-			$stmt->close();
+			$stmt->bind_param("ssss", $session, $user, $ip, $activity) or throw_exception("binding");
+			$stmt->execute() or throw_exception("execute");
+			$return = true;
 		} catch(Exception $e) {
-			echo "login store ".$e->getMessage()." failed: (".$db->errno.") ".$db->error;
+			$errno = ($stmt ? $stmt->errno : $db->errno);
+			$error = ($stmt ? $stmt->error : $db->error);
+			echo "login store ".$e->getMessage()." failed: (".$errno.") ".$error;
 		}
+		$stmt and $stmt->close();
 
 		return $return;
 	}
@@ -149,17 +145,15 @@
 			$stmt = $db->prepare("DELETE FROM "
 								 ."SessionID WHERE session_id = ? "
 								 ."LIMIT 1") or throw_exception("prepare");
-			try {
-				$stmt->bind_param("s", session_id()) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-				$return = true;
-			} catch(Exception $e) {
-				echo "logoff ".$e->getMessage()." failed: (".$stmt->errno.") ".$stmt->error;
-			}
-			$stmt->close();
+			$stmt->bind_param("s", session_id()) or throw_exception("binding");
+			$stmt->execute() or throw_exception("execute");
+			$return = true;
 		} catch(Exception $e) {
-			echo "logoff ".$e->getMessage()." failed: (".$db->errno.") ".$db->error;
+			$errno = ($stmt ? $stmt->errno : $db->errno);
+			$error = ($stmt ? $stmt->error : $db->error);
+			echo "logoff ".$e->getMessage()." failed: (".$errno.") ".$error;
 		}
+		$stmt and $stmt->close();
 
 		if($return) session_destroy();
 
@@ -173,17 +167,15 @@
 			$stmt = $db->prepare("INSERT INTO "
 								 ."Users(username, password, FirstName, LastName) "
 								 ."VALUES (?, ?, ?, ?)") or throw_exception("prepare");
-			try {
-				$stmt->bind_param("ssss", $user, $pass, $first, $last) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-				$return = true;
-			} catch(Exception $e) {
-				echo "new_user ".$e->getMessage()." failed: (".$stmt->errno.") ".$stmt->error;
-			}
-			$stmt->close();
+			$stmt->bind_param("ssss", $user, $pass, $first, $last) or throw_exception("binding");
+			$stmt->execute() or throw_exception("execute");
+			$return = true;
 		} catch(Exception $e) {
-			echo "new_user ".$e->getMessage()." failed: (".$db->errno.") ".$db->error;
+			$errno = ($stmt ? $stmt->errno : $db->errno);
+			$error = ($stmt ? $stmt->error : $db->error);
+			echo "new_user ".$e->getMessage()." failed: (".$errno.") ".$error;
 		}
+		$stmt and $stmt->close();
 		return $return;
 	}
 
