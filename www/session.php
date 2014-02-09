@@ -19,8 +19,8 @@
 		 you should not call session_start() (it's done already)
 		 @author Neil */
 		public function __construct() {
-			$this->session and throw_exception("Sessions are idempotent.");
-			$this->session = $this;
+			self::$session and throw_exception("Sessions are idempotent.");
+			self::$session = $this;
 			/* probably should do this: set_error_handler("error_handler");*/
 			session_set_cookie_params(self::COOKIE_TIME/*, "/", "payom.ca" <- final */);
 			session_start();
@@ -30,7 +30,7 @@
 		 @author Neil */
 		public function __destruct() {
 			$this->db && $this->db->close();
-			$this->session = null;
+			self::$session = null;
 		}
 
 		/** @author Neil */
@@ -239,7 +239,7 @@
 		 @param plain plain pswd
 		 @return crypt pswd
 		 @author Neil */
-		final private function password_hash($plain) {
+		final private static function password_hash($plain) {
 			$salt = bin2hex(openssl_random_pseudo_bytes(22, $isCrypto));
 			$isCrypto or die("No cryptography on this server.");
 			/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
@@ -251,7 +251,7 @@
 		 @param hash the hashed password (viz on the server)
 		 @return whether the password is valid
 		 @author Neil */
-		final private function password_verify($plain, $hash) {		
+		final private static function password_verify($plain, $hash) {		
 			return crypt($plain, $hash) == $hash;
 		}
 
@@ -266,7 +266,7 @@
 		 @param message message (defualt null)
 		 @param code the error code (default null)
 		 @author Neil */
-		final private function throw_exception($message = null, $code = null) {
+		final private static function throw_exception($message = null, $code = null) {
 			throw new Exception($message, $code);
 		}
 

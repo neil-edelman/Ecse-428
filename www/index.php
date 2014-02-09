@@ -37,7 +37,7 @@
 		}
 	} else if(isset($_REQUEST["logoff"])) {
 		$s->logoff();
-		unset($user);
+		$user = null;
 	}
 	if($user) {
 		echo "<h1>Welcome ".$user."</h1>\n";
