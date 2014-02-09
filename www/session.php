@@ -262,14 +262,14 @@
 			return $this->status;
 		}
 
-		/** create new exception; this is sytactic sugar
-		 @param message message (defualt null)
-		 @param code the error code (default null)
-		 @author Neil */
-		final private static function throw_exception($message = null, $code = null) {
-			throw new Exception($message, $code);
-		}
+	}
 
+	/** create new exception; this is sytactic sugar
+	 @param message message (defualt null)
+	 @param code the error code (default null)
+	 @author Neil */
+	function throw_exception($message = null, $code = null) {
+		throw new Exception($message, $code);
 	}
 
 ?>
