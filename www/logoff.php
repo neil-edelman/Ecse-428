@@ -2,9 +2,9 @@
 
 	include "session.php";
 
-	persistent_session_start();
+	$s = new Session();
 
-	$db = link_database();
+	$db = $s->link_database();
 ?>
 <!doctype html>
 
@@ -22,12 +22,11 @@
 
 <div>
 <?php
-	if(logoff($db)) {
+	if($s->logoff()) {
 		echo "You have been logged off.<br/>\n";
 	} else {
-		echo "You have not been logged off.<br/>\n";
+		echo "You have not been logged off: ".$s->status()."<br/>\n";
 	}
-	$db->close();
 ?>
 </div>
 

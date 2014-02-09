@@ -2,14 +2,14 @@
 
 	include "session.php";
 
-	persistent_session_start();
+	$s = new Session();
 
 	/* see if the required info was sent */
 	if(!isset($_REQUEST["username"]) || !isset($_REQUEST["password"])) {
 		header("Location: index.php?message=CredentialsRequired");
 	}
 
-	$db = link_database();
+	$db = $s->link_database();
 
 	/* Neil: I don't know if these escapes are correct */
 	$username = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
@@ -46,14 +46,13 @@
 	echo "You have specified: ";
 	echo session_id()."; $username; $password<br/>\n";
 
-	if(login($db, $username, $password)) {
+	if($s->login($username, $password)) {
 		echo "authorised<br/>\n";
 		//header("Location: index.php?message=Denyed");
 	} else {
 		//header("Location: index.php?message=Authorised";
-		echo "denyed<br/>\n";
+		echo "denied: ".$s->status()."<br/>\n";
 	}
-	$db->close();
 
 ?>
 Go to <a href = "index.php">here</a>.

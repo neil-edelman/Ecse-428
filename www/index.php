@@ -2,9 +2,9 @@
 
 	include "session.php";
 
-	persistent_session_start();
+	$s = new Session();
 
-	$db = link_database();
+	$db = $s->link_database();
 ?>
 <!doctype html>
 
@@ -23,11 +23,12 @@
 		$message = htmlspecialchars($_REQUEST["message"]);
 		echo "<p>".$message."</p>\n";
 	}
+	echo "<p>status: ".$s->status()."</p>\n";
 ?>
 
 <div>
 <?php
-	if($user = get_logged_in_user($db)) {
+	if($user = $s->get_user()) {
 		echo "<h1>Welcome ".$user."</h1>\n";
 ?>
 <p>
