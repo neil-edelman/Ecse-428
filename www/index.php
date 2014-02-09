@@ -1,3 +1,17 @@
+<?php
+	session_start();
+	include "session.php";	
+	
+	$loggeduser = check_login();	// $loggeduser stores the logged username. Use freely.
+	if ($loggeduser == "null") {	// If no one is logged in, go to loginpage.
+		header("Location: loginpage.php");
+		die();
+	} else {
+		header("Location: mainmenu.php");
+	}
+	$privilege = check_privilege($loggeduser);	// $privilege stores the user's privilege. Use freely.
+?>
+
 <!doctype html>
 
 <html>

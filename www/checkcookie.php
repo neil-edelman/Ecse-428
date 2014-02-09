@@ -10,7 +10,7 @@
 		$privilege = $thecookie[2];	// Use this in your code
 	}
 	else {
-		header("Location: http://www.payom.ca/rms/tiberiu/expired.php");
+		echo "Critical Failure";
 		die();
 	}
 ?>
