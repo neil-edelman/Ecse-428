@@ -23,17 +23,28 @@
 		$message = htmlspecialchars($_REQUEST["message"]);
 		echo "<p>".$message."</p>\n";
 	}
-	echo "<p>status: ".$s->status()."</p>\n";
 ?>
 
 <div>
 <?php
-	if($user = $s->get_user()) {
+	$user = null;
+	if(!($user = $s->get_user())) {
+		if(isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+			/* Neil: I don't know if these escapes are correct */
+			$user = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
+			$pass = $_REQUEST["password"];
+			$s->login($user, $pass) or $user = null;
+		}
+	} else if(isset($_REQUEST["logoff"])) {
+		$s->logoff();
+		unset($user);
+	}
+	if($user) {
 		echo "<h1>Welcome ".$user."</h1>\n";
 ?>
 <p>
-<form method = "get" action = "logoff.php">
-<input type = "submit" value = "Log Off">
+<form method = "get">
+<input type = "submit" name = "logoff" value = "Log Off">
 </form>
 </p>
 
@@ -42,7 +53,7 @@
 ?>
 <h1>Log In</h1>
 
-<form method = "get" action = "login.php">
+<form method = "get">
 
 <h2>Username</h2>
 <p>Please enter the username.</p>
@@ -59,6 +70,7 @@
 
 <?php
 	}
+	echo "<p>(Status: ".$s->status().")</p>\n";
 ?>
 
 <hr/>
