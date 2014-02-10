@@ -18,9 +18,6 @@
 		/* when destroy_session() sets $active = false but the session is still
 		 active because destroy_session() doesn't do like it says exactly */
 		private $active = true;
-		/* username -- prevents multiple users from being logged in at the same
-		 time */
-		private $active_user = null;
 
 		/** session_start is called idempotently at the BEGINNING;
 		 you should not call session_start() (it's done already)
@@ -104,11 +101,11 @@
 					/* fixme: this is awful */
 					if($diff > self::SESSION_TIME) {
 						$this->status = $diff."s timeout";
-						$stmt->close();
-						/* without an active_user logoff won't work */
-						$this->active_user = $username;
+						$stmt->close(); /* no nesting stmt */
 						$this->logoff();
-						/* this prevents the user from logging on automatically */
+						/* this prevents the user from logging on automatically
+						 since the destroy_session only marks the session for
+						 deletion */
 						$this->active = false;
 						return null;
 					}
@@ -138,8 +135,6 @@
 			}
 			$stmt and $stmt->close();
 
-			$this->active_user = $logged;
-
 			return $logged;
 		}
 
@@ -154,9 +149,8 @@
 				$this->status = "login: database connection closed";
 				return null;
 			}
+			/* preserve status for get_user() */
 			if(!$this->active) return null;
-
-			if($this->active_user) return $this->active_user;
 
 			/* does the user exist in the database and the password match? */
 			$loggedin = null;
@@ -203,8 +197,6 @@
 			}
 			$stmt and $stmt->close();
 
-			$this->active_user = $loggedin;
-
 			return $loggedin;
 		}
 
@@ -212,8 +204,6 @@
 		 @return whether you have been logged out
 		 @author Neil */
 		final public function logoff() {
-
-			if(!$this->active_user) return false;
 
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "logoff: database connection closed";
@@ -236,7 +226,6 @@
 			$stmt and $stmt->close();
 
 			$success and session_destroy();
-			$success and $this->active_user = null;
 
 			return $success;
 		}
