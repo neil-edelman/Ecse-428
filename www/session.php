@@ -8,6 +8,7 @@
 		const DATABASE = "payomca_rms";
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
+		/* (seconds) */
 		const SESSION_TIME = 5;
 
 		/* prevents multiple sessions being created */
@@ -25,7 +26,6 @@
 		public function __construct() {
 			self::$session and throw_exception("Sessions are idempotent.");
 			self::$session = $this;
-			/* probably should do this: set_error_handler("error_handler");*/
 			session_set_cookie_params(self::COOKIE_TIME/*, "/", "payom.ca" <- final */);
 			session_start();
 			// it barfs -- $utc = new DateTimeZone("UTC");
@@ -56,7 +56,7 @@
 				$db->close();
 				return null;
 			}
-			/* sane TZ! don't have to worry about DST */
+			/* sane TZ! don't have to worry about DST for now() */
 			$db->query("SET time_zone='+0:00'");
 
 			$this->db = $db;
@@ -97,7 +97,6 @@
 					$last = new DateTime($activity, $utc);
 					$now  = new DateTime(gmdate("Y-m-d H:i:s"), $utc);
 					$diff = $now->getTimestamp() - $last->getTimestamp();
-					/* destroy_session destoys it *after the page has loaded* */
 					/* fixme: this is awful */
 					if($diff > self::SESSION_TIME) {
 						$this->status = $diff."s timeout";
@@ -149,7 +148,7 @@
 				$this->status = "login: database connection closed";
 				return null;
 			}
-			/* preserve status for get_user() */
+			/* preserve status when called in get_user() */
 			if(!$this->active) return null;
 
 			/* does the user exist in the database and the password match? */
