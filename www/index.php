@@ -18,7 +18,9 @@
 </head>
 
 <body>
+
 <?php
+	// message
 	if(isset($_REQUEST["message"])) {
 		$message = htmlspecialchars($_REQUEST["message"]);
 		echo "<p>".$message."</p>\n";
@@ -29,13 +31,16 @@
 <?php
 	$user = null;
 	if(!($user = $s->get_user())) {
+		// not logged in
 		if(isset($_REQUEST["username"]) && isset($_REQUEST["password"])) {
+			// logging in
 			/* Neil: I don't know if these escapes are correct */
 			$user = strip_tags(stripslashes($db->escape_string($_REQUEST["username"])));
 			$pass = $_REQUEST["password"];
 			$s->login($user, $pass) or $user = null;
 		}
 	} else if(isset($_REQUEST["logoff"])) {
+		// logging out
 		$s->logoff();
 		$user = null;
 	}
