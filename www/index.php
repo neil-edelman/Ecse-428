@@ -44,8 +44,8 @@
 		$s->logoff();
 		$user = null;
 	}
-	if($user) {
-		echo "<h1>Welcome ".$user."</h1>\n";
+	if($user && ($info = $s->user_info($user))) {
+		echo "<h1>Welcome ".$info["FirstName"]." ".$info["LastName"]." (".$user.")</h1>\n";
 ?>
 <p>
 <form method = "get">

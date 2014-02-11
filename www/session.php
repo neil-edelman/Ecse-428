@@ -9,7 +9,7 @@
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
 		/* (seconds) */
-		const SESSION_TIME = 5;
+		const SESSION_TIME = 5; /* <- change */
 
 		/* prevents multiple sessions being created */
 		private static $session = null;
@@ -239,7 +239,7 @@
 		final public function new_user($user, $pass, $first, $last) {
 
 			if(!($db = $this->db) || !$this->active) {
-				$this->status = "logoff: database connection closed";
+				$this->status = "new_user: database connection closed";
 				return null;
 			}
 
@@ -259,6 +259,42 @@
 			$stmt and $stmt->close();
 
 			return $created;
+		}
+
+		/** gets the info associated with a user (or null)
+		 @return the user info as an associative array
+		 @author Neil */
+		final public function user_info($user) {
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "user_info: database connection closed";
+				return null;
+			}
+
+			$info = null;
+			try {
+				$stmt = $db->prepare("SELECT username, password, FirstName, LastName, Privilege FROM "
+									 ."Users WHERE username = ? "
+									 ."LIMIT 1") or throw_exception("prepare");
+				$stmt->bind_param("s", $user) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$stmt->bind_result($username, $password, $FirstName, $LastName, $Privilege);
+				if($stmt->fetch()) {
+					$info["username"]  = $username;
+					$info["password"]  = $password;
+					$info["FirstName"] = $FirstName;
+					$info["LastName"]  = $LastName;
+					$info["Privilege"] = $Privilege;
+				} else {
+					$this->status = "not a user";
+				}
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+
+			return $info;
 		}
 
 		/** this is an alias of versions > 5.3
