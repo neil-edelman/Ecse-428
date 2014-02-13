@@ -326,12 +326,28 @@
 
 	}
 
+	/** returns whether your allowed to make changes to stuff
+	 @param info the assoc array returned from user_info
+	 @return true/false
+	 @author Neil */
+	function is_admin($info) {
+		return $info["Privilege"] == "admin" || $info["Privilege"] == "manager";
+	}
+
 	/** create new exception; this is sytactic sugar
 	 @param message message (defualt null)
 	 @param code the error code (default null)
 	 @author Neil */
 	function throw_exception($message = null, $code = null) {
 		throw new Exception($message, $code);
+	}
+
+	/** redirect to index.php on error
+	 @param message message (defualt null)
+	 @author Neil */
+	function header_exception($message = null) {
+		header("Location: index.php?message=Error+".urlencode($message));
+		exit();
 	}
 
 ?>

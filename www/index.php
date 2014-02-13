@@ -5,6 +5,7 @@
 	$s = new Session();
 
 	$db = $s->link_database();
+
 ?>
 <!doctype html>
 
