@@ -172,7 +172,7 @@
 			}
 			$stmt and $stmt->close();
 
-			if(!isset($loggedin)) return null;
+			if(!$loggedin) return null;
 
 			/* store the session - local version */
 			$session                          = session_id();
