@@ -229,26 +229,28 @@
 			return $success;
 		}
 
-		/** new user? assumes valid input and access (this will have to be updated)
+		/** new user? assumes valid input and access
 		 @param user username
-		 @param pass password
+		 @param pass password (is hashed)
 		 @param first first name
 		 @param last last name
 		 @return the username created or null
 		 @author Neil */
-		final public function new_user($user, $pass, $first, $last) {
+		final public function new_user($user, $pass, $first, $last, $email, $privilege) {
 
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "new_user: database connection closed";
 				return null;
 			}
 
+			$hash = password_hash($pass);
+
 			$created = null;
 			try {
 				$stmt = $db->prepare("INSERT INTO "
-									 ."Users(username, password, FirstName, LastName) "
-									 ."VALUES (?, ?, ?, ?)") or throw_exception("prepare");
-				$stmt->bind_param("ssss", $user, $pass, $first, $last) or throw_exception("binding");
+									 ."Users(username, password, FirstName, LastName, Email, Privilege) "
+									 ."VALUES (?, ?, ?, ?, ?, ?)") or throw_exception("prepare");
+				$stmt->bind_param("ssss", $user, $hash, $first, $last, $email, $privilege) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
 				$created = $user;
 			} catch(Exception $e) {
@@ -345,8 +347,10 @@
 	/** redirect to index.php on error
 	 @param message message (defualt null)
 	 @author Neil */
-	function header_exception($message = null) {
-		header("Location: index.php?message=Error+".urlencode($message));
+	function header_error($message = null) {
+		header($_SERVER["SERVER_PROTOCOL"]." 500 Internal Server Error", true, 500);
+		echo "500 Internal Server Error: ".$message.".\n\n";
+		echo "Click <a href = \"index.php\">here to start again</a>.\n";
 		exit();
 	}
 

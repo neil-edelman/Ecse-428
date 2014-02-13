@@ -4,10 +4,10 @@
 
 	$s = new Session();
 
-	$db = $s->link_database() or header_exception("database");
-	$user = $s->get_user() or header_exception("user");
-	$info = $s->user_info($user) or header_exception("user info");
-	is_admin($info) or header_exception("not authorised");
+	$db = $s->link_database() or header_error("database error");
+	$user = $s->get_user() or header_error("user error");
+	$info = $s->user_info($user) or header_error("user info error");
+	is_admin($info) or header_error("not authorised");
 
 	if(isset($_REQUEST["username"]))  $username = strip_tags(stripslashes($_REQUEST["username"]));
 	if(isset($_REQUEST["password"]))  $password = password_hash($_REQUEST["password"]);

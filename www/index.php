@@ -4,7 +4,7 @@
 
 	$s = new Session();
 
-	$db = $s->link_database();
+	$db = $s->link_database() or header_error("database error");
 
 ?>
 <!doctype html>
