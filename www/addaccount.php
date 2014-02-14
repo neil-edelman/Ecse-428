@@ -32,11 +32,11 @@
             <h1>Add a new user account</h1>
             <div>
 Add limits on the html!
-            <label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>" maxlength="<?php echo Session::USERNAME_MAX?>"/><br/>
-            <label>Password:</label> <input type="text" name="password"/><br/>
-            <label>First Name:</label> <input type="text" name="firstname" value = "<?php echo $first?>"/><br/>
-            <label>Last Name:</label> <input type="text" name="lastname" value = "<?php echo $last?>"/><br/>
-            <label>Email:</label> <input type="email" name="email" value = "<?php echo $email?>"/><br/>
+            <label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>" maxlength = "<?php echo Session::USERNAME_MAX?>"/><br/>
+            <label>Password:</label> <input type="text" name="password" maxlength = "<?php echo Session::PASSWORD_MAX?>"/><br/>
+            <label>First Name:</label> <input type="text" name="firstname" value = "<?php echo $first?>" maxlength = "<?php echo Session::FIRST_MAX?>"/><br/>
+            <label>Last Name:</label> <input type="text" name="lastname" value = "<?php echo $last?>" maxlength = "<?php echo Session::LAST_MAX?>"/><br/>
+            <label>Email:</label> <input type="email" name="email" value = "<?php echo $email?>" maxlength = "<?php echo Session::EMAIL_MAX?>"/><br/>
             <label>Privilege:</label>
             <select name="privilege">
                 <option <?php echo $privilege=="wait"?"selected ":""?>value="wait">Wait Staff</option>
