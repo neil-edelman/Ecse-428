@@ -98,7 +98,7 @@
 			}
 			if($is_ready) {
 				if($s->new_user($username, $password, $first, $last, $email, $privilege)) {
-					echo "Account created ".$username.".<br/>\n";
+					echo "Account &quot;".$username."&quot; created.<br/>\n";
 				} else {
 					echo "Account not created: ".$s->status()."<br/>\n";
 				}
