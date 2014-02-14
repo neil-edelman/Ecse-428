@@ -31,7 +31,8 @@
         <form method="post">
             <h1>Add a new user account</h1>
             <div>
-            <label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>"/><br/>
+Add limits on the html!
+            <label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>" maxlength="<?php echo Session::USERNAME_MAX?>"/><br/>
             <label>Password:</label> <input type="text" name="password"/><br/>
             <label>First Name:</label> <input type="text" name="firstname" value = "<?php echo $first?>"/><br/>
             <label>Last Name:</label> <input type="text" name="lastname" value = "<?php echo $last?>"/><br/>

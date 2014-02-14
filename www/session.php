@@ -16,7 +16,7 @@
 		const PASSWORD_MAX = 70; /* hmm */
 		const FIRST_MAX    = 32; /* should be WAY higher; I have friends > 32 */
 		const LAST_MAX     = 32; /* lol */
-		const EMAIL_MAX    = 64; /* really? */
+		const EMAIL_MAX    = 64; /* too short */
 
 		/* prevents multiple sessions being created */
 		private static $session = null;
@@ -105,7 +105,8 @@
 					$last = new DateTime($activity, $utc);
 					$now  = new DateTime(gmdate("Y-m-d H:i:s"), $utc);
 					$diff = $now->getTimestamp() - $last->getTimestamp();
-					/* fixme: this is awful */
+					/* fixme: this is awful, but we want to call logoff and
+					 before we do, close must be called */
 					if($diff > self::SESSION_TIME) {
 						$this->status = $diff."s timeout";
 						$stmt->close(); /* no nesting stmt */
@@ -285,17 +286,18 @@
 
 			$info = null;
 			try {
-				$stmt = $db->prepare("SELECT username, password, FirstName, LastName, Privilege FROM "
+				$stmt = $db->prepare("SELECT username, password, FirstName, LastName, Email, Privilege FROM "
 									 ."Users WHERE username = ? "
 									 ."LIMIT 1") or throw_exception("prepare");
 				$stmt->bind_param("s", $user) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
-				$stmt->bind_result($username, $password, $FirstName, $LastName, $Privilege);
+				$stmt->bind_result($username, $password, $FirstName, $LastName, $Email, $Privilege);
 				if($stmt->fetch()) {
 					$info["username"]  = $username;
 					$info["password"]  = $password;
 					$info["FirstName"] = $FirstName;
 					$info["LastName"]  = $LastName;
+					$info["Email"]     = $Email;
 					$info["Privilege"] = $Privilege;
 				} else {
 					$this->status = "not a user";
@@ -359,6 +361,11 @@
 	function header_error($message = null) {
 		header($_SERVER["SERVER_PROTOCOL"]." 500 Internal Server Error", true, 500);
 		echo "500 Internal Server Error: ".$message.".\n\n";
+		if($session) {
+			echo "Session status: ".$session->status.".\n\n";
+		} else {
+			echo "Session not started.\n\n";
+		}
 		echo "Click <a href = \"index.php\">here to start again</a>.\n";
 		exit();
 	}
