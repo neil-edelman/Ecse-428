@@ -5,13 +5,13 @@
 	$s = new Session();
 
 	$db = $s->link_database() or header_error("database error");
-	$user = $s->get_user() or header_error("user error");
+	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
 	is_admin($info) or header_error("not authorised");
 
 	/* if the things are set, get them into vars */
 	isset($_REQUEST["username"])  and $username = strip_tags(stripslashes($_REQUEST["username"]));
-	isset($_REQUEST["password"])  and $password = password_hash($_REQUEST["password"]);
+	isset($_REQUEST["password"])  and $_REQUEST["password"] != "" and $password = password_hash($_REQUEST["password"]);
 	isset($_REQUEST["firstname"]) and $first    = strip_tags(stripslashes($_REQUEST["firstname"]));
 	isset($_REQUEST["lastname"])  and $last     = strip_tags(stripslashes($_REQUEST["lastname"]));
 	isset($_REQUEST["email"])     and $email    = strip_tags(stripslashes($_REQUEST["email"]));
@@ -33,15 +33,15 @@
             <div>
             <label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>"/><br/>
             <label>Password:</label> <input type="text" name="password"/><br/>
-            <label>First Name:</label> <input type="text" name="firstname" value = "<?php echo $firstname?>"/><br/>
-            <label>Last Name:</label> <input type="text" name="lastname" value = "<?php echo $lastname?>"/><br/>
+            <label>First Name:</label> <input type="text" name="firstname" value = "<?php echo $first?>"/><br/>
+            <label>Last Name:</label> <input type="text" name="lastname" value = "<?php echo $last?>"/><br/>
             <label>Email:</label> <input type="email" name="email" value = "<?php echo $email?>"/><br/>
             <label>Privilege:</label>
             <select name="privilege">
-                <option <?php echo $privilege="wait"?"selected ":""?>value="wait">Wait Staff</option>
-                <option <?php echo $privilege="cook"?"selected ":""?>value="cook">Cook Staff</option>
-                <option <?php echo $privilege="manager"?"selected ":""?>value="manager">Manager</option>
-                <option <?php echo $privilege="admin"?"selected ":""?>value="admin">System Admin</option>
+                <option <?php echo $privilege=="wait"?"selected ":""?>value="wait">Wait Staff</option>
+                <option <?php echo $privilege=="cook"?"selected ":""?>value="cook">Cook Staff</option>
+                <option <?php echo $privilege=="manager"?"selected ":""?>value="manager">Manager</option>
+                <option <?php echo $privilege=="admin"?"selected ":""?>value="admin">System Admin</option>
             </select>
             <br/>
 			<input type = "submit" value = "New"/>
@@ -68,9 +68,10 @@
 				   || !isset($privilege)
 				   || empty($username)
 				   || empty($password)
-				   || empty($firstname)
-				   || empty($lastname)
-				   || empty($email)  ) {
+				   || empty($first)
+				   || empty($last)
+				   || empty($email)
+				   || empty($privilege)) {
 					$is_ready = false;
 					echo "You did not enter all the required information.<br/>\n";
 				}

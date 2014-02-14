@@ -1,57 +1,49 @@
 <?php
-	session_start();
+	
 	include "session.php";	
 	
-	$loggeduser = check_login();	// $loggeduser stores the logged username. Use freely.
-	if ($loggeduser == "null") {	// If no one is logged in, return to loginpage.
-		header("Location: loginpage.php");
-		die();
-	}
-	$privilege = check_privilege($loggeduser);	// $privilege stores the user's privilege. Use freely.
-?>
+	$s = new Session();
+	
+	$db = $s->link_database() or header_error("database error");
+	$user = $s->get_user() or header_error("user timeout error");
+	$info = $s->user_info($user) or header_error("user info error");
 
+?>
 <!DOCTYPE html>
-<!--
-Login Page
--->
 
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>View Personal Information</title>
+		<meta charset="UTF-8">
+		<meta name = "Author" content = "Team RMS">
+		<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
+		<link rel = "stylesheet" type = "text/css" href = "style.css">
+		<title>View Personal Information</title>
     </head>
     <body>
 
 	<p>Here is your personal information.</p>
 
-	<?php
+<ul>
+<?php
+	echo "<li>Username: " . $info["username"] . "</li>\n";
 
-		// Query from the database's Users table all the values we need.
+	echo "<li>Password (encrypted) (It also has info on the seed; DO NOT SHOW THIS EVER -Neil): " . $info["password"] . "</li>\n";
 
-		$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
-		$user = mysqli_fetch_row(mysqli_query($server, "SELECT * FROM Users WHERE Username = '$loggeduser';"));
-	
-		$password = $user[1];
-		$firstname = $user[2];
-		$lastname = $user[3];
-		$email = $user[4];
-		
+	echo "<li>First Name: " . $info["FirstName"] . "</li>\n";
 
-		// Print all the values we queried.
+	echo "<li>Last Name: " . $info["LastName"] . "</li>\n";
 
-		echo "<br>Username: " . $loggeduser;
+	echo "<li>E-mail: " . $info["Email"] . "</li>\n";
 
-		echo "<br>Password (encrypted): " . $password;
+	echo "<li>Privilege: " . $info["Privilege"] . "</li>\n";
 
-		echo "<br>First Name: " . $firstname;
+?>
+</ul>
 
-		echo "<br>Last Name: " . $lastname;
+		<p>
+			Go back to the <a href = "mainmenu.php">main menu</a>.
+		</p>
 
-		echo "<br>E-mail: " . $email;
+	</body>
 
-		echo "<br>Privilege: " . $privilege;
-
-	?>   	  
-		        
-    </body>
 </html>

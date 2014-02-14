@@ -9,7 +9,14 @@
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
 		/* (seconds) */
-		const SESSION_TIME = 5; /* <- change */
+		const SESSION_TIME = 60; /* <- change */
+
+		/* add account constants taken from db */
+		const USERNAME_MAX = 64;
+		const PASSWORD_MAX = 70; /* hmm */
+		const FIRST_MAX    = 32; /* should be WAY higher; I have friends > 32 */
+		const LAST_MAX     = 32; /* lol */
+		const EMAIL_MAX    = 64; /* really? */
 
 		/* prevents multiple sessions being created */
 		private static $session = null;
@@ -17,7 +24,8 @@
 		private $db     = null;
 		private $status = "okay";
 		/* when destroy_session() sets $active = false but the session is still
-		 active because destroy_session() doesn't do like it says exactly */
+		 active because destroy_session() doesn't do like it says exactly;
+		 this is not needed when having multipage? */
 		private $active = true;
 
 		/** session_start is called idempotently at the BEGINNING;
@@ -132,6 +140,8 @@
 				$error = ($stmt ? $stmt->error : $db->error);
 				$this->status = "is_logged_in ".$e->getMessage()." update time failed: (".$errno.") ".$error;
 			}
+			/* fixme: rehash the pw
+			 (that might be overdoing it for this project) */
 			$stmt and $stmt->close();
 
 			return $logged;
@@ -250,7 +260,7 @@
 				$stmt = $db->prepare("INSERT INTO "
 									 ."Users(username, password, FirstName, LastName, Email, Privilege) "
 									 ."VALUES (?, ?, ?, ?, ?, ?)") or throw_exception("prepare");
-				$stmt->bind_param("ssss", $user, $hash, $first, $last, $email, $privilege) or throw_exception("binding");
+				$stmt->bind_param("ssssss", $user, $hash, $first, $last, $email, $privilege) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
 				$created = $user;
 			} catch(Exception $e) {

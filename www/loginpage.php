@@ -26,29 +26,25 @@
 		<title>Login</title>
     </head>
     <body>
-<p>
-<?php
-	echo "User: ".$user;
-?>
-</p>
         <form method="post">
             <h1>Log on</h1>
 
 			<h2>Username</h2>
 			<p>Please enter the username <em>provided by your manager.</em></p>
-			<div><label>Username:</label> <input type="text" name="username"></div>
+			<div><label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>"/></div>
 
 			<h2>Password</h2>  			 
 			<p>Please enter the password <em>provided by your manager.</em></p>
-			<div><label>Password:</label> <input type="password" name="password"></div>
+			<div><label>Password:</label> <input type="password" name="password"/></div>
 
-			<p><input type="submit" value="Login"></p>
+			<p></p>
+			<div><label></label><input type="submit" value="Login"></div>
         </form>
+		<p></p>
 
 <?php
 	if($is_complete) {
 		echo "<p>\nServer returned: ".$s->status().".\n</p>\n";
-		echo "<p>\n".$username.":".$password.".\n</p>\n";
 ?>
 
 		<h3>Forgotten password?</h3>
