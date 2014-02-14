@@ -6,9 +6,12 @@
 
 	$db = $s->link_database() or header_error("database error");
 
+	$username = null;
+	$password = null;
 	isset($_REQUEST["username"])  and $username = strip_tags(stripslashes($_REQUEST["username"]));
 	isset($_REQUEST["password"])  and $password = $_REQUEST["password"];
 
+	$is_complete = false;
 	$username and $password and $is_complete = true;
 	if($is_complete && $s->login($username, $password)) {
 		header("Location: mainmenu.php");

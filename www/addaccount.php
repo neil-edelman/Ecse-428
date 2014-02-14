@@ -31,18 +31,31 @@
         <form method="post">
             <h1>Add a new user account</h1>
             <div>
-Add limits on the html!
-            <label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>" maxlength = "<?php echo Session::USERNAME_MAX?>"/><br/>
-            <label>Password:</label> <input type="text" name="password" maxlength = "<?php echo Session::PASSWORD_MAX?>"/><br/>
-            <label>First Name:</label> <input type="text" name="firstname" value = "<?php echo $first?>" maxlength = "<?php echo Session::FIRST_MAX?>"/><br/>
-            <label>Last Name:</label> <input type="text" name="lastname" value = "<?php echo $last?>" maxlength = "<?php echo Session::LAST_MAX?>"/><br/>
-            <label>Email:</label> <input type="email" name="email" value = "<?php echo $email?>" maxlength = "<?php echo Session::EMAIL_MAX?>"/><br/>
+			<label>Username:</label>
+<input type="text" name="username"
+value = "<?php if(isset($username)) echo $username;?>"
+maxlength = "<?php echo Session::USERNAME_MAX;?>"/><br/>
+            <label>Password:</label>
+<input type="text" name="password"
+maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/>
+            <label>First Name:</label>
+<input type="text" name="firstname"
+value = "<?php if(isset($first)) echo $first;?>"
+maxlength = "<?php echo Session::FIRST_MAX;?>"/><br/>
+            <label>Last Name:</label>
+<input type="text" name="lastname"
+value = "<?php if(isset($last)) echo $last;?>"
+maxlength = "<?php echo Session::LAST_MAX;?>"/><br/>
+            <label>Email:</label>
+<input type="email" name="email"
+value = "<?php if(isset($email)) echo $email;?>"
+maxlength = "<?php echo Session::EMAIL_MAX;?>"/><br/>
             <label>Privilege:</label>
             <select name="privilege">
-                <option <?php echo $privilege=="wait"?"selected ":""?>value="wait">Wait Staff</option>
-                <option <?php echo $privilege=="cook"?"selected ":""?>value="cook">Cook Staff</option>
-                <option <?php echo $privilege=="manager"?"selected ":""?>value="manager">Manager</option>
-                <option <?php echo $privilege=="admin"?"selected ":""?>value="admin">System Admin</option>
+                <option <?php if(isset($privilege)) echo $privilege=="wait"?"selected ":"";?>value="wait">Wait Staff</option>
+                <option <?php if(isset($privilege)) echo $privilege=="cook"?"selected ":"";?>value="cook">Cook Staff</option>
+                <option <?php if(isset($privilege)) echo $privilege=="manager"?"selected ":"";?>value="manager">Manager</option>
+                <option <?php if(isset($privilege)) echo $privilege=="admin"?"selected ":"";?>value="admin">System Admin</option>
             </select>
             <br/>
 			<input type = "submit" value = "New"/>
