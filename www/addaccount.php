@@ -11,7 +11,7 @@
 
 	/* if the things are set, get them into vars */
 	isset($_REQUEST["username"])  and $username = strip_tags(stripslashes($_REQUEST["username"]));
-	isset($_REQUEST["password"])  and $_REQUEST["password"] != "" and $password = password_hash($_REQUEST["password"]);
+	isset($_REQUEST["password"])  and $_REQUEST["password"] != "" and $password = $_REQUEST["password"];
 	isset($_REQUEST["firstname"]) and $first    = strip_tags(stripslashes($_REQUEST["firstname"]));
 	isset($_REQUEST["lastname"])  and $last     = strip_tags(stripslashes($_REQUEST["lastname"]));
 	isset($_REQUEST["email"])     and $email    = strip_tags(stripslashes($_REQUEST["email"]));

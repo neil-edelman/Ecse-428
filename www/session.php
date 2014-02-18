@@ -8,8 +8,8 @@
 		const DATABASE = "payomca_rms";
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
-		/* (seconds) */
-		const SESSION_TIME = 60; /* <- change */
+		/* 60s/m * 60m/h * 4h (seconds) */
+		const SESSION_TIME = 14400;
 
 		/* add account constants taken from db */
 		const USERNAME_MAX = 64;
@@ -149,7 +149,7 @@
 		}
 
 		/** log in
-		 @param user password
+		 @param user password (unencrypted)
 		 @param pass username
 		 @return the user who is logged in (can be null)
 		 @author Neil */
@@ -254,7 +254,7 @@
 				return null;
 			}
 
-			$hash = password_hash($pass);
+			$hash = $this->password_hash($pass);
 
 			$created = null;
 			try {
@@ -326,6 +326,18 @@
 		final private static function password_verify($plain, $hash) {		
 			return crypt($plain, $hash) == $hash;
 		}
+
+		/** this is an alias of versions > 5.3
+		 @param plain plain pswd
+		 @return crypt pswd
+		 @author Neil */
+		final private static function password_hash($plain) {
+			$salt = bin2hex(openssl_random_pseudo_bytes(22, $isCrypto));
+			$isCrypto or die("No cryptography on this server.");
+			/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
+			return crypt($plain, "$2a$07$".$salt);
+		}
+
 	}
 
 	/** returns whether your allowed to make changes to stuff
@@ -334,17 +346,6 @@
 	 @author Neil */
 	function is_admin($info) {
 		return $info["Privilege"] == "admin" || $info["Privilege"] == "manager";
-	}
-
-	/** this is an alias of versions > 5.3
-	 @param plain plain pswd
-	 @return crypt pswd
-	 @author Neil */
-	function password_hash($plain) {
-		$salt = bin2hex(openssl_random_pseudo_bytes(22, $isCrypto));
-		$isCrypto or die("No cryptography on this server.");
-		/* Blowfish: "$2a" + "$xx" xx=number of iterations + "$" + 22chars */
-		return crypt($plain, "$2a$07$".$salt);
 	}
 
 	/** create new exception; this is sytactic sugar
