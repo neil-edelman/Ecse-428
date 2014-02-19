@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 08, 2014 at 11:26 AM
+-- Generation Time: Feb 18, 2014 at 05:28 PM
 -- Server version: 5.5.34-cll-lve
 -- PHP Version: 5.3.28
 
@@ -83,8 +83,31 @@ CREATE TABLE IF NOT EXISTS `SessionID` (
   `username` varchar(64) NOT NULL,
   `ip` varchar(45) NOT NULL,
   `activity` datetime NOT NULL,
-  PRIMARY KEY (`session_id`)
+  PRIMARY KEY (`session_id`),
+  KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `SessionID`
+--
+
+INSERT INTO `SessionID` (`session_id`, `username`, `ip`, `activity`) VALUES
+('9879lq9dfn9gh773ks7e14o5c3', 'user', '142.157.35.20', '2014-02-11 16:19:08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Shifts`
+--
+
+CREATE TABLE IF NOT EXISTS `Shifts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(64) NOT NULL,
+  `checkin` datetime NOT NULL,
+  `checkout` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -100,6 +123,16 @@ CREATE TABLE IF NOT EXISTS `Table` (
   PRIMARY KEY (`Table Number`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `Table`
+--
+
+INSERT INTO `Table` (`Table Number`, `Maximum Size`, `Current Size`, `Status`) VALUES
+(1, 10, 9, 'vacant'),
+(2, 2, 2, 'vacant'),
+(3, 6, 4, 'vacant'),
+(4, 4, 1, 'vacant');
+
 -- --------------------------------------------------------
 
 --
@@ -113,20 +146,22 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `LastName` varchar(32) NOT NULL,
   `Email` varchar(64) NOT NULL,
   `Privilege` enum('wait','manager','cook','admin') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`username`),
-  UNIQUE KEY `Username` (`username`)
+  `checkin` datetime DEFAULT NULL,
+  PRIMARY KEY (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Users`
 --
 
-INSERT INTO `Users` (`username`, `password`, `FirstName`, `LastName`, `Email`, `Privilege`) VALUES
-('lol', '$2a$07$f89f264852d120402d333OyGDQNH.vWHkfSC5ZX8VtIBZ5aR1gLzu', 'lol', 'lol', 'lol@lol.lol', 'cook'),
-('lola', '$2a$07$6b92d3c9af94ad3583b13euygxg0fSADpN36OLcl0kfbNsU5H.Ffi', 'lola', 'lola', 'lola@gho.com', 'wait'),
-('Dude', '$2a$07$0554b5383910c0454659duHkm7lnB7hIVd0LVpWZUY4CtW5QKaB5e', 'Capitaine', 'Mec', 'SupremeCaptain@mail.com', 'manager'),
-('Zealot', '$2a$07$05b418beafe1d36bd705euvaosDlwHUrBJfsJPmKU0PkX7EZ1PQFG', 'Executor', 'Psiblade', 'MyLifeForAiur@mail.aiur.sc', 'wait'),
-('nemo', '$2a$07$ea2ca2c74082818d7d203u0SEF9SCGvWujqIwQJkN4Hd0e9TKDpIy', 'nemo', 'nemo', '', 'wait');
+INSERT INTO `Users` (`username`, `password`, `FirstName`, `LastName`, `Email`, `Privilege`, `checkin`)
+VALUES
+	('PayomPayomPayom','$2a$07$ec123ba411443c936abb7unk5GtS52ff3MZ9oTMsyJqJ3qZMOLdBm','Payom','Meshgin','payom.meshgin@whip.org','admin','0000-00-00 00:00:00'),
+	('user','$2a$07$46af97b2794bb8a5f81a4ubUd/Nt0XRDFvO5zZL.Wl4PbOR.4Mi8q','USer','User','mail@payom.ca','wait','0000-00-00 00:00:00'),
+	('lol','$2a$07$15856ce710660f56bb166e.85l4sV5CglC/2f.s5Vli37J7Q1pxe6','Lola','Unicorn','lol@lol.lol','admin',NULL),
+	('sasi','$2a$07$56631bfeb139fc1ce70a6extZAFXZGkefMyCzrNaFgLcYiXfE8yhe','SAsithra','gerg','sasithra@gmail.com','wait','0000-00-00 00:00:00'),
+	('JonathanBouchard','$2a$07$6184f8c7c0cfc48540a03uwLuapkfkOpQq2jwyaRfI3WEQv5jh9b2','Jonathan','Bouchard','jonathan.bouchard2@mail.mcgill.c','admin','0000-00-00 00:00:00'),
+	('foo','$2a$07$71348fdcf46864d5ef0aeuXUlVan5Kkz3LxzLt6IyzdYe8lZxRAIu','Foo','Bar','foo@bar.baz','wait',NULL);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
