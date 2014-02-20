@@ -260,7 +260,7 @@
 			$created = null;
 			try {
 				$stmt = $db->prepare("INSERT INTO "
-									 ."Users(username, password, FirstName, LastName, Email, Privilege) "
+									 ."`Users` (`username`, `password`, `FirstName`, `LastName`, `Email`, `Privilege`) "
 									 ."VALUES (?, ?, ?, ?, ?, ?)") or throw_exception("prepare");
 				$stmt->bind_param("ssssss", $user, $hash, $first, $last, $email, $privilege) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
@@ -274,8 +274,6 @@
 
 			return $created;
 		}
-
-		
 		/** new table? assumes valid input and access
 		 @param tablenumber table ID
 		 @param maxsize maximum table size
@@ -283,18 +281,17 @@
 		 @param status table status: vacant, occupied
 		 @return the table ID created or null
 		 @author Yi Qing */
-		final public function new_table($tablenumber, $maxsize, $currentsize, $status)){
+		final public function new_table($tablenumber, $maxsize, $currentsize, $status){
 			if(!($db = $this->db) || !$this->active) {
-				$this->status = "new_user: database connection closed";
+				$this->status = "new_table: database connection closed";
 				return null;
 			}
 			
 			$created = null;
 			try {
-				$stmt = $db->prepare("INSERT INTO "
-									 ."Table(tablenumber, maxsize, currentsize, status) "
+				$stmt = $db->prepare("INSERT INTO `Table` (`tablenumber`, `maxsize`, `currentsize`, `status`) "
 									 ."VALUES (?, ?, ?, ?)") or throw_exception("prepare");
-				$stmt->bind_param("ssss", $tablenumber, $maxsize, $currentsize, $status) or throw_exception("binding");
+				$stmt->bind_param("iiis", $tablenumber, $maxsize, $currentsize, $status) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
 				$created = $tablenumber;
 			} catch(Exception $e) {
@@ -305,6 +302,7 @@
 			$stmt and $stmt->close();
 
 			return $created;
+			
 		}
 		
 		

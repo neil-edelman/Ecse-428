@@ -46,10 +46,11 @@ value = "<?php if(isset($first)) echo $first;?>"
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>Status:</label>
-<input type="text" name="status"
-value = "<?php if(isset($status)) echo $status;?>" 
-maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
-           
+            <select name="status">
+                <option <?php if(isset($status)) echo $status=="vacant"?"selected ":"";?>value="vacant">vacant</option>
+                <option <?php if(isset($status)) echo $status=="occupied"?"selected ":"";?>value="occupied">occupied</option>
+            </select>
+            <br/>
             <br/>
 			<input type = "submit" value = "New"/>
 			<br/>
@@ -62,7 +63,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			if(   isset($tablenumber)
 			   || isset($maxsize)
 			   || isset($currentsize)
-			   || isset($status)
+			   || isset($status)){
 				$is_ready = true;
 				if(   !isset($tablenumber)
 				   || !isset($maxsize)
@@ -71,7 +72,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				   || empty($tablenumber)
 				   || empty($maxsize)
 				   || empty($currentsize)
-				   || empty($status) {
+				   || empty($status)) {
 					$is_ready = false;
 					echo "You did not enter all the required information.<br/>\n";
 				}
@@ -86,10 +87,6 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				if(strlen($currentsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
 					echo "First name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
-				}
-				if(strlen($status) > Session::INTEGER_MAX) {
-					$is_ready = false;
-					echo "Last name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 				}
 			}
 			if($is_ready) {
