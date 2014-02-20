@@ -274,6 +274,39 @@
 			return $created;
 		}
 
+		
+		/** new table? assumes valid input and access
+		 @param tablenumber table ID
+		 @param maxsize maximum table size
+		 @param currentsize current size
+		 @param status table status: vacant, occupied
+		 @return the table ID created or null
+		 @author Yi Qing */
+		final public function new_table($tablenumber, $maxsize, $currentsize, $status)){
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "new_user: database connection closed";
+				return null;
+			}
+			
+			$created = null;
+			try {
+				$stmt = $db->prepare("INSERT INTO "
+									 ."Table(tablenumber, maxsize, currentsize, status) "
+									 ."VALUES (?, ?, ?, ?)") or throw_exception("prepare");
+				$stmt->bind_param("ssss", $tablenumber, $maxsize, $currentsize, $status) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$created = $tablenumber;
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "new_table ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+			$stmt and $stmt->close();
+
+			return $created;
+		}
+		
+		
 		/** gets the info associated with a user (or null)
 		 @return the user info as an associative array
 		 @author Neil */
