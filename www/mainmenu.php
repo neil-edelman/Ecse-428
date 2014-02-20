@@ -42,6 +42,7 @@
 <?php
 	if(is_admin($info)) {
 		echo "<p><a href = \"addaccount.php\">Add account</a>.</p>";
+		echo "<p>View <a href = \"createtable.php\">account information</a>.</p>";
 	}
 ?>
 
