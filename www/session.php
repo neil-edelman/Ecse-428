@@ -17,7 +17,8 @@
 		const FIRST_MAX    = 32; /* should be WAY higher; I have friends > 32 */
 		const LAST_MAX     = 32; /* lol */
 		const EMAIL_MAX    = 64; /* too short */
-
+		const INTEGER_MAX	   = 11; /* For tables */
+		
 		/* prevents multiple sessions being created */
 		private static $session = null;
 

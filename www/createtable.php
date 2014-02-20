@@ -17,3 +17,91 @@
 	isset($_REQUEST["status"])     	and $status			= strip_tags(stripslashes($_REQUEST["status"]));
 
 ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+		<meta name = "Author" content = "Team RMS">
+		<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
+		<link rel = "stylesheet" type = "text/css" href = "style.css">
+        <title>Create Table</title>
+    </head>
+	    <body>
+        <form method="post">
+            <h1>Add a new table</h1>
+            <div>
+			<label>Table ID:</label>
+<input type="text" name="tablenumber"
+value = "<?php if(isset($tablenumber)) echo $tablenumber;?>" 	
+maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
+
+            <label>Table Maximum Size:</label>
+<input type="text" name="maxsize"
+value = "<?php if(isset($maxsize)) echo $maxsize;?>" 
+maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
+
+            <label>Current Table Size:</label>
+<input type="text" name="currentsize"
+value = "<?php if(isset($first)) echo $first;?>"  
+maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
+
+            <label>Status:</label>
+<input type="text" name="status"
+value = "<?php if(isset($status)) echo $status;?>" 
+maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
+           
+            <br/>
+			<input type = "submit" value = "New"/>
+			<br/>
+			<input type = "reset" value = "Reset"/>
+			</div>
+        </form>
+		
+		<?php
+			$is_ready = false;
+			if(   isset($tablenumber)
+			   || isset($maxsize)
+			   || isset($currentsize)
+			   || isset($status)
+				$is_ready = true;
+				if(   !isset($tablenumber)
+				   || !isset($maxsize)
+				   || !isset($currentsize)
+				   || !isset($status)
+				   || empty($tablenumber)
+				   || empty($maxsize)
+				   || empty($currentsize)
+				   || empty($status) {
+					$is_ready = false;
+					echo "You did not enter all the required information.<br/>\n";
+				}
+				if(strlen($tablenumber) > Session::INTEGER_MAX) {
+					$is_ready = false;
+					echo "Username is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+				}
+				if(strlen($maxsize) > Session::INTEGER_MAX) {
+					$is_ready = false;
+					echo "Password is too long.<br/>\n";
+				}
+				if(strlen($currentsize) > Session::INTEGER_MAX) {
+					$is_ready = false;
+					echo "First name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+				}
+				if(strlen($status) > Session::INTEGER_MAX) {
+					$is_ready = false;
+					echo "Last name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+				}
+			}
+			if($is_ready) {
+				if($s->new_table($tablenumber, $maxsize, $currentsize, $status)) {
+					echo "Table &quot;".$tablenumber."&quot; created.<br/>\n";
+				} else {
+					echo "Table not created: ".$s->status()."<br/>\n";
+				}
+			}
+        ?>
+		
+	</body>
+	
+	
+</html>
