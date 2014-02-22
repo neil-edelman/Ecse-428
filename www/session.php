@@ -286,12 +286,12 @@
 
 			$info = null;
 			try {
-				$stmt = $db->prepare("SELECT username, password, FirstName, LastName, Email, Privilege FROM "
+				$stmt = $db->prepare("SELECT username, password, FirstName, LastName, Email, Privilege, checkin FROM "
 									 ."Users WHERE username = ? "
 									 ."LIMIT 1") or throw_exception("prepare");
 				$stmt->bind_param("s", $user) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
-				$stmt->bind_result($username, $password, $FirstName, $LastName, $Email, $Privilege);
+				$stmt->bind_result($username, $password, $FirstName, $LastName, $Email, $Privilege, $checkin);
 				if($stmt->fetch()) {
 					$info["username"]  = $username;
 					$info["password"]  = $password;
@@ -299,6 +299,7 @@
 					$info["LastName"]  = $LastName;
 					$info["Email"]     = $Email;
 					$info["Privilege"] = $Privilege;
+					$info["checkin"]   = $checkin;
 				} else {
 					$this->status = "not a user";
 				}
@@ -309,6 +310,64 @@
 			}
 
 			return $info;
+		}
+
+		/** @param user user
+		 @return if the user is checked in */
+		final public function is_checkedin($user) {
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "is_checkedin: database connection closed";
+				return null;
+			}
+
+			try {
+				$stmt = $db->prepare("SELECT checkin FROM Users "
+									 ."WHERE username = ? "
+									 ."LIMIT 1") or throw_exception("prepare");
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+		}
+
+		/** check in */
+		final public function checkin() {
+			
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "checkout: database connection closed";
+				return null;
+			}
+			
+			try {
+				$stmt = $db->prepare("UPDATE Users SET checkin = NULL "
+									 ."WHERE username = ? "
+									 ."LIMIT 1") or throw_exception("prepare");
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+		}
+
+		/** check out */
+		final public function checkout() {
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "checkout: database connection closed";
+				return null;
+			}
+
+			try {
+				$stmt = $db->prepare("UPDATE Users SET checkin = NULL "
+									 ."WHERE username = ? "
+									 ."LIMIT 1") or throw_exception("prepare");
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
 		}
 
 		/** ohnoz1! something has failed; get_status()
