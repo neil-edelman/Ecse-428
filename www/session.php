@@ -274,6 +274,7 @@
 
 			return $created;
 		}
+		
 		/** new table? assumes valid input and access
 		 @param tablenumber table ID
 		 @param maxsize maximum table size
@@ -303,6 +304,35 @@
 
 			return $created;
 			
+		}
+		
+		/** new table? assumes valid input and access
+		 @param tablenumber table ID
+		 @param maxsize maximum table size
+		 @param currentsize current size
+		 @param status table status: vacant, occupied
+		 @return the table ID created or null
+		 @author Yi Qing */
+		final public function edit_table($oritablenumber, $tablenumber, $maxsize, $currentsize, $status){
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "new_table: database connection closed";
+				return null;
+			}
+			
+			$created = null;
+			try {
+				$stmt = $db->prepare("UPDATE Tables SET tablenumber = ?, maxsize = ?, currentsize= ?, status= ? WHERE tablenumber = ?") or throw_exception("prepare");
+				$stmt->bind_param("iiisi", $tablenumber, $maxsize, $currentsize, $status, $oritablenumber) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$created = $tablenumber;
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "new_table ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+			$stmt and $stmt->close();
+
+			return $created;
 		}
 		
 		

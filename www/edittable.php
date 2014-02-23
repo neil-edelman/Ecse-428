@@ -9,6 +9,7 @@
 	$info = $s->user_info($user) or header_error("user info error");
 	is_admin($info) or header_error("not authorised");
 	
+	/* Save the original table value from the POST of the source page */
 	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'];
 	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
 	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
@@ -106,7 +107,17 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				} else {
 					echo "Table not created: ".$s->status()."<br/>\n";
 				}*/
-				echo "Table edit not available yet.<br/>\n";
+				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
+					echo "Table &quot;".$_SESSION["oritable"]."&quot; edited.<br/>\n";
+					echo "Table number: ".$tablenumber." <br/>\n";
+					echo "Table maxsize: ".$maxsize." <br/>\n";
+					echo "Table currentsize: ".$currentsize." <br/>\n";
+					echo "Table status: ".$status." <br/>\n";
+
+				} else {
+					echo "Table not edited: ".$s->status()."<br/>\n";
+				}
+				
 			}
         ?>
 		
