@@ -7,7 +7,7 @@
         <title>Create Table</title>
     </head>
 	    <body>
-        <form method="post" action="catching-var.php">
+        <form method="post" action="edittable.php">
 		
 		1. <input type="text" name = "name1"/><br/>
 		2. <input type="text" name = "name2"/><br/>

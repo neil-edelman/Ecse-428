@@ -289,7 +289,7 @@
 			
 			$created = null;
 			try {
-				$stmt = $db->prepare("INSERT INTO `Table` (`tablenumber`, `maxsize`, `currentsize`, `status`) "
+				$stmt = $db->prepare("INSERT INTO `Tables` (`tablenumber`, `maxsize`, `currentsize`, `status`) "
 									 ."VALUES (?, ?, ?, ?)") or throw_exception("prepare");
 				$stmt->bind_param("iiis", $tablenumber, $maxsize, $currentsize, $status) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
