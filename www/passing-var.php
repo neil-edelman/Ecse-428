@@ -9,10 +9,10 @@
 	    <body>
         <form method="post" action="edittable.php">
 		
-		1. <input type="text" name = "name1"/><br/>
-		2. <input type="text" name = "name2"/><br/>
-		3. <input type="text" name = "name3"/><br/>
-		4. <input type="text" name = "name4"/><br/>
+		1. <input type="text" name = "intable"/><br/>
+		2. <input type="text" name = "inmaxsize"/><br/>
+		3. <input type="text" name = "incurrsize"/><br/>
+		4. <input type="text" name = "instatus"/><br/>
 		
 		<input type="submit" name="submit"/>
 		

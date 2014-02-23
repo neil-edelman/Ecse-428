@@ -14,10 +14,10 @@
 	//$oricurrentsize = $_POST['name3'];
 	//$oristatus = $_POST['name4'];
 	
-	isset($_POST['name1']) and $_SESSION["oritable"] = $_POST['name1'];
-	isset($_POST['name2']) and $_SESSION["orimaxsize"]	= $_POST['name2'];
-	isset($_POST['name3']) and $_SESSION["oricurrentsize"]	= $_POST['name3'];
-	isset($_POST['name4']) and $_SESSION["oristatus"]	= $_POST['name4'];
+	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'];
+	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
+	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
+	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
 	
 	
 			/* if the things are set, get them into vars */
