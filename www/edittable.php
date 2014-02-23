@@ -73,7 +73,8 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
 			<br/>
-			<p><?php if(isset($submitted)) echo "Edit Complete. (return to calling page...)";?></p>
+			<p><?php if(isset($submitted)) echo "Edit Complete.";?><br/>
+			<?php if (!isset($_SESSION["oritable"])){ echo "This page is presently stale.  Please return to mainmenu";} ?></p>
 			</div>
         </form>
 		
@@ -116,6 +117,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				}*/
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
 					
+					/* Clear out temporary Session variables*/
 					unset($_SESSION['oritable']);
 					unset($_SESSION['orimaxsize']);
 					unset($_SESSION['oricurrentsize']);
