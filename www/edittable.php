@@ -14,7 +14,8 @@
 	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
 	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
 	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
-	
+
+
 			/* if the things are set, get them into vars */
 	isset($_REQUEST["tablenumber"])	and $tablenumber 	= strip_tags(stripslashes($_REQUEST["tablenumber"]));
 	isset($_REQUEST["maxsize"]) 	and $maxsize    	= strip_tags(stripslashes($_REQUEST["maxsize"]));
@@ -64,7 +65,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
             </select>
             <br/>
             <br/>
-			<input type = "submit" value = "New"/>
+			<input type = "submit" value = "New" <?php if (isset($firstuse)){ echo "disabled";} ?>/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
 			</div>
@@ -114,6 +115,12 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 					echo "Table currentsize: ".$currentsize." <br/>\n";
 					echo "Table status: ".$status." <br/>\n";
 
+					$_SESSION["oritable"] = $tablenumber;
+					$_SESSION["orimaxsize"]	= $maxsize;
+					$_SESSION["oricurrentsize"]	= $currentsize;
+					$_SESSION["oristatus"]	= $status;
+					
+					Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
 					echo "Table not edited: ".$s->status()."<br/>\n";
 				}
