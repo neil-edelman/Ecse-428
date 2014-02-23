@@ -14,7 +14,10 @@
 	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
 	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
 	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
-
+	if(isset($_SESSION['submitted'])){
+		$submitted = $_SESSION['submitted'];
+		unset($_SESSION['submitted']);
+	}
 
 			/* if the things are set, get them into vars */
 	isset($_REQUEST["tablenumber"])	and $tablenumber 	= strip_tags(stripslashes($_REQUEST["tablenumber"]));
@@ -70,6 +73,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
 			<br/>
+			<p><?php if(isset($submitted)) echo "Edit Complete. (return to calling page...)";?></p>
 			</div>
         </form>
 		
@@ -111,21 +115,12 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 					echo "Table not created: ".$s->status()."<br/>\n";
 				}*/
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
-					/*echo "<br/><br/>Table &quot;".$_SESSION["oritable"]."&quot; edited.<br/>\n";
-					echo "Updated table number: ".$tablenumber." <br/>\n";
-					echo "Updated table maxsize: ".$maxsize." <br/>\n";
-					echo "Updated table currentsize: ".$currentsize." <br/>\n";
-					echo "Updated table status: ".$status." <br/>\n";*/
-
-					/*$_SESSION["oritable"] = $tablenumber;
-					$_SESSION["orimaxsize"]	= $maxsize;
-					$_SESSION["oricurrentsize"]	= $currentsize;
-					$_SESSION["oristatus"]	= $status;*/
 					
 					unset($_SESSION['oritable']);
 					unset($_SESSION['orimaxsize']);
 					unset($_SESSION['oricurrentsize']);
 					unset($_SESSION['oristatus']);
+					$_SESSION['submitted'] = true;
 					
 					Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
