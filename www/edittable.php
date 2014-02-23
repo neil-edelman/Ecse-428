@@ -8,24 +8,18 @@
 	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
 	is_admin($info) or header_error("not authorised");
-
-	//$oritablenumber = $_POST['name1'];
-	//$orimaxsize = $_POST['name2'];
-	//$oricurrentsize = $_POST['name3'];
-	//$oristatus = $_POST['name4'];
 	
 	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'];
 	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
 	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
 	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
 	
-	
 			/* if the things are set, get them into vars */
-	/*isset($_REQUEST["tablenumber"])	and $tablenumber 	= strip_tags(stripslashes($_REQUEST["tablenumber"]));
+	isset($_REQUEST["tablenumber"])	and $tablenumber 	= strip_tags(stripslashes($_REQUEST["tablenumber"]));
 	isset($_REQUEST["maxsize"]) 	and $maxsize    	= strip_tags(stripslashes($_REQUEST["maxsize"]));
 	isset($_REQUEST["currentsize"])	and $currentsize   	= strip_tags(stripslashes($_REQUEST["currentsize"]));
 	isset($_REQUEST["status"])     	and $status			= strip_tags(stripslashes($_REQUEST["status"]));
-	*/
+	
 ?>
 <!DOCTYPE html>
 <html>
@@ -59,7 +53,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>Current Table Size:</label>
 <input type="text" name="currentsize"
-value = "<?php if(isset($first)) echo $first;?>"  
+value = "<?php if(isset($currentsize)) echo $currentsize;?>"  
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>Status:</label>
