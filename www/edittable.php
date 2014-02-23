@@ -37,37 +37,39 @@
             <h1>Edit Table</h1>
 			<label>Currently: <br/></label>
 			<?php
-			echo "Table Number: &quot;".$_SESSION["oritable"]."&quot;<br/>\n";
-			echo "Maximum Size: &quot;".$_SESSION["orimaxsize"]."&quot;<br/>\n";
-			echo "Current Size: &quot;".$_SESSION["oricurrentsize"]."&quot;<br/>\n";
-			echo "status: &quot;".$_SESSION["oristatus"]."&quot;<br/><br/><br/>\n";
+			echo "Previous Table Number: &quot;".$_SESSION["oritable"]."&quot;<br/>\n";
+			echo "Previous Maximum Size: &quot;".$_SESSION["orimaxsize"]."&quot;<br/>\n";
+			echo "Previous Current Size: &quot;".$_SESSION["oricurrentsize"]."&quot;<br/>\n";
+			echo "Previous status: &quot;".$_SESSION["oristatus"]."&quot;<br/><br/><br/>\n";
 			?>
+			
             <div>
-			<label>Table ID:</label>
+			<label>New Table ID:</label>
 <input type="text" name="tablenumber"
 value = "<?php if(isset($tablenumber)) echo $tablenumber;?>" 	
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
-            <label>Table Maximum Size:</label>
+            <label>New Table Maximum Size:</label>
 <input type="text" name="maxsize"
 value = "<?php if(isset($maxsize)) echo $maxsize;?>" 
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
-            <label>Current Table Size:</label>
+            <label>New Table Size:</label>
 <input type="text" name="currentsize"
 value = "<?php if(isset($currentsize)) echo $currentsize;?>"  
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
-            <label>Status:</label>
+            <label>New Status:</label>
             <select name="status">
                 <option <?php if(isset($status)) echo $status=="vacant"?"selected ":"";?>value="vacant">vacant</option>
                 <option <?php if(isset($status)) echo $status=="occupied"?"selected ":"";?>value="occupied">occupied</option>
             </select>
             <br/>
             <br/>
-			<input type = "submit" value = "New" <?php if (isset($firstuse)){ echo "disabled";} ?>/>
+			<input type = "submit" value = "Edit" <?php if (!isset($_SESSION["oritable"])){ echo "disabled";} ?>/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
+			<br/>
 			</div>
         </form>
 		
@@ -109,18 +111,18 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 					echo "Table not created: ".$s->status()."<br/>\n";
 				}*/
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
-					echo "Table &quot;".$_SESSION["oritable"]."&quot; edited.<br/>\n";
-					echo "Table number: ".$tablenumber." <br/>\n";
-					echo "Table maxsize: ".$maxsize." <br/>\n";
-					echo "Table currentsize: ".$currentsize." <br/>\n";
-					echo "Table status: ".$status." <br/>\n";
+					echo "<br/><br/>Table &quot;".$_SESSION["oritable"]."&quot; edited.<br/>\n";
+					echo "Updated table number: ".$tablenumber." <br/>\n";
+					echo "Updated table maxsize: ".$maxsize." <br/>\n";
+					echo "Updated table currentsize: ".$currentsize." <br/>\n";
+					echo "Updated table status: ".$status." <br/>\n";
 
 					$_SESSION["oritable"] = $tablenumber;
 					$_SESSION["orimaxsize"]	= $maxsize;
 					$_SESSION["oricurrentsize"]	= $currentsize;
 					$_SESSION["oristatus"]	= $status;
 					
-					Header('Location: '.$_SERVER['PHP_SELF']);
+					//Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
 					echo "Table not edited: ".$s->status()."<br/>\n";
 				}
