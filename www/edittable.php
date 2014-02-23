@@ -111,18 +111,23 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 					echo "Table not created: ".$s->status()."<br/>\n";
 				}*/
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
-					echo "<br/><br/>Table &quot;".$_SESSION["oritable"]."&quot; edited.<br/>\n";
+					/*echo "<br/><br/>Table &quot;".$_SESSION["oritable"]."&quot; edited.<br/>\n";
 					echo "Updated table number: ".$tablenumber." <br/>\n";
 					echo "Updated table maxsize: ".$maxsize." <br/>\n";
 					echo "Updated table currentsize: ".$currentsize." <br/>\n";
-					echo "Updated table status: ".$status." <br/>\n";
+					echo "Updated table status: ".$status." <br/>\n";*/
 
-					$_SESSION["oritable"] = $tablenumber;
+					/*$_SESSION["oritable"] = $tablenumber;
 					$_SESSION["orimaxsize"]	= $maxsize;
 					$_SESSION["oricurrentsize"]	= $currentsize;
-					$_SESSION["oristatus"]	= $status;
+					$_SESSION["oristatus"]	= $status;*/
 					
-					//Header('Location: '.$_SERVER['PHP_SELF']);
+					unset($_SESSION['oritable']);
+					unset($_SESSION['orimaxsize']);
+					unset($_SESSION['oricurrentsize']);
+					unset($_SESSION['oristatus']);
+					
+					Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
 					echo "Table not edited: ".$s->status()."<br/>\n";
 				}
