@@ -110,11 +110,6 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				}
 			}
 			if($is_ready) {
-				/*if($s->new_table($tablenumber, $maxsize, $currentsize, $status)) {
-					echo "Table &quot;".$tablenumber."&quot; created.<br/>\n";
-				} else {
-					echo "Table not created: ".$s->status()."<br/>\n";
-				}*/
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
 					
 					/* Clear out temporary Session variables*/
@@ -128,7 +123,6 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				} else {
 					echo "Table not edited: ".$s->status()."<br/>\n";
 				}
-				
 			}
         ?>
 		
