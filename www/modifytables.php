@@ -30,7 +30,7 @@
                     $table = $table . "<td>$row[$number_of_columns]</td>";                   
                 } 
                 $table = $table . "<td><form id= \"name\" method=\"post\" action=\"cleartable.php\">
-                                   <input name=\"tablenumber\" type=\"hidden\" value=\"$row[0]\">                                   
+                                   <input name=\"intable\" type=\"hidden\" value=\"$row[0]\">                                   
                                    <input name=\"submit\" type=\"submit\" value=\"Clear\">
                                    </form></td>";               
                 
