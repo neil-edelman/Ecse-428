@@ -45,6 +45,7 @@
 		echo "<p>View <a href = \"createtable.php\">account information</a>.</p>";
 	}
 ?>
+<p><a href = "viewtables.php">View Tables</a></p>
 
 <p><form><input type="submit" name="logout" value="Logout"></form></p>
 
