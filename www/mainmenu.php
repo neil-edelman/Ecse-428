@@ -40,8 +40,34 @@
 <p>View <a href = "viewpersonal.php">account information</a>.</p>
 
 <?php
-	if(is_admin($info)) {
-		echo "<p><a href = \"addaccount.php\">Add account</a>.</p>";
+	/* request check in/out */
+	if(isset($_REQUEST["checkout"]) && is_checkedin($info)) {
+		if($s->checkout($info)) {
+			echo "<p>You have been checked out.</p>\n\n";
+		} else {
+			echo "<p>There was an error and you may still be checked in; ".status()."</p>\n\n";
+		}
+		/* refesh user info; assert true */
+		$info = $s->user_info($user);
+	} else if(isset($_REQUEST["checkin"]) && !is_checkedin($info)) {
+		if($s->checkin($info)) {
+			echo "<p>You have been checked in.</p>\n\n";
+		} else {
+			echo "<p>There was an error and you may not be checked in; ".status()."</p>\n\n";
+		}
+		/* refesh user info; assert true */
+		$info = $s->user_info($user);
+	}
+
+	if(is_checkedin($info)) {
+		/* this is where all the functions that depend on check in lie */
+		if(is_admin($info)) {
+			echo "<p><a href = \"addaccount.php\">Add account</a>.</p>\n\n";
+		}
+		echo "<p><form><input type=\"submit\" name=\"checkout\" value=\"Check Out\"></form></p>\n\n";
+	} else {
+		/* or else show the button to check in */
+		echo "<p><form><input type=\"submit\" name=\"checkin\" value=\"Check In\"></form></p>\n\n";
 	}
 ?>
 

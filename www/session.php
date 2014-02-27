@@ -258,6 +258,7 @@
 
 			$created = null;
 			try {
+				/* checkin defaults to NULL which is very good */
 				$stmt = $db->prepare("INSERT INTO "
 									 ."Users(username, password, FirstName, LastName, Email, Privilege) "
 									 ."VALUES (?, ?, ?, ?, ?, ?)") or throw_exception("prepare");
@@ -312,62 +313,64 @@
 			return $info;
 		}
 
-		/** @param user user
-		 @return if the user is checked in */
-		final public function is_checkedin($user) {
+		/** check in
+		 @param info the assoc array returned from user_info
+		 @return wheather you are checked in
+		 @author Neil */
+		final public function checkin($info) {
+
+			if(!($username = $info["username"])) return false;
+			if( ($checkin  = $info["checkin"]))  return true;
 
 			if(!($db = $this->db) || !$this->active) {
-				$this->status = "is_checkedin: database connection closed";
-				return null;
+				$this->status = "checkin: database connection closed";
+				return false;
 			}
 
 			try {
-				$stmt = $db->prepare("SELECT checkin FROM Users "
+				$stmt = $db->prepare("UPDATE Users SET checkin = now() "
 									 ."WHERE username = ? "
 									 ."LIMIT 1") or throw_exception("prepare");
+				$stmt->bind_param("s", $username) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
 			} catch(Exception $e) {
 				$errno = ($stmt ? $stmt->errno : $db->errno);
 				$error = ($stmt ? $stmt->error : $db->error);
-				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
+				$this->status = "checkin ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
 			}
+
+			return true;
 		}
 
-		/** check in */
-		final public function checkin() {
-			
+		/** check out
+		 @param info the assoc array returned from user_info
+		 @return wheather you are checked out
+		 @author Neil */
+		final public function checkout($info) {
+
+			if(!($username = $info["username"])) return true;
+			if(!($checkin  = $info["checkin"]))  return true;
+
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "checkout: database connection closed";
-				return null;
+				return true;
 			}
-			
+
 			try {
 				$stmt = $db->prepare("UPDATE Users SET checkin = NULL "
 									 ."WHERE username = ? "
 									 ."LIMIT 1") or throw_exception("prepare");
+				$stmt->bind_param("s", $username) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
 			} catch(Exception $e) {
 				$errno = ($stmt ? $stmt->errno : $db->errno);
 				$error = ($stmt ? $stmt->error : $db->error);
-				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
-			}
-		}
-
-		/** check out */
-		final public function checkout() {
-
-			if(!($db = $this->db) || !$this->active) {
-				$this->status = "checkout: database connection closed";
-				return null;
+				$this->status = "checkout ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
 			}
 
-			try {
-				$stmt = $db->prepare("UPDATE Users SET checkin = NULL "
-									 ."WHERE username = ? "
-									 ."LIMIT 1") or throw_exception("prepare");
-			} catch(Exception $e) {
-				$errno = ($stmt ? $stmt->errno : $db->errno);
-				$error = ($stmt ? $stmt->error : $db->error);
-				$this->status = "user_info ".$e->getMessage()." failed: (".$errno.") ".$error;
-			}
+			return true;
 		}
 
 		/** ohnoz1! something has failed; get_status()
@@ -407,6 +410,14 @@
 		return $info["Privilege"] == "admin" || $info["Privilege"] == "manager";
 	}
 
+	/** 
+	 @param info the assoc array returned from user_info
+	 @return wheather you are checked in
+	 @author Neil */
+	function is_checkedin($info) {
+		return !is_null($info["checkin"]);
+	}
+
 	/** create new exception; this is sytactic sugar
 	 @param message message (defualt null)
 	 @param code the error code (default null)
@@ -429,6 +440,29 @@
 		echo "Click <a href = \"index.php\">here to start again</a>.\n";
 		exit();
 	}
+	
+	/* Larry Ullman, PHP 5 Advanced
+	function my_error_handler ($e_number, $e_message, $e_file, $e_line, $e_vars)
+	{
+		global $debug, $contact_email;
+		$message = "An error occurred in script '$e_file' on line $e_line: \n<BR />$e_message\n<br />";
+		$message .= "Date/Time: " . date('n-j-Y H:i:s') . "\n<br />";
+		$message .= "<pre>" . print_r ($e_vars, 1) . "</pre>\n<BR />";
+		if ($debug)
+		{
+			echo '<p class="error">'.$message.'</p>';
+		}
+		else
+		{
+			error_log($message, 1,$contact_email);
+			if (($e_number != E_NOTICE) && ($e_number < 2048))
+			{
+				echo '<p class="error">A system error occurred.  We apologize for the inconvenience.</p>';
+			}
+		}
+	}
+	set_error_handler('my_error_handler');
+	*/
 
 	// Returns the username of the currently logged in user. Returns "null" otherwise; as in an actual STRING called "null".
 	// Neil: use Session::get_user(); "null" (the string) is replaced by null (the value)
