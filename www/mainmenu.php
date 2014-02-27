@@ -64,6 +64,7 @@
 		/* this is where all the functions that depend on check in lie */
 		if(is_admin($info)) {
 			echo "<p><a href = \"addaccount.php\">Add account</a>.</p>\n\n";
+			echo "<p><a href = \"shifts.php\">View and edit shifts</a>.</p>\n\n";
 		}
 		echo "<p><form><input type=\"submit\" name=\"checkout\" value=\"Check Out\"></form></p>\n\n";
 	} else {

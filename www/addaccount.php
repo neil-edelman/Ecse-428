@@ -47,7 +47,7 @@ maxlength = "<?php echo Session::FIRST_MAX;?>"/><br/>
 value = "<?php if(isset($last)) echo $last;?>"
 maxlength = "<?php echo Session::LAST_MAX;?>"/><br/>
             <label>Email:</label>
-<input type="email" name="email"
+<input type="text" name="email"
 value = "<?php if(isset($email)) echo $email;?>"
 maxlength = "<?php echo Session::EMAIL_MAX;?>"/><br/>
             <label>Privilege:</label>
