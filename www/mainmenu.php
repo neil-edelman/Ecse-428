@@ -41,19 +41,20 @@
 
 <?php
 	/* request check in/out */
-	if(isset($_REQUEST["checkout"]) && is_checkedin($info)) {
+	$is_checkedin = is_checkedin($info);
+	if(isset($_REQUEST["checkout"]) && $is_checkedin) {
 		if($s->checkout($info)) {
 			echo "<p>You have been checked out.</p>\n\n";
 		} else {
-			echo "<p>There was an error and you may still be checked in; ".status()."</p>\n\n";
+			echo "<p>There was an error and you may still be checked in; ".$s->status()."</p>\n\n";
 		}
 		/* refesh user info; assert true */
 		$info = $s->user_info($user);
-	} else if(isset($_REQUEST["checkin"]) && !is_checkedin($info)) {
+	} else if(isset($_REQUEST["checkin"]) && !$is_checkedin) {
 		if($s->checkin($info)) {
 			echo "<p>You have been checked in.</p>\n\n";
 		} else {
-			echo "<p>There was an error and you may not be checked in; ".status()."</p>\n\n";
+			echo "<p>There was an error and you may not be checked in; ".$s->status()."</p>\n\n";
 		}
 		/* refesh user info; assert true */
 		$info = $s->user_info($user);
