@@ -357,6 +357,21 @@
 				return true;
 			}
 
+			/* entry in the shifts table */
+			try {
+				$stmt = $db->prepare("INSERT INTO "
+									 ."Shifts(username, checkin, checkout) "
+									 ."VALUES (?, ?, now())") or throw_exception("prepare");
+				$stmt->bind_param("ss", $username, $checkin) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "checkout shifts ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
+			}
+
+			/* check out */
 			try {
 				$stmt = $db->prepare("UPDATE Users SET checkin = NULL "
 									 ."WHERE username = ? "
