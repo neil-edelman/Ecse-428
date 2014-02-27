@@ -71,7 +71,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				   || !isset($status)
 				   || empty($tablenumber)
 				   || empty($maxsize)
-				   || empty($currentsize)
+				   || (empty($currentsize) && $currentsize != 0)
 				   || empty($status)) {
 					$is_ready = false;
 					echo "You did not enter all the required information.<br/>\n";
