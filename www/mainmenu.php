@@ -47,6 +47,8 @@
 ?>
 <p><a href = "viewtables.php">View Tables</a></p>
 
+<p><a href = "createtable.php">Create Tables</a></p>
+
 <p><form><input type="submit" name="logout" value="Logout"></form></p>
 
     </body>

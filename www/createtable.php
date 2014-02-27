@@ -55,6 +55,9 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			<input type = "submit" value = "New"/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
+			<p>
+			Go back to <a href = "mainmenu.php">mainmenu</a>.
+			</p>
 			</div>
         </form>
 		
