@@ -1,3 +1,6 @@
+tr:hover {
+    background-color: yellow;
+}
 /* colours; pretty fonts; encompases the page in a box */
 body {
 	background-color: white;
@@ -76,5 +79,3 @@ div.file-rightfixed {
 	padding-top: 1em;
 	padding-bottom: 1em;
 }
-
-

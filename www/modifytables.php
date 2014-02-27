@@ -2,8 +2,13 @@
     
     class modifytables {      
         
-        public function get_all_tables($db) {
-           $sqlQuery = "SELECT * FROM Tables";                        
+        public function get_all_tables($db, $ordering) {
+           if ($ordering == "default") {
+               $sqlQuery = "SELECT * FROM Tables";
+           } else {              
+               $sqlQuery = "SELECT * FROM Tables ORDER BY " . $ordering;               
+           }             
+                                 
            $result = mysqli_query($db, $sqlQuery);            
            return $result;
         }
@@ -14,10 +19,10 @@
             $table = $table 
                   . "<thead>"
                   . "<tr>"
-                    . "<th bgcolor=\"silver\">Table Number </th>"
+                    . "<th bgcolor=\"silver\">Table Number</th>"
                     . "<th bgcolor=\"silver\"> Maximum Size </th>"
                     . "<th bgcolor=\"silver\"> Current Size </th>"
-                    . "<th bgcolor=\"silver\"> Size </th>"
+                    . "<th bgcolor=\"silver\"> Status </th>"
                     . "<th bgcolor=\"silver\">     </th>"
                     . "<th bgcolor=\"silver\">     </th>"
                  . "</tr>"
@@ -30,7 +35,7 @@
                     $table = $table . "<td>$row[$number_of_columns]</td>";                   
                 } 
                 $table = $table . "<td><form id= \"name\" method=\"post\" action=\"cleartable.php\">
-                                   <input name=\"tablenumber\" type=\"hidden\" value=\"$row[0]\">                                   
+                                   <input name=\"intable\" type=\"hidden\" value=\"$row[0]\">                                   
                                    <input name=\"submit\" type=\"submit\" value=\"Clear\">
                                    </form></td>";               
                 
