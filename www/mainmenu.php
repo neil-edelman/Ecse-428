@@ -39,6 +39,8 @@
 
 <p>View <a href = "viewpersonal.php">account information</a>.</p>
 
+<p><a href = "createorder.php">Create a new Order</a></p>
+
 <?php
 	/* request check in/out */
 	$is_checkedin = is_checkedin($info);
