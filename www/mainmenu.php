@@ -66,10 +66,10 @@
 			echo "<p><a href = \"addaccount.php\">Add account</a>.</p>\n\n";
 			echo "<p><a href = \"shifts.php\">View and edit shifts</a>.</p>\n\n";
 		}
-		echo "<p><form><input type=\"submit\" name=\"checkout\" value=\"Check Out\"></form></p>\n\n";
+		echo "<p><form><input type=\"submit\" name=\"checkout\" value=\"Check Out\"/></form></p>\n\n";
 	} else {
 		/* or else show the button to check in */
-		echo "<p><form><input type=\"submit\" name=\"checkin\" value=\"Check In\"></form></p>\n\n";
+		echo "<p><form><input type=\"submit\" name=\"checkin\" value=\"Check In\"/></form></p>\n\n";
 	}
 ?>
 
