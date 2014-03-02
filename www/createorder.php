@@ -8,13 +8,15 @@
 
 	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
-	
+
 	// Generating a sequential OrderID for the new Order.
 	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+
 	if (mysqli_connect_errno()) {
 		echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
 	}
-	$sql = "SELECT * FROM `payomca_rms`.`Order`";			
+
+	$sql = "SELECT * FROM `payomca_rms`.`Order`";
 	$stmt = mysqli_prepare ($server, $sql);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
@@ -57,17 +59,17 @@
         </form>
 
 		<p>Cancel and return to the <a href = "viewpersonal.php">main menu</a>.</p>
-		
+
 <?php
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		if (!empty($tableid)) {
-		
+
 			$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
 			if (mysqli_connect_errno()) {
 				echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			}
 
-			$sql = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
+			$sql = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";
 			mysqli_query($server, $sql);
 			//echo $result;		// Life-saver for debugging.
 
