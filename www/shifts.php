@@ -42,7 +42,7 @@ function edit(a) {
 
 	var textDynamic = document.getElementById(a.concat("edit"));
 	if(!textDynamic) return;
-	textDynamic.style.display = "inline";
+	textDynamic.style.display = "block";
 }
 
 /** swiches back to looking
@@ -52,7 +52,7 @@ function hide(a) {
 
 	var textStatic = document.getElementById(a);
 	if(!textStatic) return;
-	textStatic.style.display = "inline";
+	textStatic.style.display = "block";
 
 	var textDynamic = document.getElementById(a.concat("edit"));
 	if(!textDynamic) return;
@@ -60,6 +60,20 @@ function hide(a) {
 
 	editing = null;
 }
+
+/** "deletes" the value (sets it to hidden)
+ @param a string which identifies the element
+ @author Neil */
+/*function del(a) {
+
+	var textStatic = document.getElementById(a);
+	if(textStatic) textStatic.style.display = "none";
+
+	var textDynamic = document.getElementById(a.concat("edit"));
+	if(textDynamic) textDynamic.style.display = "none";
+
+	// I don't think this matters; editing = null;
+}*/
 
 // -->
 </script>
@@ -97,43 +111,52 @@ function hide(a) {
 			if($subjectinfo["checkin"]) {
 				echo "<p>They are currently working.</p>\n";
 			}
-			echo "<p>\n";
-			$s->view_shifts($subject);
-			echo "</p>\n";
 
 			/* prepare statements */
 			$in = $db->prepare("UPDATE Shifts SET checkin = ? "
 							   ."WHERE id = ? "
 							   ."LIMIT 1") or throw_exception("prepare in");
-			$in->bind_param("si", $datetime, $id) or throw_exception("binding in");
+			$in->bind_param("si", $datetime, $id) or throw_exception("binding checkin");
 			$out = $db->prepare("UPDATE Shifts SET checkout = ? "
 								."WHERE id = ? "
 								."LIMIT 1") or throw_exception("prepare out");
-			$out->bind_param("si", $datetime, $id) or throw_exception("binding out");
+			$out->bind_param("si", $datetime, $id) or throw_exception("binding checkout");
+			$del = $db->prepare("DELETE FROM Shifts "
+								."WHERE id = ? "
+								."LIMIT 1") or throw_exception("prepare out");
+			$del->bind_param("i", $id) or throw_exception("binding delete");
 
 			/* values submitted? */
 			foreach($_REQUEST as $k => $v) {
 				/* this is really ugly */
 				if(strncmp("shifts", $k, 6)) continue;
-				list($number, $check) = sscanf($k, "shifts%uedit-%s");
-				echo "<p>".$k." -&gt; ".$v." (".$number." ".$check.")</p>\n";
+				list($number, $action) = sscanf($k, "shifts%uedit-%s");
+				//echo "<p>".$k." -&gt; ".$v." (".$number." ".$action.")</p>\n";
 				/* prepare */
 				$datetime = iso2db($v);
 				$id       = $number;
-				echo "Id ".$id." to ".$datetime." -&gt; ".iso2db($datetime)."<br/>\n";
 				/* exec */
-				if($check === "checkin") {
-					$in->execute() or throw_exception("execute in");
-					echo "changed ".$id." checkin to ".$datetime.".<br/>\n";
-				} else if($check === "checkout") {
-					$out->execute() or throw_exception("execute out ".$id.";".$datetime);
-					echo "changed ".$id." checkout to ".$datetime.".<br/>\n";
+				if($action === "checkin") {
+					$in->execute() or throw_exception("execute checkin, set ".$id." to ".$datetime);
+					echo "<p>Changed ".$id." checkin to ".$datetime.".</p>\n\n";
+				} else if($action === "checkout") {
+					$out->execute() or throw_exception("execute checkout, set ".$id." to ".$datetime);
+					echo "<p>Changed ".$id." checkout to ".$datetime.".</p>\n\n";
+				} else if($action === "delete") {
+					$del->execute() or throw_exception("execute delete ".$id);
+					echo "<p>Deleted ".$id.".</p>\n\n";
+					// javascipt in html in php in html
+					//echo "<script type = \"text/javascript\">\n<!--\ndel(\"shifts\".concat($number));\n// -->\n</script>\n\n";
 				}
-				///////// delete!!! ///////////////
 			}
 		} catch(Exception $e) {
-			echo "<p>Error: ".$e->getMessage().".</p>\n";
+			echo "<p>Error: ".htmlspecialchars($e->getMessage()).".</p>\n";
 		}
+
+		echo "<p>\n";
+		$s->view_shifts($subject);
+		echo "</p>\n";
+
 	} else {
 		echo "<p>No subject entered.</p>\n";
 	}
