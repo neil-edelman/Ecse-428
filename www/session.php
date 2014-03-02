@@ -388,8 +388,10 @@
 			return true;
 		}
 
-		/** display a selection of users; intended to be used inside a select
-		 tag; fixme: callback fn!
+		/** display a selection of users; intended to be used inside form
+		 fixme: callback fn!
+		 @param title    the name of the key
+		 @param selected optional, the selected value
 		 @return true if success, false means status
 		 @author Neil */
 		final public function select_users($title, $selected = null) {
