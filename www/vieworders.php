@@ -8,30 +8,6 @@
     $user = $s->get_user() or header_error("user timeout error");
     $info = $s->user_info($user) or header_error("user info error");
 
-    // Generating a sequential OrderID for the new Order.
-    $server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
-
-    if (mysqli_connect_errno()) {
-        echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
-    }
-
-    $sql = "SELECT * FROM `payomca_rms`.`Order`";
-    $stmt = mysqli_prepare ($server, $sql);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_store_result($stmt);
-    $rows = mysqli_stmt_num_rows($stmt);
-    if ($rows == 0) {
-        $orderid = 1;
-    } else {
-        $orderid = ($rows + 1);
-    }
-//  $orderid = uniqid();
-    $tableid = null;
-    echo $orderid;
-
-
-    isset($_REQUEST["tableid"]) and $tableid = $_REQUEST["tableid"];    // When the tableid field is set, store in in $tableid.
-
 ?>
 <!DOCTYPE html>
 
@@ -46,41 +22,82 @@
     <body>
 
         <form method="post">
-            <h1><font color="7700FF">Create Order</font></h1>
+            <h1><font color="7700FF">View Order</font></h1>
 
-            <h2>Order's Table</h2>
+            <h2>View order of which Table?</h2>
             <p>Please enter the table associated with this order.</p>
             <div><label>Table of Order:</label> <input type="text" name="tableid"/></div>
 
             <p></p>
-            <div><label></label><input type="submit" value="Create order"></div>
+            <div><label></label><input type="submit" value="View order"></div>
 
         </form>
+        <p></p>
 
-        <p>Cancel and return to the <a href = "viewpersonal.php">main menu</a>.</p>
+        <p>Cancel and return to the <a href = "mainmenu.php">main menu</a>.</p>
 
 <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (!empty($tableid)) {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-            $server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+            echo $tableid;
+
+            if(!empty($tableid))
+            {
+                $server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+
             if (mysqli_connect_errno()) {
-                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
             }
 
-            $sql = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";
-            mysqli_query($server, $sql);
-            //echo $result;     // Life-saver for debugging.
+            $result = "SELECT * FROM `payomca_rms`.`Order`";
+            $stmt = mysqli_prepare ($server, $sql);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
 
-            $_SESSION['orderid'] = $orderid;    // Transferring $orderid to use on addtoorder.php
-            header("Location: addtoorder.php");
-            //exit();
+            echo $result;
 
-        } else {
-            echo "Error: No Table ID given.";
+//            $tableid = null;
+//            $orderid = null;
+            }
+            else
+            {
+                echo "Error: No Table ID given.";
+            }
         }
-    }
-    ?>
+
+//          isset($_REQUEST["tableid"]) and $tableid = $_REQUEST["tableid"];    // When the tableid field is set, store in in $tableid.
+//          isset($_REQUEST["orderid"]) and $orderid = $_REQUEST["orderid"];
+//        if (!empty($tableid)) {
+//
+//            $server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+//            if (mysqli_connect_errno()) {
+//                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+//            }
+//
+//            $sql = "SELECT * FROM `payomca_rms`.`OrderContain`";
+//            $stmt = mysqli_prepare ($server, $sql);
+//            mysqli_stmt_execute($stmt);
+//            mysqli_stmt_store_result($stmt);
+//
+//            $itemid = null;
+//            $quantity = null;
+//            $comment = null;
+
+//            isset($_REQUEST["itemid"]) and $itemid = $_REQUEST["itemid"];
+//            isset($_REQUEST["quantity"]) and $quantity = $_REQUEST["quantity"];
+//            isset($_REQUEST["comment"]) and $comment = $_REQUEST["comment"];
+
+//            echo $itemid;
+//            echo $quantity;
+//            echo $comment;
+
+//            <p>Back to <a href = "mainmenu.php">Main Menu</a>.</p>
+
+//        } else {
+//            echo "Error: No Table ID given.";
+//        }
+
+//    ?>
         <p></p>
 
 </body>
