@@ -1,14 +1,14 @@
 <?php
     include "session.php";
-    include "modifyorder.php";
+    include "modifytables.php";
 
     $s = new Session();
-    $g = new modifyorder();
+    $g = new modifytables();
 
     $db = $s->link_database() or header_error("database error");
     $user = $s->get_user() or header_error("user timeout error");
 
-    $all_orders = $g->get_all_orders($db);
+    $all_tables = $g->get_all_tables($db);
 ?>
 
 <!DOCTYPE html>
@@ -18,15 +18,15 @@
         <meta name = "Author" content = "Team RMS">
         <link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
         <link rel = "stylesheet" type = "text/css" href = "style.css">
-        <title>View Orders</title>
+        <title>View Tables</title>
     </head>
     <body>
-        <h1>View Orders</h1>
+        <h1>View Tables</h1>
 
         <?php
-             echo $g->display_all_orders($all_orders);
+             echo $g->display_all_tables($all_tables);
 
-             $all_orders->close();
+             $all_tables->close();
         ?>
 
         <p>

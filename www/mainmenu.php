@@ -44,6 +44,16 @@
 <p>View <a href = "vieworders.php">an existing Order</a>.</p>
 
 <?php
+  if(is_admin($info)) {
+    echo "<p><a href = \"addaccount.php\">Add account</a>.</p>";
+    echo "<p>View <a href = \"createtable.php\">account information</a>.</p>";
+  }
+?>
+<p><a href = "viewtables.php">View Tables</a></p>
+
+<p><a href = "createtable.php">Create Tables</a></p>
+
+<?php
 	/* request check in/out */
 	$is_checkedin = is_checkedin($info);
 	if(isset($_REQUEST["checkout"]) && $is_checkedin) {
