@@ -10,8 +10,9 @@
 	is_admin($info) or header_error("not authorised");
 
 	/* if the things are set, get them into vars */
-	isset($_REQUEST["subject"])  and $subject = strip_tags(stripslashes($_REQUEST["subject"]));
-
+	isset($_REQUEST["subject"])     and $subject     = strip_tags(stripslashes($_REQUEST["subject"]));
+	isset($_REQUEST["newcheckin"])  and $newcheckin  = strip_tags(stripslashes($_REQUEST["newcheckin"]));
+	isset($_REQUEST["newcheckout"]) and $newcheckout = strip_tags(stripslashes($_REQUEST["newcheckout"]));
 ?>
 <!DOCTYPE html>
 
@@ -62,6 +63,7 @@ function hide(a) {
 }
 
 /** "deletes" the value (sets it to hidden)
+ (changed the ordering so this is not needed)
  @param a string which identifies the element
  @author Neil */
 /*function del(a) {
@@ -83,7 +85,7 @@ function hide(a) {
 
 	<h1>Shifts</h1>
 
-<div>
+<p><div>
 <form>
 <label>View shifts of</label>
 <!-- input user -Neil; this is lame -Neil
@@ -98,9 +100,10 @@ function hide(a) {
 		$s->select_users("subject");
 	}
 ?>
-<input type = "submit" value = "Go"><br/><br/>
+<br/>
+<label>&nbsp;</label><input type = "submit" value = "Go">
 </form>
-</div>
+</div></p>
 
 <?php
 	if(isset($subject)) {
@@ -149,6 +152,15 @@ function hide(a) {
 					//echo "<script type = \"text/javascript\">\n<!--\ndel(\"shifts\".concat($number));\n// -->\n</script>\n\n";
 				}
 			}
+
+			/* new shift? */
+			if(isset($newcheckin) && isset($newcheckout)) {
+				if($s->add_shift($subject, $newcheckin, $newcheckout)) {
+					echo "<p>Shift was added.</p>\n\n";
+				} else {
+					echo "<p>Error: ".$s->status()."</p>\n\n";
+				}
+			}
 		} catch(Exception $e) {
 			echo "<p>Error: ".htmlspecialchars($e->getMessage()).".</p>\n";
 		}
@@ -156,7 +168,17 @@ function hide(a) {
 		echo "<p>\n";
 		$s->view_shifts($subject);
 		echo "</p>\n";
-
+?>
+<p><div><form>
+<input type = "hidden" name = "subject" value = "<?php echo $subject; ?>">
+<label>Check in:</label><input type = "datetime" name = "newcheckin"
+value = "<?php if(isset($newcheckin)) echo $newcheckin;?>"/><br/>
+<label>Check out:</label><input type = "datetime" name = "newcheckout"
+value = "<?php if(isset($newcheckout)) echo $newcheckout;?>"/><br/>
+<label>&nbsp;</label><input type = "submit" value = "New">
+</form>
+</div></p>
+<?php
 	} else {
 		echo "<p>No subject entered.</p>\n";
 	}

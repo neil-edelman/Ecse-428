@@ -483,6 +483,47 @@
 			return true;
 		}
 
+		/** add entry to shifts
+		 @param user
+		 @param checkin
+		 @param checkout
+		 @return was the operation a success
+		 @author Neil */
+		final public function add_shift($user, $checkin, $checkout) {
+
+			if(!is_string($user) || !strlen($user)) {
+				$this->status = "view_shifts: invalid syntax";
+				return false;
+			}
+
+			/* fixme: verify the dates */
+			$checkin  = iso2db($checkin);
+			$checkout = iso2db($checkout);
+
+			$return = false;
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "add_shift: database connection closed";
+				return false;
+			}
+
+			try {
+				$stmt = $db->prepare("INSERT INTO "
+									 ."Shifts(username, checkin, checkout) "
+									 ."VALUES (?, ?, ?)") or throw_exception("prepare");
+				$stmt->bind_param("sss", $user, $checkin, $checkout) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$return = true;
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "add_shift ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+			$stmt and $stmt->close();
+
+			return $return;
+		}
+
 		/** ohnoz1! something has failed; get_status()
 		 @return why (hopefully)
 		 @author Neil */
