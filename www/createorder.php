@@ -24,13 +24,17 @@
 	} else {
 		$orderid = ($rows + 1);
 	}
-//	$orderid = uniqid();
+
 	$tableid = null;
 	echo $orderid;
 
 
 	isset($_REQUEST["tableid"]) and $tableid = $_REQUEST["tableid"];	// When the tableid field is set, store in in $tableid.
+	
+	$tableupdate = null;
 
+	
+	
 ?>
 <!DOCTYPE html>
 
@@ -52,14 +56,16 @@
 			<div><label>Table of Order:</label> <input type="text" name="tableid"/></div>
 
 			<p></p>
-			<div><label></label><input type="submit" value="Create order"></div>
-
+			<div><label></label><input type="submit" name="createorder" value="Create order"></div>
+			
         </form>
-
-		<p>Cancel and return to the <a href = "viewpersonal.php">main menu</a>.</p>
+		
+		<p>Cancel and return to the <a href = "mainmenu.php">main menu</a>.</p>
+		
+		
 		
 <?php
-	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	if(isset($_REQUEST["createorder"])) {
 		if (!empty($tableid)) {
 		
 			$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
@@ -69,16 +75,33 @@
 
 			$sql = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
 			mysqli_query($server, $sql);
-			//echo $result;		// Life-saver for debugging.
 
 			$_SESSION['orderid'] = $orderid;	// Transferring $orderid to use on addtoorder.php
 			header("Location: addtoorder.php");
-			//exit();
 
 		} else {
 			echo "Error: No Table ID given.";
 		}
 	}
+	
+	// Allow user to update order.
+	echo "Updating Orders: please input the table whose order you wish to update.";
+	echo "<form method=\"post\"><div><label>Table of Order:</label> <input type=\"text\" name=\"tableupdate\"/></div>";
+	echo "<p><input type=\"submit\" name=\"updateorder\" value=\"Update Order\"></form></p>\n\n";
+	isset($_REQUEST["tableupdate"]) and $tableupdate = $_REQUEST["tableupdate"];
+	
+	if(isset($_REQUEST["updateorder"])) {
+		if (empty($tableupdate)) {
+			echo "Error: No table specified whose orders to edit.";
+		} else {
+			$sqlgetorder = "SELECT * FROM `payomca_rms`.`Order` WHERE `tableid`=$tableupdate;";
+			$theorder = mysqli_fetch_row(mysqli_query($server, $sqlgetorder));
+			$_SESSION['itemnumber'] = 1;
+			$_SESSION['idorder'] = $theorder[0];
+			header("Location: updateorder.php");
+		}
+	}	
+
 	?>
 		<p></p>
 
