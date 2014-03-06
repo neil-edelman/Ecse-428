@@ -388,6 +388,101 @@
 			return true;
 		}
 
+		/** display a selection of users; intended to be used inside form
+		 fixme: callback fn!
+		 @param title    the name of the key
+		 @param selected optional, the selected value
+		 @return true if success, false means status
+		 @author Neil */
+		final public function select_users($title, $selected = null) {
+
+			if(!is_string($title) || !strlen($title)) {
+				$this->status = "select_users: invalid syntax";
+				return false;
+			}
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "select_users: database connection closed";
+				return false;
+			}
+
+			try {
+				$stmt = $db->prepare("SELECT username, FirstName, LastName FROM "
+									 ."Users") or throw_exception("prepare");
+				$stmt->execute() or throw_exception("execute");
+				$stmt->bind_result($username, $FirstName, $LastName);
+				echo "<select name = \"".$title."\">\n";
+				while($stmt->fetch()) {
+					echo "<option value = \"".$username."\"";
+					if($username == $selected) echo " selected";
+					echo ">".$LastName.", ".$FirstName."</option>\n";
+				}
+				echo "</select>\n";
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "select_users ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
+			}
+
+			return true;
+		}
+
+		/** fixme: username should be an index in database
+		 fixme: callback fn!(!! this is a hack!)
+		 @return true if success
+		 @author Neil */
+		final public function view_shifts($user) {
+
+			if(!is_string($user) || !strlen($user)) {
+				$this->status = "view_shifts: invalid syntax";
+				return false;
+			}
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "view_shifts: database connection closed";
+				return false;
+			}
+
+			try {
+				$stmt = $db->prepare("SELECT id, username, checkin, checkout FROM "
+									 ."Shifts WHERE "
+									 ."username = ? AND "
+									 ."checkout >= DATE_SUB(now(), INTERVAL 2 WEEK)") or throw_exception("prepare");
+				$stmt->bind_param("s", $user) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$stmt->bind_result($id, $username, $checkin, $checkout);
+				//echo "<select name = \"".$title."\">\n";
+				while($stmt->fetch()) {
+
+					$name = "shifts".$id;
+					$edit = $name."edit";
+
+					echo "<div class = \"shifts\" id = \"".$name."\">".$id.": ".$checkin." - ".$checkout." ";
+					echo "<a href = \"javascript:edit('".$name."');\">Edit</a>";
+					echo "</div>\n";
+
+					echo "<div class = \"edit\" id = \"".$edit."\"  style = \"display:none;\"><form method = \"get\">\n";
+					echo "<input type = \"hidden\" name = \"subject\" value = \"".$user."\">\n";
+					echo "<label>Check in:</label><input type = \"datetime\" name = \"".$edit."-checkin\" value = \"".$checkin."\"/><br/>\n";
+					echo "<label>Check out:</label><input type = \"datetime\" name = \"".$edit."-checkout\" value = \"".$checkout."\"/><br/>\n";
+					echo "<label>Delete:</label><input type = \"checkbox\" name = \"".$edit."-delete\"></input><br/>\n";
+					echo "<input type = \"submit\" value = \"Go\"/>";
+					echo "<input type = \"reset\" value = \"Clear\"/><br/>";
+					echo "<a href = \"javascript:hide('".$name."');\">Hide</a>\n";
+					echo "</form></div><br/>\n";
+				}
+				//echo "</select>\n";
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "select_users ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
+			}
+
+			return true;
+		}
+
 		/** ohnoz1! something has failed; get_status()
 		 @return why (hopefully)
 		 @author Neil */
@@ -433,6 +528,14 @@
 		return !is_null($info["checkin"]);
 	}
 
+	/** converts iso datetime to database datetime (close!)
+	 @author Neil */
+	function iso2db($iso) {
+		$temp = str_replace("T", " ", $iso);
+		$db   = str_replace("Z", ":00", $temp);
+		return $db;
+	}
+
 	/** create new exception; this is sytactic sugar
 	 @param message message (defualt null)
 	 @param code the error code (default null)
@@ -455,7 +558,7 @@
 		echo "Click <a href = \"index.php\">here to start again</a>.\n";
 		exit();
 	}
-	
+
 	/* Larry Ullman, PHP 5 Advanced
 	function my_error_handler ($e_number, $e_message, $e_file, $e_line, $e_vars)
 	{
@@ -478,50 +581,5 @@
 	}
 	set_error_handler('my_error_handler');
 	*/
-
-	// Returns the username of the currently logged in user. Returns "null" otherwise; as in an actual STRING called "null".
-	// Neil: use Session::get_user(); "null" (the string) is replaced by null (the value)
-	/*function check_login() {
-		$session_id = session_id();
-		$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
-		if (mysqli_connect_errno()) {
-			echo "Failed to connect to MySQL: " . mysqli_connect_error();
-		}
-
-		$sqlQuery = "SELECT * FROM SessionID WHERE SessionID . session_id = '$session_id';";                        
-		$result = mysqli_query($server, $sqlQuery);
-		
-		if (mysqli_num_rows($result) == 1) {		// Must CHECK if there's one and only row of results
-			$theresult = mysqli_fetch_row($result);	// Must GET the one and only row of results
-			$loggeduser = $theresult[1];			// Acquire said row's SECOND data field. Ie. the username.
-		}
-		else {
-			$loggeduser = "null";	// Reached if no session is found. 
-		}
-		
-		return $loggeduser;
-	}*/
-	
-	// Obtains the privilege status of the given username.
-	// Neil: use: $user = $s->user_info(username); at the top of the script and
-	// $s->is_admin($user); or $user["Privilege"]
-	/*function check_privilege($user) {
-		$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
-		if (mysqli_connect_errno()) {
-			echo "Failed to connect to MySQL: " . mysqli_connect_error();
-		}
-
-		$sqlQuery = "SELECT * FROM Users WHERE Username = '$user';";
-		$result = mysqli_query($server, $sqlQuery);
-		
-		if (mysqli_num_rows($result) == 1) {		// Must CHECK if there's one and only row of results
-			$theresult = mysqli_fetch_row($result);	// Must GET the one and only row of results
-			$privilege = $theresult[5];		// Acquire said row's FIFTH field. Ie. the privilege.
-		}
-		else {
-			$privilege = "null";
-		}
-		return $privilege;
-	}*/
 
 ?>
