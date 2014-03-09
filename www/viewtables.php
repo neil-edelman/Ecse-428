@@ -44,7 +44,7 @@
                 $all_tables = $g->get_all_tables($db, "default");
            }
             
-            echo $g->display_all_tables($all_tables);      
+            echo $g->display_all_tables($all_tables, $db);      
                 
             $all_tables->close();
         ?>                    
