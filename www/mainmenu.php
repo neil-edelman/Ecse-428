@@ -40,7 +40,7 @@
 <p>View <a href = "viewpersonal.php">account information</a>.</p>
 
 <!-- you must be checked in, moved it -Neil
-<p><a href = "createorder.php">Create a new Order</a></p>-->
+<p><a href = "ordersmenu.php">Orders Menu</a></p>-->
 
 <?php
 	/* request check in/out */
@@ -65,7 +65,7 @@
 
 	if(is_checkedin($info)) {
 		/* this is where all the functions that depend on check in lie */
-		echo "<p><a href = \"createorder.php\">Create a new Order</a></p>\n\n";
+		echo "<p><a href = \"ordersmenu.php\">Orders Menu</a></p>\n\n";
 		if(is_admin($info)) {
 			echo "<p><a href = \"addaccount.php\">Add account</a>.</p>\n\n";
 			echo "<p><a href = \"shifts.php\">View and edit shifts</a>.</p>\n\n";
