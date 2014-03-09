@@ -76,6 +76,7 @@
 		echo "<p><form><input type=\"submit\" name=\"checkin\" value=\"Check In\"/></form></p>\n\n";
 	}
 ?>
+<p><a href = "viewtables.php">View Tables</a></p>
 
 <p><form><input type="submit" name="logout" value="Logout"></form></p>
 
