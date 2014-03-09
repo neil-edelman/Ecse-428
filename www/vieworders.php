@@ -8,7 +8,7 @@
     $db = $s->link_database() or header_error("database error");
     $user = $s->get_user() or header_error("user timeout error");
 
-    $all_orders = $g->get_all_orders($db);
+    $all_orders = $g->get_table_orders($db);
 ?>
 
 <!DOCTYPE html>
