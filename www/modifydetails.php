@@ -13,7 +13,7 @@
 
           $order = $order . " For Order ID: ". $orderid . "<br/>";
 
-          $order = $order . "<table border="1" style="width:300px">";
+          $order = $order . "<table>";
 
             $order = $order
                   ."<br/"
