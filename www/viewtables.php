@@ -16,7 +16,6 @@
 <html>
     <head>
         <meta charset="UTF-8">
-<<<<<<< HEAD
 		<meta name = "Author" content = "Team RMS">
 		<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
                 <link rel = "stylesheet" type = "text/css" href = "style.css">
