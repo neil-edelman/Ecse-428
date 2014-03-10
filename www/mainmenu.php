@@ -1,6 +1,6 @@
 <?php
 
-	include "session.php";	
+	include "session.php";
 
 	$s = new Session();
 
@@ -31,16 +31,31 @@
 <h1>Main Menu</h1>
 
 <p>
-<?php	
+<?php
 	echo "You are currently logged in as ".$info["FirstName"]." "
 	     .$info["LastName"]." (".$info["username"].".)\n";
 ?>
 </p>
 
-<p>View <a href = "viewpersonal.php">account information</a>.</p>
+<p>View <a href = "viewpersonal.php">Account Information</a>.</p>
+
+<p>Create <a href = "createorder.php">a new Order</a>.</p>
+
+<p>View <a href = "vieworders.php">an existing Order</a>.</p>
+
+<?php
+  if(is_admin($info)) {
+    echo "<p><a href = \"addaccount.php\">Add account</a>.</p>";
+    echo "<p>View <a href = \"createtable.php\">account information</a>.</p>";
+  }
+?>
+<p><a href = "viewtables.php">View Tables</a></p>
 
 <!-- you must be checked in, moved it -Neil
 <p><a href = "createorder.php">Create a new Order</a></p>-->
+
+<p><a href = "createtable.php">Create Tables</a></p>
+
 
 <?php
 	/* request check in/out */
