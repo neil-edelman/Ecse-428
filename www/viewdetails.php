@@ -1,14 +1,13 @@
 <?php
+
     include "session.php";
-    include "modifyorder.php";
+    include "modifydetails.php";
 
     $s = new Session();
-    $g = new modifyorder();
+    $g = new modifydetails();
 
     $db = $s->link_database() or header_error("database error");
-    $user = $s->get_user() or header_error("user timeout error");
-
-    $all_orders = $g->get_all_orders($db);
+    $details = $g->get_order_details($db);
 ?>
 
 <!DOCTYPE html>
@@ -18,18 +17,21 @@
         <meta name = "Author" content = "Team RMS">
         <link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
         <link rel = "stylesheet" type = "text/css" href = "style.css">
-        <title>View Orders</title>
+        <title>Orders Details</title>
     </head>
     <body>
-        <h1>View Orders</h1>
+        <h1>View Orders Details</h1>
 
         <?php
-             echo $g->display_all_orders($all_orders);
+             $row[0] = $_REQUEST['orderid'];
+             echo $g->display_order_details($details, $row[0]);
 
-             $all_orders->close();
+             $details->close();
         ?>
 
         <p>
+            <br>To add to this order <a href = "addtoorder.php">CLICK HERE!</a>.
+            <p></p>
             <br>Go back to the <a href = "mainmenu.php">main menu</a>.
         </p>
 
