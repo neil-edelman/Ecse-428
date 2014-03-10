@@ -88,8 +88,6 @@ checked in -->
 
 <p><a href = "shifts.php">View and edit shifts</a>.</p>
 
-<p>View <a href = "createtable.php">account information</a>.</p>
-
 <?php
 		}
 
