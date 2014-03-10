@@ -98,9 +98,13 @@
 		} else {
 			$sqlgetorder = "SELECT * FROM `payomca_rms`.`Order` WHERE `tableid`=$tableupdate;";
 			$theorder = mysqli_fetch_row(mysqli_query($server, $sqlgetorder));
-			$_SESSION['itemnumber'] = 1;
-			$_SESSION['idorder'] = $theorder[0];
-			header("Location: updateorder.php");
+			if ($theorder == null) {
+				echo "This table has no orders associated with it.";
+			} else {
+				$_SESSION['itemnumber'] = 1;
+				$_SESSION['idorder'] = $theorder[0];
+				header("Location: updateorder.php");
+			}
 		}
 	}	
 
