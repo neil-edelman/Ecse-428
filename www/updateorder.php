@@ -67,11 +67,11 @@
 
 			<h2>Status</h2>
 			<p>Change status of the Order.</p>
-			<div><label>Item ID:</label> <input type="text" name="situation" value="<?php echo $situation; ?>"></div>
+			<div><label>Order ID:</label> <input type="text" name="situation" value="<?php echo $situation; ?>"></div>
 			
 			<h2>Table</h2>
 			<p>Change the table associated with this order.</p>
-			<div><label>Item ID:</label> <input type="text" name="tableid" value=<?php echo $tableid; ?>></div>
+			<div><label>Table:</label> <input type="text" name="tableid" value=<?php echo $tableid; ?>></div>
 			
 			<h2>Item</h2>
 			<p>Change the ordered item's ID.</p>
@@ -121,10 +121,11 @@
 			if (mysqli_connect_errno()) {
 				echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			}
-			echo $tableid;
-			echo $situation;
+
 			$sqlupdateorder= "UPDATE `payomca_rms`.`Order` SET `tableid`='$tableid',`situation`='$situation' WHERE `orderid`='$orderid';";
 			$sqlupdateitem = "UPDATE `payomca_rms`.`OrderContain` SET `itemid`='$itemid',`quantity`='$quantity',`comment`='$comment' WHERE `containid`='$containid';";
+			mysqli_query($server, $sqlupdateorder);
+			mysqli_query($server, $sqlupdateitem);
 			
 			echo "Order successfully updated!";
 		}
