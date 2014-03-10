@@ -69,14 +69,18 @@
 		if(is_admin($info)) {
 			echo "<p><a href = \"addaccount.php\">Add account</a>.</p>\n\n";
 			echo "<p><a href = \"shifts.php\">View and edit shifts</a>.</p>\n\n";
+			echo "<p>View <a href = \"createtable.php\">account information</a>.</p>";
 		}
 		echo "<p><form><input type=\"submit\" name=\"checkout\" value=\"Check Out\"/></form></p>\n\n";
 	} else {
 		/* or else show the button to check in */
 		echo "<p><form><input type=\"submit\" name=\"checkin\" value=\"Check In\"/></form></p>\n\n";
+
 	}
 ?>
 <p><a href = "viewtables.php">View Tables</a></p>
+
+<p><a href = "createtable.php">Create Tables</a></p>
 
 <p><form><input type="submit" name="logout" value="Logout"></form></p>
 
