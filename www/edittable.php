@@ -90,15 +90,15 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				}
 				if(strlen($tablenumber) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "Username is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+					echo "tablenumber has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
 				}
 				if(strlen($maxsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "Password is too long.<br/>\n";
+					echo "maxsize has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
 				}
 				if(strlen($currentsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "First name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+					echo "currentsize has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
 				}
 				if($currentsize > $maxsize){
 					$is_ready = false;
