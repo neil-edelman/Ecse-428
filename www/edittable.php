@@ -10,7 +10,7 @@
 	is_admin($info) or header_error("not authorised");
 	
 	/* Save the original table value from the POST of the source page */
-	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'];
+	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'] and $tablenumber = $_SESSION["oritable"];
 	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
 	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
 	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
@@ -41,9 +41,6 @@
 			<label>Currently: <br/></label>
 			<?php
 			echo "Previous Table Number: &quot;".$_SESSION["oritable"]."&quot;<br/>\n";
-			echo "Previous Maximum Size: &quot;".$_SESSION["orimaxsize"]."&quot;<br/>\n";
-			echo "Previous Current Size: &quot;".$_SESSION["oricurrentsize"]."&quot;<br/>\n";
-			echo "Previous status: &quot;".$_SESSION["oristatus"]."&quot;<br/><br/><br/>\n";
 			?>
 			
             <div>
