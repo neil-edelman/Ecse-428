@@ -111,6 +111,10 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 					$is_ready = false;
 					echo "First name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 				}
+				if($currentsize > $maxsize){
+					$is_ready = false;
+					echo "current size is larger than the maximum size.";
+				}
 			}
 			if($is_ready) {
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
