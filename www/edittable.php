@@ -62,11 +62,6 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 value = "<?php if(isset($currentsize)) echo $currentsize;?>"  
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
-            <label>New Status:</label>
-            <select name="status">
-                <option <?php if(isset($status)) echo $status=="vacant"?"selected ":"";?>value="vacant">vacant</option>
-                <option <?php if(isset($status)) echo $status=="occupied"?"selected ":"";?>value="occupied">occupied</option>
-            </select>
             <br/>
             <br/>
 			<input type = "submit" value = "Edit" <?php if (!isset($_SESSION["oritable"])){ echo "disabled";} ?>/>
@@ -85,17 +80,14 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			$is_ready = false;
 			if(   isset($tablenumber)
 			   || isset($maxsize)
-			   || isset($currentsize)
-			   || isset($status)){
+			   || isset($currentsize)){
 				$is_ready = true;
 				if(   !isset($tablenumber)
 				   || !isset($maxsize)
 				   || !isset($currentsize)
-				   || !isset($status)
 				   || empty($tablenumber)
 				   || empty($maxsize)
-				   || empty($currentsize)
-				   || empty($status)) {
+				   || (empty($currentsize) && $currentsize != 0)) {
 					$is_ready = false;
 					echo "You did not enter all the required information.<br/>\n";
 				}
@@ -114,7 +106,12 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				if($currentsize > $maxsize){
 					$is_ready = false;
 					echo "current size is larger than the maximum size.";
+				}else if($currentsize > 0){
+					$status = 'occupied';
+				}else{
+					$status = 'vacant';
 				}
+				
 			}
 			if($is_ready) {
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
