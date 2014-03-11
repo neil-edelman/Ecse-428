@@ -23,7 +23,7 @@
         <h1>View Orders Details</h1>
 
         <?php
-             $row[0] = $_REQUEST['orderid'];
+             $row[0] = $_REQUEST['tablenumber'];
              echo $g->display_order_details($details, $row[0]);
 
              $details->close();
@@ -31,8 +31,6 @@
 
         <p>
             <br>To add to this order <a href = "addtoorder.php">CLICK HERE!</a>.
-            <p></p>
-            <br>To view more <a href = "vieworders.php">orders</a>.
             <p></p>
             <br>Go back to the <a href = "mainmenu.php">main menu</a>.
         </p>

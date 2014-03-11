@@ -11,6 +11,8 @@
 
         public function display_order_details($details, $orderid) {
 
+          $exist = 0;
+
           $order = $order . " For Order ID: ". $orderid . "<br/>";
 
           $order = $order . "<table>";
@@ -32,6 +34,7 @@
                 if($rows[1] == $orderid){
                   for ($number_of_columns = 2;  $number_of_columns < 5;  $number_of_columns++) {
                     $order = $order . "<td>$rows[$number_of_columns]</td>";
+                    $exist = 1;
                   }
                 }
 
@@ -40,6 +43,10 @@
             }
 
             $order = $order . "</tbody></table>";
+
+              if ($exist != 1){
+                  $order = "<h3> No orders corresponding to that order ID can be found </h3>";
+                }
 
             return $order;
 

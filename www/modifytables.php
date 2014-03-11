@@ -20,6 +20,7 @@
                     . "<th bgcolor=\"silver\"> Size </th>"
                     . "<th bgcolor=\"silver\">     </th>"
                     . "<th bgcolor=\"silver\">     </th>"
+                    . "<th bgcolor=\"silver\">     </th>"
                  . "</tr>"
                  . "</thead>";
 
@@ -38,6 +39,12 @@
                                    <input name=\"intable\" type=\"hidden\" value=\"$row[0]\">
                                    <input name=\"submit\" type=\"submit\" value=\"Edit Table\">
                                    </form></td>";
+
+                $table = $table . "<td><form id= \"name\" method=\"post\" action=\"vieworders.php\">
+                                   <input name=\"tablenumber\" type=\"hidden\" value=\"$row[0]\">
+                                   <input name=\"submit\" type=\"submit\" value=\"View Orders\">
+                                   </form></td>";
+
                 $table = $table . "</tr>";
            }
            $table = $table . "</tbody></table>";

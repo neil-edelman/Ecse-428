@@ -8,7 +8,7 @@
            return $result;
         }
 
-        public function display_all_orders($all_orders) {
+        public function display_all_orders($all_orders, $tablenumber) {
 
             $returnstring = $returnstring . "<table>";
 
@@ -26,15 +26,35 @@
 
 
           while ($row = $all_orders->fetch_array(MYSQLI_NUM)) {
-                $returnstring = $returnstring . "<tbody><tr>";
+
+            $returnstring = $returnstring . "<tbody><tr>";
+
+             if(!empty($tablenumber)){
+                if($row[1] == $tablenumber) {
+                  $returnstring = $returnstring . "<tbody><tr>";
+                  for ($number_of_columns = 0;  $number_of_columns < 3;  $number_of_columns++) {
+                      $returnstring = $returnstring . "<td>$row[$number_of_columns]</td>";
+                  }
+
+                  $returnstring = $returnstring . "<td><form id= \"name\" method=\"get\" action=\"viewdetails.php\">
+                                   <input name=\"orderid\" type=\"hidden\" value=\"$row[0]\">
+                                   <input name=\"submit\" type=\"submit\" value=\"View Details\">
+                                   </form></td>";
+                }
+
+             } else {
+
                 for ($number_of_columns = 0;  $number_of_columns < 3;  $number_of_columns++) {
                     $returnstring = $returnstring . "<td>$row[$number_of_columns]</td>";
                 }
+
                 $returnstring = $returnstring . "<td><form id= \"name\" method=\"get\" action=\"viewdetails.php\">
                                    <input name=\"orderid\" type=\"hidden\" value=\"$row[0]\">
                                    <input name=\"submit\" type=\"submit\" value=\"View Details\">
                                    </form></td>";
-                echo $orderid;
+             }
+
+
 
                 $returnstring = $returnstring . "</tr>";
            }

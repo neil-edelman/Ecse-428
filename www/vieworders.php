@@ -24,7 +24,11 @@
         <h1>View Orders</h1>
 
         <?php
-             echo $g->display_all_orders($all_orders);
+
+            $row[0] = $_REQUEST['tablenumber'];
+
+            echo $g->display_all_orders($all_orders, $row[0]);
+
 
              $all_orders->close();
         ?>
