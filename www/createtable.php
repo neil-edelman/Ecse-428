@@ -50,7 +50,8 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
 			<p>
-			Go back to <a href = "mainmenu.php">mainmenu</a>.
+			Go to <a href = "mainmenu.php">mainmenu</a>.<br>
+			Go to <a href = "viewtables.php">view table</a>.
 			</p>
 			</div>
         </form>
