@@ -36,7 +36,7 @@
 			<p>Please enter the username <em>provided by your manager.</em></p>
 			<div><label>Username:</label> <input type="text" name="username" value = "<?php echo $username?>"/></div>
 
-			<h2>Password</h2>  			 
+			<h2>Password</h2>
 			<p>Please enter the password <em>provided by your manager.</em></p>
 			<div><label>Password:</label> <input type="password" name="password"/></div>
 

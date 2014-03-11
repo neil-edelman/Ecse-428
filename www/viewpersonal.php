@@ -37,13 +37,12 @@
 
 	echo "<li>Privilege: " . $info["Privilege"] . "</li>\n";
 
-	echo "<li>You have been checked in since: " . $info["checkin"] . "</li>\n";
+	if(is_checkedin($info)) {
+		echo "<li>You have been checked in since: " . $info["checkin"] . "Z</li>\n";
+	} else {
+		echo "<li>You are not checked in.</li>\n";
+	}
 
-	echo "<li>Is checkin null? " . (is_null($info["checkin"]) ? "null" : "not") . "</li>\n";
-
-	echo "<li>Is checkin empty? " . (empty($info["checkin"]) ? "empty" : "not") . "</li>\n";
-
-	echo "<li>Is checkin set? " . (isset($info["checkin"]) ? "set" : "not") . "</li>\n";
 ?>
 </ul>
 

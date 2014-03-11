@@ -57,9 +57,7 @@
                 $result = mysqli_query($db, $sqlQuery);
                 $count = mysqli_num_rows($result);
   
-                echo "count: " . $count;
-                
-                
+                              
                 if ($count==0){
                     $table = $table . "<td><form id= \"name\" method=\"post\" action=\"cleartable.php\">
                                        <input name=\"intable\" type=\"hidden\" value=\"$row[0]\">                                   
@@ -88,3 +86,5 @@
         }      
     }
 ?>
+
+   

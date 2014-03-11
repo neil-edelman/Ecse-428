@@ -1,6 +1,6 @@
 <?php
 
-	include "session.php";	
+	include "session.php";
 
 	$s = new Session();
 
@@ -30,18 +30,6 @@
 
 <h1>Main Menu</h1>
 
-<p>
-<?php	
-	echo "You are currently logged in as ".$info["FirstName"]." "
-	     .$info["LastName"]." (".$info["username"].".)\n";
-?>
-</p>
-
-<p>View <a href = "viewpersonal.php">account information</a>.</p>
-
-<!-- you must be checked in, moved it -Neil
-<p><a href = "createorder.php">Create a new Order</a></p>-->
-
 <?php
 	/* request check in/out */
 	$is_checkedin = is_checkedin($info);
@@ -62,25 +50,59 @@
 		/* refesh user info; assert true */
 		$info = $s->user_info($user);
 	}
+?>
 
+<!-- this is where you don't need to be an admin and you don't need to be
+checked in -->
+
+<?php
+	echo "<p>You are currently logged in as ".$info["FirstName"]." "
+	     .$info["LastName"]." (".$info["username"].".)</p>\n\n";
+?>
+
+<p>View <a href = "viewpersonal.php">Account Information</a>.</p>
+
+<?php
 	if(is_checkedin($info)) {
-		/* this is where all the functions that depend on check in lie */
-		echo "<p><a href = \"createorder.php\">Create a new Order</a></p>\n\n";
+?>
+
+<!-- all the functions that depend on check in -->
+
+<p><a href = "viewtables.php">View Tables</a></p>
+
+<p><a href = "ordersmenu.php">Orders Menu</a></p>
+
+<p>Create <a href = "createorder.php">a new Order</a>.</p>
+
+<p>View <a href = "vieworders.php">an existing Order</a>.</p>
+
+<?php
 		if(is_admin($info)) {
-			echo "<p><a href = \"addaccount.php\">Add account</a>.</p>\n\n";
-			echo "<p><a href = \"shifts.php\">View and edit shifts</a>.</p>\n\n";
-			echo "<p>View <a href = \"createtable.php\">account information</a>.</p>";
+?>
+
+<!-- admin and checked in -->
+
+<p><a href = "createtable.php">Create Tables</a></p>
+
+<p><a href = "addaccount.php">Add account</a>.</p>
+
+<p><a href = "shifts.php">View and edit shifts</a>.</p>
+
+<?php
 		}
+
+		/* just checked in */
 		echo "<p><form><input type=\"submit\" name=\"checkout\" value=\"Check Out\"/></form></p>\n\n";
+
 	} else {
-		/* or else show the button to check in */
+
+		/* checked out */
 		echo "<p><form><input type=\"submit\" name=\"checkin\" value=\"Check In\"/></form></p>\n\n";
 
 	}
 ?>
-<p><a href = "viewtables.php">View Tables</a></p>
 
-<p><a href = "createtable.php">Create Tables</a></p>
+<!-- also you show this to all -->
 
 <p><form><input type="submit" name="logout" value="Logout"></form></p>
 

@@ -1,13 +1,15 @@
 <?php
     include "session.php";
-    include "modifytables.php";    
-	
+    include "modifytables.php";
+
     $s = new Session();
     $g = new modifytables();
-	
+
     $db = $s->link_database() or header_error("database error");
     $user = $s->get_user() or header_error("user timeout error");
-       
+
+    $all_tables = $g->get_all_tables($db);
+
 ?>
 
 <!DOCTYPE html>
@@ -57,3 +59,5 @@
         
     </body>
 </html>
+
+     
