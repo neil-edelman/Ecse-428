@@ -19,28 +19,13 @@
 		<meta name = "Author" content = "Team RMS">
 		<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
                 <link rel = "stylesheet" type = "text/css" href = "style.css">
-		<title>View Users</title>
+		<title>Edit Users</title>
     </head>
     <body>
-        <h1>View Users</h1>        
-           
-        <form name="select" method="post" action="viewtables.php">
-            Sort the table by:
-            <select name="select_ordering" onchange="this.form.submit()">
-                <option value="empty">CHOOSE OPTION</option>
-                <option value="tablenumber ASC">Table Number (INCR)</option>
-                <option value="tablenumber DESC">Table Number (DECR)</option>
-                <option value="maxsize ASC">Max Size (INCR)</option>
-                <option value="maxsize DESC">Max Size (DECR)</option>
-                <option value="currentsize ASC">Current Size (INCR)</option>
-                <option value="currentsize DESC">Current Size (DECR)</option>
-                <option value="status ASC">Status (INCR)</option>
-                <option value="status DESC">Status (DECR)</option>
-            </select>
-        </form>          
+        <h1>Edit Users</h1>               
         
 		<form name="User List" method="post" action="edituser.php">
-            Sort the table by:
+            Select the user to be edited with his/her username:<br>
 			<select name="username" onchange="this.form.submit()">
         <?php    
 			//echo "start<br>";
