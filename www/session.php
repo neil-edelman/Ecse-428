@@ -307,12 +307,7 @@
 			
 		}
 		
-		/** new table? assumes valid input and access
-		 @param tablenumber table ID
-		 @param maxsize maximum table size
-		 @param currentsize current size
-		 @param status table status: vacant, occupied
-		 @return the table ID created or null
+		/** edit user? assumes valid input and access
 		 @author Yi Qing */
 		final public function edit_user($oriusername, $username, $pass, $first, $last, $email, $privilege){
 			if(!($db = $this->db) || !$this->active) {
@@ -320,10 +315,12 @@
 				return null;
 			}
 			
+			$hash = $this->password_hash($pass);
+			
 			$edited = null;
 			try {
 				$stmt = $db->prepare("UPDATE Users SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE username = ?") or throw_exception("prepare");
-				$stmt->bind_param("ssssss", $username, $pass, $first, $last, $email, $privilege, $oriusername) or throw_exception("binding");
+				$stmt->bind_param("sssssss", $username, $hash, $first, $last, $email, $privilege, $oriusername) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
 				$edited = $username;
 			} catch(Exception $e) {

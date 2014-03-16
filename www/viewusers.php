@@ -63,7 +63,6 @@
 		
         <p>
 			<br>
-            Go to <a href = "createtable.php">Create Tables</a><br>
 			Go back to the <a href = "mainmenu.php">main menu</a>.			
         </p>
         

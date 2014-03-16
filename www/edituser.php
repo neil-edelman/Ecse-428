@@ -19,8 +19,8 @@
 	/* if the things are set, get them into vars */
 	isset($_REQUEST["username"])	and $username 		= strip_tags(stripslashes($_REQUEST["username"]));
 	isset($_REQUEST["password"]) 	and $password    	= strip_tags(stripslashes($_REQUEST["password"]));
-	isset($_REQUEST["firstname"])   and $firstname		= strip_tags(stripslashes($_REQUEST["firstname"]));
-	isset($_REQUEST["lastname"])	and $lastname   	= strip_tags(stripslashes($_REQUEST["lastname"]));
+	isset($_REQUEST["first"])   and $first		= strip_tags(stripslashes($_REQUEST["first"]));
+	isset($_REQUEST["last"])	and $last   	= strip_tags(stripslashes($_REQUEST["last"]));
 	isset($_REQUEST["email"])   	and $email			= strip_tags(stripslashes($_REQUEST["email"]));
 	isset($_REQUEST["privilege"])   and $privilege		= strip_tags(stripslashes($_REQUEST["privilege"]));
 
@@ -49,19 +49,19 @@
 			value = "<?php if(isset($username)) echo $username;?>" 	
 			maxlength = "<?php echo Session::USERNAME_MAX;?>"/><br/>
 
-            <label>New Table Maximum Size:</label>
+            <label>New Password:</label>
 			<input type="text" name="password"
 			value = "<?php if(isset($password)) echo $password;?>" 
 			maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/>
 
-            <label>New Table Size:</label>
-			<input type="text" name="firstname"
-			value = "<?php if(isset($firstname)) echo $firstname;?>"  
+            <label>New First Name:</label>
+			<input type="text" name="first"
+			value = "<?php if(isset($first)) echo $first;?>"  
 			maxlength = "<?php echo Session::FIRST_MAX;?>"/><br/>
 
-            <label>Last Name:</label>
-			<input type="text" name="lastname"
-			value = "<?php if(isset($lastname)) echo $lastname;?>"
+            <label>New Last Name:</label>
+			<input type="text" name="last"
+			value = "<?php if(isset($last)) echo $last;?>"
 			maxlength = "<?php echo Session::LAST_MAX;?>"/><br/>
 			
             <label>Email:</label>
@@ -76,10 +76,18 @@
                 <option <?php if(isset($privilege)) echo $privilege=="manager"?"selected ":"";?>value="manager">Manager</option>
                 <option <?php if(isset($privilege)) echo $privilege=="admin"?"selected ":"";?>value="admin">System Admin</option>
             </select>
+            
+			<br/>
             <br/>
-			<input type = "submit" value = "New"/>
+			<input type = "submit" value = "Edit" <?php if (!isset($_SESSION["oriusername"])){ echo "disabled";} ?>/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
+			<br/>
+			<p><?php if(isset($submitted)) echo "Edit Complete.";?><br/>
+			<?php if (!isset($_SESSION["oriusername"])){ echo "This page is presently stale.  Please return to mainmenu";} ?></p>
+			<p>
+			Go back to <a href = "viewusers.php">View Users</a>.
+			</p>
 			</div>
         </form>		
 		
@@ -126,13 +134,22 @@
 				if(strlen($email) > Session::EMAIL_MAX) {
 					$is_ready = false;
 					echo "E-mail is maximum ".Session::EMAIL_MAX." characters.<br/>\n";
+				}else if(!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)){
+					$is_ready = false;
+					echo "Not a valid email format.<br/>\n";
 				}
 			}
 			if($is_ready) {
-				if($s->new_user($username, $password, $first, $last, $email, $privilege)) {
-					echo "Account &quot;".$username."&quot; created.<br/>\n";
+				if($s->edit_user($_SESSION['oriusername'], $username, $password, $first, $last, $email, $privilege)) {
+					
+					/* Clear out temporary Session variables*/
+					unset($_SESSION['oriusername']);
+
+					$_SESSION['submitted'] = true;
+					
+					Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
-					echo "Account not created: ".$s->status()."<br/>\n";
+					echo "Account not edited: ".$s->status()."<br/>\n";
 				}
 			}
         ?>
