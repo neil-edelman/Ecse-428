@@ -314,26 +314,48 @@
 		 @param status table status: vacant, occupied
 		 @return the table ID created or null
 		 @author Yi Qing */
+		final public function edit_user($oriusername, $username, $pass, $first, $last, $email, $privilege){
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "edit_user: database connection closed";
+				return null;
+			}
+			
+			$edited = null;
+			try {
+				$stmt = $db->prepare("UPDATE Users SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE username = ?") or throw_exception("prepare");
+				$stmt->bind_param("ssssss", $username, $pass, $first, $last, $email, $privilege, $oriusername) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$edited = $username;
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "edit_user ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+			$stmt and $stmt->close();
+
+			return $edited;
+		}
+		
 		final public function edit_table($oritablenumber, $tablenumber, $maxsize, $currentsize, $status){
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "new_table: database connection closed";
 				return null;
 			}
 			
-			$created = null;
+			$edited = null;
 			try {
 				$stmt = $db->prepare("UPDATE Tables SET tablenumber = ?, maxsize = ?, currentsize= ?, status= ? WHERE tablenumber = ?") or throw_exception("prepare");
 				$stmt->bind_param("iiisi", $tablenumber, $maxsize, $currentsize, $status, $oritablenumber) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
-				$created = $tablenumber;
+				$edited = $tablenumber;
 			} catch(Exception $e) {
 				$errno = ($stmt ? $stmt->errno : $db->errno);
 				$error = ($stmt ? $stmt->error : $db->error);
-				$this->status = "new_table ".$e->getMessage()." failed: (".$errno.") ".$error;
+				$this->status = "edit_table ".$e->getMessage()." failed: (".$errno.") ".$error;
 			}
 			$stmt and $stmt->close();
 
-			return $created;
+			return $edited;
 		}
 		
 		
