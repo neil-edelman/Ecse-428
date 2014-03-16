@@ -1,2 +1,4 @@
 *.bak
 *.orig
+/nbproject/private/
+nbproject/*
