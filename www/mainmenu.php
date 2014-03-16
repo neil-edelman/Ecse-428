@@ -86,6 +86,8 @@ checked in -->
 
 <p><a href = "addaccount.php">Add account</a>.</p>
 
+<p><a href = "viewusers.php">Edit Users</a>.</p>
+
 <p><a href = "shifts.php">View and edit shifts</a>.</p>
 
 <?php
