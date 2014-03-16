@@ -7,8 +7,14 @@
 
     $db = $s->link_database() or header_error("database error");
     $user = $s->get_user() or header_error("user timeout error");
-
-    $all_orders = $g->get_all_orders($db);
+   
+   
+    if (isset($_POST['intable'])) {        
+        $table_number = $_POST['intable'];
+        $orders = $g->get_specific_orders($db, $table_number);       
+    } else {        
+        $orders = $g->get_all_orders($db);
+    }    
 ?>
 
 <!DOCTYPE html>
@@ -23,10 +29,9 @@
     <body>
         <h1>View Orders</h1>
 
-        <?php
-             echo $g->display_all_orders($all_orders);
-
-             $all_orders->close();
+        <?php       
+             echo $g->display_all_orders($orders);
+             $orders->close();
         ?>
 
         <p>

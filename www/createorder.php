@@ -72,13 +72,20 @@
 			if (mysqli_connect_errno()) {
 				echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			}
+			
+			$sql1 = "SELECT * FROM `payomca_rms`.`Tables` WHERE `tablenumber`='$tableid';";			
+			$suchtables = mysqli_fetch_row(mysqli_query($server, $sql1));
+			
+			if ($suchtables != null ) {
+				$sql2 = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
+				mysqli_query($server, $sql2);
 
-			$sql = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
-			mysqli_query($server, $sql);
-
-			$_SESSION['orderid'] = $orderid;	// Transferring $orderid to use on addtoorder.php
-			header("Location: addtoorder.php");
-
+				$_SESSION['orderid'] = $orderid;	// Transferring $orderid to use on addtoorder.php
+				header("Location: addtoorder.php");
+			} else {
+				echo "Error: This Table does not appear to exist.";
+			}
+			
 		} else {
 			echo "Error: No Table ID given.";
 		}
@@ -95,13 +102,13 @@
 			echo "Error: No table specified whose orders to edit.";
 		} else {
 			$sqlgetorder = "SELECT * FROM `payomca_rms`.`Order` WHERE `tableid`=$tableupdate;";
-			$theorder = mysqli_fetch_row(mysqli_query($server, $sqlgetorder));
+			$itsorders = mysqli_query($server, $sqlgetorder);	// This now stores all orders associated with the given table.
+			$theorder = mysqli_fetch_row($itsorders);		// Get the 1st such order, just to see if there IS at least one.
 			if ($theorder == null) {
 				echo "This table has no orders associated with it.";
-			} else {
-				$_SESSION['itemnumber'] = 1;
-				$_SESSION['idorder'] = $theorder[0];
-				header("Location: updateorder.php");
+			} else {			
+				$_SESSION['tableupdate'] = $tableupdate;	// Pass all this table to the next page.
+				header("Location: chooseorder.php");
 			}
 		}
 	}	

@@ -2,6 +2,12 @@
 
     class modifyorder {
 
+        public function get_specific_orders($db, $table_number) {          
+           $sqlQuery = "SELECT * FROM `Order` WHERE `tableid` = " . $table_number;           
+           $result = mysqli_query($db, $sqlQuery);
+           return $result;
+        }
+        
         public function get_all_orders($db) {
            $sqlQuery = "SELECT * FROM `Order` WHERE 1 ORDER BY tableid ASC";
            $result = mysqli_query($db, $sqlQuery);
