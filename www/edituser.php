@@ -10,7 +10,13 @@
 	is_admin($info) or header_error("not authorised");
 	
 	/* Save the original table value from the POST of the source page */
-	isset($_POST['username']) and $_SESSION["oriusername"] = $_POST['username'] and $username = $_SESSION["oriusername"];
+	//isset($_POST['username']) and $_SESSION["oriusername"] = $_POST['username'] and $username = $_SESSION["oriusername"];
+	if(isset($_POST['username'])){
+		$pieces = explode(",", $_POST['username']);
+		$_SESSION["oriusername"] = $pieces[0];
+		$username = $_SESSION["oriusername"];
+	}
+	
 	if(isset($_SESSION['submitted'])){
 		$submitted = $_SESSION['submitted'];
 		unset($_SESSION['submitted']);
@@ -19,8 +25,8 @@
 	/* if the things are set, get them into vars */
 	isset($_REQUEST["username"])	and $username 		= strip_tags(stripslashes($_REQUEST["username"]));
 	isset($_REQUEST["password"]) 	and $password    	= strip_tags(stripslashes($_REQUEST["password"]));
-	isset($_REQUEST["first"])   and $first		= strip_tags(stripslashes($_REQUEST["first"]));
-	isset($_REQUEST["last"])	and $last   	= strip_tags(stripslashes($_REQUEST["last"]));
+	isset($_REQUEST["first"])   	and $first			= strip_tags(stripslashes($_REQUEST["first"]));
+	isset($_REQUEST["last"])		and $last   		= strip_tags(stripslashes($_REQUEST["last"]));
 	isset($_REQUEST["email"])   	and $email			= strip_tags(stripslashes($_REQUEST["email"]));
 	isset($_REQUEST["privilege"])   and $privilege		= strip_tags(stripslashes($_REQUEST["privilege"]));
 
@@ -75,9 +81,8 @@
                 <option <?php if(isset($privilege)) echo $privilege=="cook"?"selected ":"";?>value="cook">Cook Staff</option>
                 <option <?php if(isset($privilege)) echo $privilege=="manager"?"selected ":"";?>value="manager">Manager</option>
                 <option <?php if(isset($privilege)) echo $privilege=="admin"?"selected ":"";?>value="admin">System Admin</option>
-            </select>
-            
-			<br/>
+            </select><br/>
+			
             <br/>
 			<input type = "submit" value = "Edit" <?php if (!isset($_SESSION["oriusername"])){ echo "disabled";} ?>/>
 			<br/>
