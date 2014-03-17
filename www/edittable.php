@@ -40,7 +40,7 @@
             <h1>Edit Table</h1>
 			<label>Currently: <br/></label>
 			<?php
-			echo "Previous Table Number: &quot;".$_SESSION["oritable"]."&quot;<br/>\n";
+			echo "Previous Table Number: &quot;".$_SESSION["oritable"][0]."&quot;<br/>\n";
 			?>
 			
             <div>

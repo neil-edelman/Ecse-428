@@ -10,17 +10,31 @@
 	is_admin($info) or header_error("not authorised");
 	
 	/* Save the original table value from the POST of the source page */
-	isset($_POST['username']) and $_SESSION["oriusername"] = $_POST['username'] and $username = $_SESSION["oriusername"];
+	//isset($_POST['username']) and $_SESSION["oriusername"] = $_POST['username'] and $username = $_SESSION["oriusername"];
+	if(isset($_POST['username'])){
+		$pieces = explode(" ", $_POST['username']);
+		$_SESSION["oriusername"] = $pieces[0];
+		$_SESSION["orifirst"] = $pieces[1];
+		$_SESSION["orilast"] = $pieces[2];
+		$_SESSION["oriemail"] = $pieces[3];
+		$_SESSION["oriprivilege"] = $pieces[4];
+		$inusername = $pieces[0];
+		$first = $pieces[1];
+		$last = $pieces[2];
+		$email = $pieces[3];
+		$privilege = $pieces[4];
+	}
+	
 	if(isset($_SESSION['submitted'])){
 		$submitted = $_SESSION['submitted'];
 		unset($_SESSION['submitted']);
 	}
 	
 	/* if the things are set, get them into vars */
-	isset($_REQUEST["username"])	and $username 		= strip_tags(stripslashes($_REQUEST["username"]));
+	isset($_REQUEST["inusername"])	and $inusername 		= strip_tags(stripslashes($_REQUEST["inusername"]));
 	isset($_REQUEST["password"]) 	and $password    	= strip_tags(stripslashes($_REQUEST["password"]));
-	isset($_REQUEST["first"])   and $first		= strip_tags(stripslashes($_REQUEST["first"]));
-	isset($_REQUEST["last"])	and $last   	= strip_tags(stripslashes($_REQUEST["last"]));
+	isset($_REQUEST["first"])   	and $first			= strip_tags(stripslashes($_REQUEST["first"]));
+	isset($_REQUEST["last"])		and $last   		= strip_tags(stripslashes($_REQUEST["last"]));
 	isset($_REQUEST["email"])   	and $email			= strip_tags(stripslashes($_REQUEST["email"]));
 	isset($_REQUEST["privilege"])   and $privilege		= strip_tags(stripslashes($_REQUEST["privilege"]));
 
@@ -40,13 +54,18 @@
             <h1>Edit User</h1>
 			<label>Currently: <br/></label>
 			<?php
-			echo "Previous User username: &quot;".$_SESSION["oriusername"]."&quot;<br/>\n";
+			echo "Original User username: 	 &quot;".$_SESSION["oriusername"]."&quot;<br/>\n";
+			echo "Original User firstname: 	 &quot;".$_SESSION["orifirst"]."&quot;<br/>\n";
+			echo "Original User lastname: 	 &quot;".$_SESSION["orilast"]."&quot;<br/>\n";
+			echo "Original User email: 		 &quot;".$_SESSION["oriemail"]."&quot;<br/>\n";
+			echo "Original User privilege: 	 &quot;".$_SESSION["oriprivilege"]."&quot;<br/>\n";
 			?>
+			<br/>
 			
             <div>
 			<label>New Username:</label>
-			<input type="text" name="username"
-			value = "<?php if(isset($username)) echo $username;?>" 	
+			<input type="text" name="inusername"
+			value = "<?php if(isset($inusername)) echo $inusername;?>" 	
 			maxlength = "<?php echo Session::USERNAME_MAX;?>"/><br/>
 
             <label>New Password:</label>
@@ -75,9 +94,8 @@
                 <option <?php if(isset($privilege)) echo $privilege=="cook"?"selected ":"";?>value="cook">Cook Staff</option>
                 <option <?php if(isset($privilege)) echo $privilege=="manager"?"selected ":"";?>value="manager">Manager</option>
                 <option <?php if(isset($privilege)) echo $privilege=="admin"?"selected ":"";?>value="admin">System Admin</option>
-            </select>
-            
-			<br/>
+            </select><br/>
+			
             <br/>
 			<input type = "submit" value = "Edit" <?php if (!isset($_SESSION["oriusername"])){ echo "disabled";} ?>/>
 			<br/>
@@ -93,20 +111,20 @@
 		
 		<?php
 			$is_ready = false;
-			if(   isset($username)
+			if(   isset($inusername)
 			   || isset($password)
 			   || isset($first)
 			   || isset($last)
 			   || isset($email)
 			   || isset($privilege)) {
 				$is_ready = true;
-				if(   !isset($username)
+				if(   !isset($inusername)
 				   || !isset($password)
 				   || !isset($first)
 				   || !isset($last)
 				   || !isset($email)
 				   || !isset($privilege)
-				   || empty($username)
+				   || empty($inusername)
 				   || empty($password)
 				   || empty($first)
 				   || empty($last)
@@ -115,7 +133,7 @@
 					$is_ready = false;
 					echo "You did not enter all the required information.<br/>\n";
 				}
-				if(strlen($username) > Session::USERNAME_MAX) {
+				if(strlen($inusername) > Session::USERNAME_MAX) {
 					$is_ready = false;
 					echo "Username is maximum ".Session::USERNAME_MAX." characters.<br/>\n";
 				}
@@ -140,11 +158,14 @@
 				}
 			}
 			if($is_ready) {
-				if($s->edit_user($_SESSION['oriusername'], $username, $password, $first, $last, $email, $privilege)) {
+				if($s->edit_user($_SESSION['oriusername'], $inusername, $password, $first, $last, $email, $privilege)) {
 					
 					/* Clear out temporary Session variables*/
 					unset($_SESSION['oriusername']);
-
+					unset($_SESSION["orifirst"]);
+					unset($_SESSION["orilast"]);
+					unset($_SESSION["oriemail"]);
+					unset($_SESSION["oriprivilege"]);
 					$_SESSION['submitted'] = true;
 					
 					Header('Location: '.$_SERVER['PHP_SELF']);

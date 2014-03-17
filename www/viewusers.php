@@ -27,6 +27,8 @@
 		<form name="User List" method="post" action="edituser.php">
             Select the user to be edited with his/her username:<br>
 			<select name="username" onchange="this.form.submit()">
+			<option value=""></option>
+			
         <?php    
 			//echo "start<br>";
             
@@ -40,7 +42,8 @@
 			echo "end<br>"; */
 			
 			while($row = $all_users->fetch_array(MYSQLI_NUM)){
-				echo "<option value='$row[0]'>".$row[0]."</option>";
+				//echo "<option value='$row[0]'>".$row[0]."</option>";
+				echo "<option value=\"$row[0] $row[2] $row[3] $row[4] $row[5]\">".$row[0]." (".$row[2]." ".$row[3].")</option>";
 			}
         ?>   
             </select>		
