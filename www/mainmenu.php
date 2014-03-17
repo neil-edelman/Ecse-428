@@ -76,6 +76,8 @@ checked in -->
 
 <p>View <a href = "vieworders.php">an existing Order</a>.</p>
 
+<p><a href = "changepass.php">Change existing Password.</a>.</p>
+
 <?php
 		if(is_admin($info)) {
 ?>
