@@ -43,7 +43,7 @@
 			
 			while($row = $all_users->fetch_array(MYSQLI_NUM)){
 				//echo "<option value='$row[0]'>".$row[0]."</option>";
-				echo "<option value=\"$row[0] $row[2] $row[3] $row[4] $row[5]\">".$row[0]."</option>";
+				echo "<option value=\"$row[0] $row[2] $row[3] $row[4] $row[5]\">".$row[0]." (".$row[2]." ".$row[3].")</option>";
 			}
         ?>   
             </select>		

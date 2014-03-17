@@ -163,9 +163,10 @@
 					/* Clear out temporary Session variables*/
 					unset($_SESSION['oriusername']);
 					unset($_SESSION["orifirst"]);
+					unset($_SESSION["orilast"]);
 					unset($_SESSION["oriemail"]);
 					unset($_SESSION["oriprivilege"]);
-					unset($_SESSION["submitted"]);
+					$_SESSION['submitted'] = true;
 					
 					Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
