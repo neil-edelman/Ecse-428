@@ -108,6 +108,9 @@ maxlength = "<?php echo Session::EMAIL_MAX;?>"/><br/>
 				if(strlen($email) > Session::EMAIL_MAX) {
 					$is_ready = false;
 					echo "E-mail is maximum ".Session::EMAIL_MAX." characters.<br/>\n";
+				}else if(!preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/",$email)){
+					$is_ready = false;
+					echo "Not a valid email format.<br/>\n";
 				}
 			}
 			if($is_ready) {
