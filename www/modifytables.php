@@ -1,7 +1,6 @@
 <?php
     
-    class modifytables {      
-        
+    class modifytables {         
          
         public function clear_table($db, $table_number) {
           

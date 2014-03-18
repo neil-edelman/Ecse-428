@@ -42,6 +42,12 @@
             return $created;
         }
         
+        public function get_item_info($item_number, $db) {
+           $sqlQuery = "SELECT * FROM `MenuItems` WHERE `Item ID` =" . $item_number;
+           $result = mysqli_query($db, $sqlQuery);            
+           return $result;
+        }        
+        
         final public function status() {
             return $this->status;
 	}

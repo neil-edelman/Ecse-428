@@ -113,3 +113,15 @@
 [22-Feb-2014 20:53:48 America/Phoenix] PHP Notice:  Undefined variable: orimaxsize in /home/payomca/public_html/rms/yiqing/edittable.php on line 47
 [22-Feb-2014 20:53:48 America/Phoenix] PHP Notice:  Undefined variable: oricurrentsize in /home/payomca/public_html/rms/yiqing/edittable.php on line 48
 [22-Feb-2014 20:53:48 America/Phoenix] PHP Notice:  Undefined variable: oristatus in /home/payomca/public_html/rms/yiqing/edittable.php on line 49
+[18-Mar-2014 08:24:04 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:25:29 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:26:00 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:26:00 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:28:16 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:28:39 America/Phoenix] PHP Notice:  Undefined offset: 1 in /home/payomca/public_html/rms/jonathan/edititem.php on line 17
+[18-Mar-2014 08:28:39 America/Phoenix] PHP Notice:  Undefined offset: 2 in /home/payomca/public_html/rms/jonathan/edititem.php on line 18
+[18-Mar-2014 08:28:39 America/Phoenix] PHP Notice:  Undefined offset: 3 in /home/payomca/public_html/rms/jonathan/edititem.php on line 19
+[18-Mar-2014 08:34:55 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:36:04 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:37:08 America/Phoenix] PHP Fatal error:  Call to undefined function get_item_info() in /home/payomca/public_html/rms/jonathan/edititem.php on line 16
+[18-Mar-2014 08:40:15 America/Phoenix] PHP Fatal error:  Cannot use object of type mysqli_result as array in /home/payomca/public_html/rms/jonathan/edititem.php on line 17
