@@ -231,3 +231,86 @@
 [18-Mar-2014 19:03:51 America/Phoenix] PHP Notice:  Undefined variable: all_items in /home/payomca/public_html/rms/nad/mostpopular.php on line 48
 [18-Mar-2014 19:03:51 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/nad/modifyitems.php on line 115
 [18-Mar-2014 19:03:51 America/Phoenix] PHP Fatal error:  Call to a member function fetch_array() on a non-object in /home/payomca/public_html/rms/nad/modifyitems.php on line 129
+[18-Mar-2014 20:08:30 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:30 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:30 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:30 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:33 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:33 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:33 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:33 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:37 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:37 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:37 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:37 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:41 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:41 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:41 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:41 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:43 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:43 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:43 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:43 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:45 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:45 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:45 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:45 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:47 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:47 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:47 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:47 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:08:50 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:08:50 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:08:50 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:08:50 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:09:57 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:09:57 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:09:57 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:09:57 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:10:03 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:10:03 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:10:03 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:10:03 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:10:13 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 111
+[18-Mar-2014 20:10:13 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:10:13 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:10:13 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:10:13 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:10:28 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 111
+[18-Mar-2014 20:10:28 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:10:28 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:10:28 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:10:28 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:10:37 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 111
+[18-Mar-2014 20:10:38 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:10:38 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:10:38 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:10:38 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:11:40 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 111
+[18-Mar-2014 20:11:40 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:11:40 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:11:40 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:11:40 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:14:04 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:14:04 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:14:04 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:14:04 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:14:07 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 109
+[18-Mar-2014 20:14:10 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:14:10 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:14:10 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:14:10 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:14:19 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 109
+[18-Mar-2014 20:14:20 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:14:20 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:14:20 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:14:20 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:14:37 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:14:37 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:14:37 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:14:37 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69
+[18-Mar-2014 20:14:46 America/Phoenix] PHP Notice:  Undefined variable: item_number in /home/payomca/public_html/rms/jonathan/edititem.php on line 109
+[18-Mar-2014 20:14:49 America/Phoenix] PHP Warning:  Missing argument 2 for modifyitems::get_all_items(), called in /home/payomca/public_html/rms/jonathan/viewitems.php on line 11 and defined in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 57
+[18-Mar-2014 20:14:49 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 58
+[18-Mar-2014 20:14:49 America/Phoenix] PHP Notice:  Undefined variable: ordering in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 61
+[18-Mar-2014 20:14:49 America/Phoenix] PHP Notice:  Undefined variable: table in /home/payomca/public_html/rms/jonathan/modifyitems.php on line 69

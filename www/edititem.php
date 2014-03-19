@@ -11,26 +11,58 @@
     is_admin($info) or header_error("not authorised");
     
     if (isset($_POST["initem"])) {
-        $item_number  = $_POST["initem"];       
+        $item_number  = $_POST["initem"];
+        $_SESSION['item_number'] = $item_number;
         $info = $m->get_item_info($item_number, $db);
         while ($row = $info->fetch_array(MYSQLI_NUM)) {
-            $info1 = $row[1]; 
-            $info2 = $row[2]; 
-            $info3 = $row[3]; 
+           $info1 = $row[1]; 
+           $info2 = $row[2]; 
+           $info3 = $row[3]; 
         }
-    } else {
-        Header('Location: viewitems.php');
     }
-        
-    isset($_REQUEST["itemid"]) and $itemid = strip_tags(stripslashes($_REQUEST["itemid"]));
-    isset($_REQUEST["itemname"]) and $itemname = strip_tags(stripslashes($_REQUEST["itemname"]));
-    isset($_REQUEST["itemcost"]) and $itemcost = strip_tags(stripslashes($_REQUEST["itemcost"]));
-    isset($_REQUEST["description"]) and $description = strip_tags(stripslashes($_REQUEST["description"]));    
-
-    if(isset($_SESSION['item_submitted'])){        
-        $item_submitted = $_SESSION['item_submitted'];
-        unset($_SESSION['item_submitted']);
+            
+    isset($_REQUEST["itemid"]) and $itemid = strip_tags(stripslashes($_REQUEST["itemid"])) and $item_number = $itemid;
+    isset($_REQUEST["itemname"]) and $itemname = strip_tags(stripslashes($_REQUEST["itemname"])) and  $info1= $itemname;
+    isset($_REQUEST["itemcost"]) and $itemcost = strip_tags(stripslashes($_REQUEST["itemcost"])) and $info2 = $itemcost;
+    isset($_REQUEST["description"]) and $description = strip_tags(stripslashes($_REQUEST["description"])) and $info3 = $description;      
+    
+    $is_ready = true;	
+    if(!isset($itemid) || !isset($itemname) || !isset($itemcost) || !isset($description)
+	|| empty($itemid) || empty($itemname) || empty($itemcost) || empty($description)) {
+        $is_ready = false;
+        echo "You must fill up all fields before clicking Edit.<br/>\n";
     }
+    if(strlen($itemid) > Session::INTEGER_MAX) {
+        $is_ready = false;
+        echo "Item ID is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+    }
+    if(strlen($itemname) > Session::NAME_MAX) {
+        $is_ready = false;
+        echo "Item Name is too long.<br/>\n";
+    }
+    if(strlen($itemcost) > Session::INTEGER_MAX) {
+        $is_ready = false;
+        echo "Item Cost is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+    }
+    if(strlen($description) > Session::DESCRIPTION_MAX) {
+        $is_ready = false;
+        echo "Item descrition is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
+    }
+   
+    if($is_ready) {
+        if (!isset($item_number)) {
+            $item_number =  $_SESSION['item_number'];
+            unset($_SESSION['item_number']);
+        }
+        if($m->edit_item($item_number, $itemid, $itemname, $itemcost, $description, $db)) {            
+            $edit_complete = true;       
+            unset($_SESSION['item_number']);
+        } else {
+            echo "Item not created: ".$m->status()."<br/>\n";
+        }         
+    }
+    
+   //echo "ddddd: " .  $_SESSION['item_number'];
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +75,7 @@
 		<title>Create New Item</title>
     </head>
     <body>
-       <form method="post">            
+       <form method="post" action="edititem.php">            
             <div>
                 <h1>Edit Item</h1>                    
                 
@@ -68,9 +100,8 @@
                     maxlength = "<?php echo Session::DESCRIPTION_MAX;?>"/>
                 <br/><br/><br/>   
                 
-                <input type = "submit" value = "Edit" <?php if (isset($item_submitted) || !isset($item_number)){ echo "disabled";}?>/>
-                <p><?php if(isset($item_submitted)) echo "Edit Complete. Please navigate back to View Items";?><br/>
-                
+                <input type = "submit" value = "Edit" <?php if (isset($edit_complete) || !isset($_SESSION['item_number'])) { echo "disabled";}?>/>
+                <p><?php if(isset($edit_complete)) echo "Edit Complete. Please Navigate back to View Items";?><br/>                
                 <p>
                     Go back to <a href = "viewitems.php">View Items</a>.
 		</p>
@@ -78,41 +109,3 @@
        </form>        
     </body>
 </html>
-
-<?php
-    $is_ready = false;
-    if(isset($itemid) || isset($itemname) || isset($itemcost) || isset($description)){
-	$is_ready = true;
-	
-        if(!isset($itemid) || !isset($itemname) || !isset($itemcost) || !isset($description)
-	   || empty($itemid) || empty($itemname) || empty($itemcost) || empty($description)) {
-            $is_ready = false;
-            echo "You did not enter all the required information.<br/>\n";
-	}
-	if(strlen($itemid) > Session::INTEGER_MAX) {
-            $is_ready = false;
-            echo "Item ID is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
-	}
-	if(strlen($itemname) > Session::NAME_MAX) {
-            $is_ready = false;
-            echo "Item Name is too long.<br/>\n";
-	}
-	if(strlen($itemcost) > Session::INTEGER_MAX) {
-            $is_ready = false;
-            echo "Item Cost is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
-	}
-        if(strlen($description) > Session::DESCRIPTION_MAX) {
-            $is_ready = false;
-            echo "Item descrition is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
-	}
-    }
-    
-    if($is_ready) {
-        if($m->edit_item($item_number, $itemid, $itemname, $itemcost, $description, $db)) {           
-            $_SESSION['item_submitted'] = true;
-            Header('Location: '.$_SERVER['PHP_SELF']);            
-        } else {
-            echo "Item not created: ".$m->status()."<br/>\n";
-        }    
-    }
-?>
