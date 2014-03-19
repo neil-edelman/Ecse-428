@@ -11,8 +11,16 @@
     is_admin($info) or header_error("not authorised");
     
     if (isset($_POST["initem"])) {
-        $item_number  = $_POST["initem"];        
-    }  
+        $item_number  = $_POST["initem"];       
+        $info = $m->get_item_info($item_number, $db);
+        while ($row = $info->fetch_array(MYSQLI_NUM)) {
+            $info1 = $row[1]; 
+            $info2 = $row[2]; 
+            $info3 = $row[3]; 
+        }
+    } else {
+        Header('Location: viewitems.php');
+    }
         
     isset($_REQUEST["itemid"]) and $itemid = strip_tags(stripslashes($_REQUEST["itemid"]));
     isset($_REQUEST["itemname"]) and $itemname = strip_tags(stripslashes($_REQUEST["itemname"]));
@@ -37,36 +45,30 @@
     <body>
        <form method="post">            
             <div>
-                <h1>Edit Item</h1> 
-                   
-                <p>Currently editing item: 
-                    <?php
-                        echo "&quot;".$item_number."&quot;<br/>\n";
-                    ?>
-                </p>
+                <h1>Edit Item</h1>                    
                 
                 <label>New Item ID:</label>
                 <input type="text" name="itemid"
-                    value = "<?php if(isset($itemid)) echo $itemid;?>" 	
+                    value = "<?php if(isset($item_number)) echo $item_number;?>" 	
                     maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
                 <label>New Item Name:</label>
                 <input type="text" name="itemname"
-                    value = "<?php if(isset($itemname)) echo $itemname;?>" 	
+                    value = "<?php if(isset($info1)) echo $info1;?>" 	
                     maxlength = "<?php echo Session::NAME_MAX;?>"/><br/>            
                 
                  <label>New Item Cost:</label>
                 <input type="text" name="itemcost"
-                    value = "<?php if(isset($itemcost)) echo $itemcost;?>"  
+                    value = "<?php if(isset($info2)) echo $info2;?>"  
                     maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
                 <label>New Item Description:</label>
                 <input type="text" name="description"
-                    value = "<?php if(isset($description)) echo $description;?>"  
+                    value = "<?php if(isset($info3)) echo $info3;?>"  
                     maxlength = "<?php echo Session::DESCRIPTION_MAX;?>"/>
                 <br/><br/><br/>   
                 
-                <input type = "submit" value = "New" <?php if (isset($item_submitted) || !isset($item_number)){ echo "disabled";}?>/>
+                <input type = "submit" value = "Edit" <?php if (isset($item_submitted) || !isset($item_number)){ echo "disabled";}?>/>
                 <p><?php if(isset($item_submitted)) echo "Edit Complete. Please navigate back to View Items";?><br/>
                 
                 <p>
