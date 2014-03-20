@@ -14,8 +14,10 @@
 	isset($_REQUEST["tablenumber"])	and $tablenumber 	= strip_tags(stripslashes($_REQUEST["tablenumber"]));
 	isset($_REQUEST["maxsize"]) 	and $maxsize    	= strip_tags(stripslashes($_REQUEST["maxsize"]));
 	isset($_REQUEST["currentsize"])	and $currentsize   	= strip_tags(stripslashes($_REQUEST["currentsize"]));
+	isset($_REQUEST["status"])     	and $status			= strip_tags(stripslashes($_REQUEST["status"]));
 
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -44,14 +46,18 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 value = "<?php if(isset($first)) echo $first;?>"  
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
+            <label>Status:</label>
+            <select name="status">
+                <option <?php if(isset($status)) echo $status=="vacant"?"selected ":"";?>value="vacant">vacant</option>
+                <option <?php if(isset($status)) echo $status=="occupied"?"selected ":"";?>value="occupied">occupied</option>
+            </select>
             <br/>
             <br/>
 			<input type = "submit" value = "New"/>
 			<br/>
 			<input type = "reset" value = "Reset"/>
 			<p>
-			Go to <a href = "mainmenu.php">mainmenu</a>.<br>
-			Go to <a href = "viewtables.php">view table</a>.
+			Go back to <a href = "mainmenu.php">mainmenu</a>.
 			</p>
 			</div>
         </form>
@@ -60,36 +66,31 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			$is_ready = false;
 			if(   isset($tablenumber)
 			   || isset($maxsize)
-			   || isset($currentsize)){
+			   || isset($currentsize)
+			   || isset($status)){
 				$is_ready = true;
 				if(   !isset($tablenumber)
 				   || !isset($maxsize)
 				   || !isset($currentsize)
+				   || !isset($status)
 				   || empty($tablenumber)
 				   || empty($maxsize)
-				   || (empty($currentsize) && $currentsize != 0)) {
+				   || (empty($currentsize) && $currentsize != 0)
+				   || empty($status)) {
 					$is_ready = false;
 					echo "You did not enter all the required information.<br/>\n";
 				}
 				if(strlen($tablenumber) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "tablenumber has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
+					echo "Username is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 				}
 				if(strlen($maxsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "maxsize has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
+					echo "Password is too long.<br/>\n";
 				}
 				if(strlen($currentsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "currentsize has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
-				}
-				if($currentsize > $maxsize){
-					$is_ready = false;
-					echo "current size is larger than the maximum size.";
-				}else if($currentsize > 0){
-					$status = 'occupied';
-				}else{
-					$status = 'vacant';
+					echo "First name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 				}
 			}
 			if($is_ready) {

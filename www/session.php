@@ -5,7 +5,7 @@
 		const SERVER   = "127.0.0.1"; /* :3306? not working */
 		const USERNAME = "payomca_rms";
 		const PASSWORD = "mushroom";
-		const DATABASE = "payomca_rms";
+		const DATABASE = "payomca_rms2";
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
 		/* 60s/m * 60m/h * 4h (seconds) */
@@ -18,7 +18,8 @@
 		const LAST_MAX     = 32; /* lol */
 		const EMAIL_MAX    = 64; /* too short */
 		const INTEGER_MAX	   = 11; /* For tables */
-		
+		const NAME_MAX     = 30;
+                const DESCRIPTION_MAX = 800;
 		/* prevents multiple sessions being created */
 		private static $session = null;
 

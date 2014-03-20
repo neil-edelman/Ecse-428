@@ -1,7 +1,6 @@
 <?php
     
-    class modifytables {      
-        
+    class modifytables {         
          
         public function clear_table($db, $table_number) {
           
@@ -9,7 +8,7 @@
             $status = 'vacant';          
             
             try {
-                $change = $db->prepare("UPDATE payomca_rms.Tables SET currentsize = ?, status = ? WHERE Tables.tablenumber = ?") or throw_exception("prepare");
+                $change = $db->prepare("UPDATE payomca_rms2.Tables SET currentsize = ?, status = ? WHERE Tables.tablenumber = ?") or throw_exception("prepare");
                 $change->bind_param("isi", $size, $status, $table_number) or throw_exception("binding");
                 $change->execute() or throw_exception("execute");
 
@@ -55,7 +54,7 @@
                     $table = $table . "<td>$row[$number_of_columns]</td>";                   
                 } 
                 
-                $sqlQuery = "SELECT * FROM payomca_rms.Order WHERE Order.tableid =".$row[0]." AND Order.situation != 'done'";
+                $sqlQuery = "SELECT * FROM payomca_rms2.Order WHERE Order.tableid =".$row[0]." AND Order.situation != 'done'";
                 $result = mysqli_query($db, $sqlQuery);
                 $count = mysqli_num_rows($result);
   

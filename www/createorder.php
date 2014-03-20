@@ -10,11 +10,11 @@
 	$info = $s->user_info($user) or header_error("user info error");
 	
 	// Generating a sequential OrderID for the new Order.
-	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 	if (mysqli_connect_errno()) {
 		echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
 	}
-	$sql = "SELECT * FROM `payomca_rms`.`Order`";			
+	$sql = "SELECT * FROM `payomca_rms2`.`Order`";			
 	$stmt = mysqli_prepare ($server, $sql);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
@@ -68,16 +68,16 @@
 	if(isset($_REQUEST["createorder"])) {
 		if (!empty($tableid)) {
 		
-			$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+			$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 			if (mysqli_connect_errno()) {
 				echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			}
 			
-			$sql1 = "SELECT * FROM `payomca_rms`.`Tables` WHERE `tablenumber`='$tableid';";			
+			$sql1 = "SELECT * FROM `payomca_rms2`.`Tables` WHERE `tablenumber`='$tableid';";			
 			$suchtables = mysqli_fetch_row(mysqli_query($server, $sql1));
 			
 			if ($suchtables != null ) {
-				$sql2 = "INSERT INTO `payomca_rms`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
+				$sql2 = "INSERT INTO `payomca_rms2`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
 				mysqli_query($server, $sql2);
 
 				$_SESSION['orderid'] = $orderid;	// Transferring $orderid to use on addtoorder.php
@@ -101,7 +101,7 @@
 		if (empty($tableupdate)) {
 			echo "Error: No table specified whose orders to edit.";
 		} else {
-			$sqlgetorder = "SELECT * FROM `payomca_rms`.`Order` WHERE `tableid`=$tableupdate;";
+			$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Order` WHERE `tableid`=$tableupdate;";
 			$itsorders = mysqli_query($server, $sqlgetorder);	// This now stores all orders associated with the given table.
 			$theorder = mysqli_fetch_row($itsorders);		// Get the 1st such order, just to see if there IS at least one.
 			if ($theorder == null) {
