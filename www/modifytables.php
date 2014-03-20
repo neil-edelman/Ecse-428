@@ -75,7 +75,7 @@
                 mysqli_free_result($result);
                 
                 $table = $table . "<td><form id= \"name\" method=\"post\" action=\"edittable.php\">
-                                   <input name=\"intable\" type=\"hidden\" value=\"$row[0] $row[1] $row[2]\">                                   
+                                   <input name=\"intable\" type=\"hidden\" value=\"$row[0] $row[1] $row[2] $row[3]\">                                   
                                    <input name=\"submit\" type=\"submit\" value=\"Edit Table\">
                                    </form></td>";
                 

@@ -10,10 +10,25 @@
 	is_admin($info) or header_error("not authorised");
 	
 	/* Save the original table value from the POST of the source page */
-	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'] and $tablenumber = $_SESSION["oritable"];
-	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
-	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
-	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
+	if(isset($_POST['intable'])){
+		$pieces = explode(" ", $_POST['intable']);
+		$_SESSION["oritable"] = $pieces[0];
+		$_SESSION["orimaxsize"] = $pieces[1];
+		$_SESSION["oricurrentsize"] = $pieces[2];
+		$_SESSION["oristatus"] = $pieces[3];
+		$tablenumber = $pieces[0];
+		$maxsize = $pieces[1];
+		//$currentsize = $pieces[2];
+		$status = $pieces[3];
+	}else{
+		/* Clear out temporary Session variables*/
+		unset($_SESSION['oritable']);
+		unset($_SESSION['orimaxsize']);
+		unset($_SESSION['oricurrentsize']);
+		unset($_SESSION['oristatus']);
+		$_SESSION['submitted'] = true;
+	}
+	
 	if(isset($_SESSION['submitted'])){
 		$submitted = $_SESSION['submitted'];
 		unset($_SESSION['submitted']);
@@ -40,9 +55,10 @@
             <h1>Edit Table</h1>
 			<label>Currently: <br/></label>
 			<?php
-			echo "Previous Table Number: &quot;".$_SESSION["oritable"][0]."&quot;<br/>\n";
+			echo "Original table number: 		 &quot;".$_SESSION["oritable"]."&quot;<br/>\n";
+			echo "Original table max size: 	 	 &quot;".$_SESSION["orimaxsize"]."&quot;<br/>\n";
+			echo "Original table current size: 	 &quot;".$_SESSION["oricurrentsize"]."&quot;<br/>\n";
 			?>
-			
             <div>
 			<label>New Table ID:</label>
 <input type="text" name="tablenumber"
