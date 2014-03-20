@@ -5,7 +5,7 @@
 		const SERVER   = "127.0.0.1"; /* :3306? not working */
 		const USERNAME = "payomca_rms";
 		const PASSWORD = "mushroom";
-		const DATABASE = "payomca_rms";
+		const DATABASE = "payomca_rms2";
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
 		/* 60s/m * 60m/h * 4h (seconds) */

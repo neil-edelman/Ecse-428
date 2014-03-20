@@ -32,7 +32,7 @@ class modifyitems {
         $created = NULL;
         try {
             //echo "edit_item: " . $item_number . "--" . $itemid . "--" . $itemname . "--" . $itemcost . "--" . $description;
-            $stmt = $db->prepare("UPDATE payomca_rms.MenuItems SET `Item ID`= ?, `Name`= ?, `Cost`= ?, `Description`= ? WHERE `Item ID` = ?") or throw_exception("prepare");
+            $stmt = $db->prepare("UPDATE payomca_rms2.MenuItems SET `Item ID`= ?, `Name`= ?, `Cost`= ?, `Description`= ? WHERE `Item ID` = ?") or throw_exception("prepare");
             $stmt->bind_param("isisi", $itemid, $itemname, $itemcost, $description, $item_number) or throw_exception("binding");
             $stmt->execute() or throw_exception("execute");
             //echo "Stupid2\n";
@@ -59,7 +59,7 @@ class modifyitems {
 
     public function get_all_items($db, $ordering) {
         if ($ordering == "default") {
-            $sqlQuery = "SELECT * FROM payomca_rms.MenuItems";
+            $sqlQuery = "SELECT * FROM payomca_rms2.MenuItems";
         } else {
             $sqlQuery = "SELECT * FROM MenuItems ORDER BY " . $ordering;
         }

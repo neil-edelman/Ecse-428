@@ -13,22 +13,22 @@
 	
 	$orderid = $_SESSION['idorder'];	// Getting $orderid
 	
-	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 		if (mysqli_connect_errno()) {
 			echo "Failed to connect to MySQL: " . mysqli_connect_error();
 		}
 	
 	// THEORDER = the order to update.
-	$theorder = mysqli_fetch_row(mysqli_query($server, "SELECT * FROM `payomca_rms`.`Order` WHERE `orderid` = $orderid"));	// Only 1 result will exist.
+	$theorder = mysqli_fetch_row(mysqli_query($server, "SELECT * FROM `payomca_rms2`.`Order` WHERE `orderid` = $orderid"));	// Only 1 result will exist.
 	
-	$sqlitem = "SELECT * FROM `payomca_rms`.`OrderContain` WHERE `orderid` = $orderid";			
+	$sqlitem = "SELECT * FROM `payomca_rms2`.`OrderContain` WHERE `orderid` = $orderid";			
 	$stmt = mysqli_prepare ($server, $sqlitem);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
     $rows = mysqli_stmt_num_rows($stmt);	// Count the # of items for this order.
 	
 	// ALLCONTAINS = all items contained in the current order.
-	$allcontains = mysqli_query($server, "SELECT * FROM `payomca_rms`.`OrderContain` WHERE `orderid` = $orderid");
+	$allcontains = mysqli_query($server, "SELECT * FROM `payomca_rms2`.`OrderContain` WHERE `orderid` = $orderid");
 	
 
 	for ($i = 1; $i <= $itemnumber; $i++) {
@@ -117,13 +117,13 @@
 		}
 		else {
 			
-			$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+			$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 			if (mysqli_connect_errno()) {
 				echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			}
 
-			$sqlupdateorder= "UPDATE `payomca_rms`.`Order` SET `tableid`='$tableid',`situation`='$situation' WHERE `orderid`='$orderid';";
-			$sqlupdateitem = "UPDATE `payomca_rms`.`OrderContain` SET `itemid`='$itemid',`quantity`='$quantity',`comment`='$comment' WHERE `containid`='$containid';";
+			$sqlupdateorder= "UPDATE `payomca_rms2`.`Order` SET `tableid`='$tableid',`situation`='$situation' WHERE `orderid`='$orderid';";
+			$sqlupdateitem = "UPDATE `payomca_rms2`.`OrderContain` SET `itemid`='$itemid',`quantity`='$quantity',`comment`='$comment' WHERE `containid`='$containid';";
 			mysqli_query($server, $sqlupdateorder);
 			mysqli_query($server, $sqlupdateitem);
 			

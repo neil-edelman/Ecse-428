@@ -14,11 +14,11 @@
 		echo $tableupdate;
 
 	// Let's count how many Orders exist for this Table.
-	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 	if (mysqli_connect_errno()) {
 		echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
 	}		
-	$sqlgetorder = "SELECT * FROM `payomca_rms`.`Order` WHERE `tableid`=$tableupdate;";	
+	$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Order` WHERE `tableid`=$tableupdate;";	
 	$stmt = mysqli_prepare ($server, $sqlgetorder);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
