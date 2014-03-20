@@ -31,7 +31,7 @@
 	}
 	
 	/* if the things are set, get them into vars */
-	isset($_REQUEST["inusername"])	and $inusername 		= strip_tags(stripslashes($_REQUEST["inusername"]));
+	isset($_REQUEST["inusername"])	and $inusername 	= strip_tags(stripslashes($_REQUEST["inusername"]));
 	isset($_REQUEST["password"]) 	and $password    	= strip_tags(stripslashes($_REQUEST["password"]));
 	isset($_REQUEST["first"])   	and $first			= strip_tags(stripslashes($_REQUEST["first"]));
 	isset($_REQUEST["last"])		and $last   		= strip_tags(stripslashes($_REQUEST["last"]));
