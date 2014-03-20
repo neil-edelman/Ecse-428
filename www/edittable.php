@@ -15,19 +15,11 @@
 		$_SESSION["oritable"] = $pieces[0];
 		$_SESSION["orimaxsize"] = $pieces[1];
 		$_SESSION["oricurrentsize"] = $pieces[2];
-		$_SESSION["oristatus"] = $pieces[3];
 		$tablenumber = $pieces[0];
 		$maxsize = $pieces[1];
 		//$currentsize = $pieces[2];
-		$status = $pieces[3];
-	}else{
-		/* Clear out temporary Session variables*/
-		unset($_SESSION['oritable']);
-		unset($_SESSION['orimaxsize']);
-		unset($_SESSION['oricurrentsize']);
-		unset($_SESSION['oristatus']);
-		$_SESSION['submitted'] = true;
 	}
+	
 	if(isset($_SESSION['submitted'])){
 		$submitted = $_SESSION['submitted'];
 		unset($_SESSION['submitted']);
@@ -37,9 +29,7 @@
 			/* if the things are set, get them into vars */
 	isset($_REQUEST["tablenumber"])	and $tablenumber 	= strip_tags(stripslashes($_REQUEST["tablenumber"]));
 	isset($_REQUEST["maxsize"]) 	and $maxsize    	= strip_tags(stripslashes($_REQUEST["maxsize"]));
-	isset($_REQUEST["currentsize"])	and $currentsize   	= strip_tags(stripslashes($_REQUEST["currentsize"]));
-	isset($_REQUEST["status"])     	and $status			= strip_tags(stripslashes($_REQUEST["status"]));
-	
+	isset($_REQUEST["currentsize"])	and $currentsize   	= strip_tags(stripslashes($_REQUEST["currentsize"]));	
 ?>
 <!DOCTYPE html>
 <html>
