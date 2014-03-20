@@ -1,3 +1,4 @@
 *.bak
 *.orig
-/www/nbproject/private/
+/nbproject/private/
+nbproject/*
