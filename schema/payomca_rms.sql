@@ -50,7 +50,7 @@ INSERT INTO `Bills` (`id`, `date`, `revenue`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `MenuItems` (
-  `Item ID` int(11) NOT NULL,
+  `Item ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(30) NOT NULL,
   `Cost` int(11) NOT NULL,
   `Description` varchar(800) NOT NULL,
@@ -61,21 +61,21 @@ CREATE TABLE IF NOT EXISTS `MenuItems` (
 -- Dumping data for table `MenuItems`
 --
 
-INSERT INTO `MenuItems` (`Item ID`, `Name`, `Cost`, `Description`) VALUES
-(36, 'fdffd', 6, 'dvdv'),
-(89, 'yumm yumm', 56, 'yummmmm'),
-(3, 'dragon succotash', 6, 'hhhhhhhhhhhhhhhhhhhhh'),
-(90, 'Frog legs', 56, 'mmmmm'),
-(0, '', 0, ''),
-(100, 'Chicken', 3, 'Premium chicken egg'),
-(7, 'hot dog blaster', 89, 'god'),
-(8, 'banana bomb', 77, 'Explosive banana whip'),
-(45, 'Snake', 150, 'Rattle snake extract'),
-(34, 'Badger Meat', 87, 'BEST MEAT EVER!!!!'),
-(78, 'Pineapple', 23, 'sweet pineapple'),
-(79, 'whip2', 23, 'whipping stuff ++'),
-(44444, 'Noodles', 1, 'spagetti'),
-(6666, '6666', 6666, '66666');
+INSERT INTO `MenuItems` (`Name`, `Cost`, `Description`) VALUES
+('fdffd', 6, 'dvdv'),
+('yumm yumm', 56, 'yummmmm'),
+('dragon succotash', 6, 'hhhhhhhhhhhhhhhhhhhhh'),
+('Frog legs', 56, 'mmmmm'),
+('', 0, ''),
+('Chicken', 3, 'Premium chicken egg'),
+('hot dog blaster', 89, 'god'),
+('banana bomb', 77, 'Explosive banana whip'),
+('Snake', 150, 'Rattle snake extract'),
+('Badger Meat', 87, 'BEST MEAT EVER!!!!'),
+('Pineapple', 23, 'sweet pineapple'),
+('whip2', 23, 'whipping stuff ++'),
+('Noodles', 1, 'spagetti'),
+('6666', 6666, '66666');
 
 -- --------------------------------------------------------
 
@@ -84,7 +84,7 @@ INSERT INTO `MenuItems` (`Item ID`, `Name`, `Cost`, `Description`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `Order` (
-  `orderid` int(11) NOT NULL,
+  `orderid` int(11) NOT NULL AUTO_INCREMENT,
   `tableid` int(11) NOT NULL,
   `situation` varchar(15) NOT NULL,
   PRIMARY KEY (`orderid`)
