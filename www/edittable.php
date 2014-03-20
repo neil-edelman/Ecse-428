@@ -73,12 +73,24 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			<br/>
 			<p><?php if(isset($submitted)) echo "Edit Complete.";?><br/>
 			<?php if (!isset($_SESSION["oritable"])){ echo "This page is presently stale.  Please return to mainmenu";} ?></p>
-			<p>
-			<input type="button" />
-			Go back to <a href = "viewtables.php">view table</a>.
-			</p>
 			</div>
         </form>
+		
+		<p>Click the button to access an Input Button.</p>
+
+		<form action = "viewtables.php">
+			<input type="submit" value="Return to view table" onclick="myFunction()">
+		</form>
+		<script>
+		function myFunction()
+		{
+		<?php 
+			unset($_SESSION['oritable']);
+			unset($_SESSION['orimaxsize']);
+			unset($_SESSION['oricurrentsize']);
+		?>
+		}
+		</script>
 		
 		<?php
 			$is_ready = false;
@@ -124,7 +136,6 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 					unset($_SESSION['oritable']);
 					unset($_SESSION['orimaxsize']);
 					unset($_SESSION['oricurrentsize']);
-					unset($_SESSION['oristatus']);
 					$_SESSION['submitted'] = true;
 					
 					Header('Location: '.$_SERVER['PHP_SELF']);
