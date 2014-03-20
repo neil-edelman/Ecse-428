@@ -8,33 +8,11 @@
 
 	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
-	
-	// Generating a sequential OrderID for the new Order.
-	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
-	if (mysqli_connect_errno()) {
-		echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
-	}
-	$sql = "SELECT * FROM `payomca_rms2`.`Order`";			
-	$stmt = mysqli_prepare ($server, $sql);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_store_result($stmt);
-    $rows = mysqli_stmt_num_rows($stmt);
-	if ($rows == 0) {
-		$orderid = 1;
-	} else {
-		$orderid = ($rows + 1);
-	}
-
-	$tableid = null;
-	echo $orderid;
-
 
 	isset($_REQUEST["tableid"]) and $tableid = $_REQUEST["tableid"];	// When the tableid field is set, store in in $tableid.
-	
+
 	$tableupdate = null;
 
-	
-	
 ?>
 <!DOCTYPE html>
 
@@ -51,7 +29,7 @@
         <form method="post">
             <h1><font color="7700FF">Create Order</font></h1>
 
-			<h2>Order's Table</h2>
+			<h2>Order Table</h2>
 			<p>Please enter the table associated with this order.</p>
 			<div><label>Table of Order:</label> <input type="text" name="tableid"/></div>
 
@@ -67,18 +45,13 @@
 <?php
 	if(isset($_REQUEST["createorder"])) {
 		if (!empty($tableid)) {
-		
-			$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
-			if (mysqli_connect_errno()) {
-				echo "Failed to connect to MySQL: " . mysqli_connect_error();
-			}
-			
-			$sql1 = "SELECT * FROM `payomca_rms2`.`Tables` WHERE `tablenumber`='$tableid';";			
+
+			$sql1 = "SELECT * FROM `payomca_rms2`.`Tables` WHERE `tablenumber`='$tableid';";
 			$suchtables = mysqli_fetch_row(mysqli_query($server, $sql1));
 			
 			if ($suchtables != null ) {
 				$sql2 = "INSERT INTO `payomca_rms2`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
-				mysqli_query($server, $sql2);
+				mysqli_query($db, $sql2);
 
 				$_SESSION['orderid'] = $orderid;	// Transferring $orderid to use on addtoorder.php
 				header("Location: addtoorder.php");
@@ -102,7 +75,7 @@
 			echo "Error: No table specified whose orders to edit.";
 		} else {
 			$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Order` WHERE `tableid`=$tableupdate;";
-			$itsorders = mysqli_query($server, $sqlgetorder);	// This now stores all orders associated with the given table.
+			$itsorders = mysqli_query($db, $sqlgetorder);	// This now stores all orders associated with the given table.
 			$theorder = mysqli_fetch_row($itsorders);		// Get the 1st such order, just to see if there IS at least one.
 			if ($theorder == null) {
 				echo "This table has no orders associated with it.";
