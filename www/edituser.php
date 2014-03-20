@@ -69,7 +69,7 @@
 			maxlength = "<?php echo Session::USERNAME_MAX;?>"/><br/>
 
             <label>New Password:</label>
-			<input type="text" name="password"
+			<input type="password" name="password"
 			value = "<?php if(isset($password)) echo $password;?>" 
 			maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/>
 

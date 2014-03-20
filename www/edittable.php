@@ -74,6 +74,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			<p><?php if(isset($submitted)) echo "Edit Complete.";?><br/>
 			<?php if (!isset($_SESSION["oritable"])){ echo "This page is presently stale.  Please return to mainmenu";} ?></p>
 			<p>
+			<input type="button" />
 			Go back to <a href = "viewtables.php">view table</a>.
 			</p>
 			</div>
