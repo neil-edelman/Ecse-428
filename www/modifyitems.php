@@ -10,12 +10,12 @@ class modifyitems {
 
     private $status = "okay";
 
-    final public function new_item($itemid, $itemname, $itemcost, $description, $db) {
+    final public function new_item($itemname, $itemcost, $description, $db) {
         $created = null;
         try {
-            $stmt = $db->prepare("INSERT INTO `MenuItems` (`Item ID`, `Name`, `Cost`, `Description`) "
-                    . "VALUES (?, ?, ?, ?)") or throw_exception("prepare");
-            $stmt->bind_param("isis", $itemid, $itemname, $itemcost, $description) or throw_exception("binding");
+            $stmt = $db->prepare("INSERT INTO `MenuItems` (`Name`, `Cost`, `Description`) "
+                    . "VALUES (?, ?, ?)") or throw_exception("prepare");
+            $stmt->bind_param("sis", $itemname, $itemcost, $description) or throw_exception("binding");
             $stmt->execute() or throw_exception("execute");
             $created = $itemname;
         } catch (Exception $e) {

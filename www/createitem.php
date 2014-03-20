@@ -11,7 +11,7 @@
     $info = $s->user_info($user) or header_error("user info error");
     is_admin($info) or header_error("not authorised");
     
-    isset($_REQUEST["itemid"]) and $itemid = strip_tags(stripslashes($_REQUEST["itemid"]));
+    //isset($_REQUEST["itemid"]) and $itemid = strip_tags(stripslashes($_REQUEST["itemid"]));
     isset($_REQUEST["itemname"]) and $itemname = strip_tags(stripslashes($_REQUEST["itemname"]));
     isset($_REQUEST["itemcost"]) and $itemcost = strip_tags(stripslashes($_REQUEST["itemcost"]));
     isset($_REQUEST["description"]) and $description = strip_tags(stripslashes($_REQUEST["description"]));    
@@ -29,12 +29,7 @@
     <body>
        <form method="post">            
             <div>
-                <h1>Create New Item</h1> 
-
-                <label>New Item ID:</label>
-                <input type="text" name="itemid"
-                    value = "<?php if(isset($itemid)) echo $itemid;?>" 	
-                    maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
+                <h1>Create New Item</h1>                 
 
                 <label>New Item Name:</label>
                 <input type="text" name="itemname"
@@ -65,17 +60,13 @@
 <?php
 
     $is_ready = false;
-    if(isset($itemid) || isset($itemname) || isset($itemcost) || isset($description)){
+    if(isset($itemname) || isset($itemcost) || isset($description)){
 	$is_ready = true;
 	
-        if(!isset($itemid) || !isset($itemname) || !isset($itemcost) || !isset($description)
-	   || empty($itemid) || empty($itemname) || empty($itemcost) || empty($description)) {
+        if(!isset($itemname) || !isset($itemcost) || !isset($description)
+	   || empty($itemname) || empty($itemcost) || empty($description)) {
             $is_ready = false;
             echo "You did not enter all the required information.<br/>\n";
-	}
-	if(strlen($itemid) > Session::INTEGER_MAX) {
-            $is_ready = false;
-            echo "Item ID is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 	}
 	if(strlen($itemname) > Session::NAME_MAX) {
             $is_ready = false;
@@ -92,7 +83,7 @@
     }
     
     if($is_ready) {
-        if($m->new_item($itemid, $itemname, $itemcost, $description, $db)) {
+        if($m->new_item($itemname, $itemcost, $description, $db)) {
             echo "Item &quot;".$itemname."&quot; created.<br/>\n";
         } else {
             echo "Item not created: ".$m->status()."<br/>\n";

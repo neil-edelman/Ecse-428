@@ -72,7 +72,7 @@
 		<meta name = "Author" content = "Team RMS">
 		<link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
                 <link rel = "stylesheet" type = "text/css" href = "style.css">
-		<title>Create New Item</title>
+		<title>Edit Item</title>
     </head>
     <body>
        <form method="post" action="edititem.php">            
