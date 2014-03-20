@@ -1,2 +1,7 @@
 *.bak
 *.orig
+/nbproject/private/
+nbproject/*
+www/private
+www/nbproject/
+error_log

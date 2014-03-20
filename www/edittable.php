@@ -28,10 +28,10 @@
 		unset($_SESSION['oristatus']);
 		$_SESSION['submitted'] = true;
 	}
-	
 	if(isset($_SESSION['submitted'])){
 		$submitted = $_SESSION['submitted'];
 		unset($_SESSION['submitted']);
+
 	}
 
 			/* if the things are set, get them into vars */
@@ -106,15 +106,15 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				}
 				if(strlen($tablenumber) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "tablenumber has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
+					echo "Username is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 				}
 				if(strlen($maxsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "maxsize has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
+					echo "Password is too long.<br/>\n";
 				}
 				if(strlen($currentsize) > Session::INTEGER_MAX) {
 					$is_ready = false;
-					echo "currentsize has maximum ".Session::INTEGER_MAX." decimal representation.<br/>\n";
+					echo "First name is maximum ".Session::INTEGER_MAX." characters.<br/>\n";
 				}
 				if($currentsize > $maxsize){
 					$is_ready = false;

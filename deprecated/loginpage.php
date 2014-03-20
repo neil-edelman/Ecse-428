@@ -30,7 +30,7 @@ Login Page
                 if (!(empty($username) || empty($password))) {
 
 					// Create connection
-                    $server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+                    $server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 
                     // Check connection
                     if (mysqli_connect_errno()) {
@@ -50,7 +50,7 @@ Login Page
 						//Create cookie. The 4th parameter makes the cookie usable in the entire domain.
 						setcookie("superCookie", $ses_id, time()+3600, '/');						
 											
-						$sqlSession = "INSERT INTO payomca_rms.SessionID (ID, Username, Privilege) VALUES ('$ses_id', '$username', '$row[5]');";
+						$sqlSession = "INSERT INTO payomca_rms2.SessionID (ID, Username, Privilege) VALUES ('$ses_id', '$username', '$row[5]');";
 						mysqli_query($server, $sqlSession); 
 						
 						header("Location: mainmenu.php");

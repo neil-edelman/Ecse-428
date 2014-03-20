@@ -18,7 +18,8 @@
 		const LAST_MAX     = 32; /* lol */
 		const EMAIL_MAX    = 64; /* too short */
 		const INTEGER_MAX	   = 11; /* For tables */
-		
+		const NAME_MAX     = 30;
+                const DESCRIPTION_MAX = 800;
 		/* prevents multiple sessions being created */
 		private static $session = null;
 

@@ -58,12 +58,12 @@
 			echo "Error: One or more required field unfilled.";
 		} else {
 
-			$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+			$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 			if (mysqli_connect_errno()) {
 				echo "Failed to connect to MySQL: " . mysqli_connect_error();
 			}
 
-			$sql = "INSERT INTO payomca_rms . OrderContain (containid, orderid, itemid, quantity, comment) VALUES ('$containid', '$orderid', '$itemid', '$quantity', '$comment');";
+			$sql = "INSERT INTO payomca_rms2 . OrderContain (containid, orderid, itemid, quantity, comment) VALUES ('$containid', '$orderid', '$itemid', '$quantity', '$comment');";
 			$result = mysqli_query($server, $sql);
 			if ($result >= 1 ) {
 				echo "Item successfully added to the order!";
