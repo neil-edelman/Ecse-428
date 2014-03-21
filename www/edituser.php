@@ -136,35 +136,34 @@
             <div>
 			<label>New Username:</label>
 			<input type="text" name="inusername"
-			value = "<?php if(isset($inusername)) echo $inusername;?>" 	
+			value = "<?php if(isset($_SESSION["oriusername"])) echo $_SESSION["oriusername"];?>" 	
 			maxlength = "<?php echo Session::USERNAME_MAX;?>"/><br/>
 
             <label>New Password:</label>
-			<input type="inpassword" name="inpassword"
-			value = "<?php if(isset($inpassword)) echo $inpassword;?>" 
+			<input type="password" name="inpassword"
 			maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/>
 
             <label>New First Name:</label>
 			<input type="text" name="infirst"
-			value = "<?php if(isset($infirst)) echo $infirst;?>"  
+			value = "<?php if(isset($_SESSION["orifirst"])) echo $_SESSION["orifirst"];?>"  
 			maxlength = "<?php echo Session::FIRST_MAX;?>"/><br/>
 
             <label>New Last Name:</label>
 			<input type="text" name="inlast"
-			value = "<?php if(isset($inlast)) echo $inlast;?>"
+			value = "<?php if(isset($_SESSION["orilast"])) echo $_SESSION["orilast"];?>"
 			maxlength = "<?php echo Session::LAST_MAX;?>"/><br/>
 			
             <label>Email:</label>
 			<input type="text" name="inemail"
-			value = "<?php if(isset($inemail)) echo $inemail;?>"
+			value = "<?php if(isset($_SESSION["oriemail"])) echo $_SESSION["oriemail"];?>"
 			maxlength = "<?php echo Session::EMAIL_MAX;?>"/><br/>
 			
             <label>Privilege:</label>
             <select name="inprivilege">
-                <option <?php if(isset($inprivilege)) echo $inprivilege=="wait"?"selected ":"";?>value="wait">Wait Staff</option>
-                <option <?php if(isset($inprivilege)) echo $inprivilege=="cook"?"selected ":"";?>value="cook">Cook Staff</option>
-                <option <?php if(isset($inprivilege)) echo $inprivilege=="manager"?"selected ":"";?>value="manager">Manager</option>
-                <option <?php if(isset($inprivilege)) echo $inprivilege=="admin"?"selected ":"";?>value="admin">System Admin</option>
+                <option <?php if(isset($_SESSION["oriprivilege"])) echo $_SESSION["oriprivilege"] =="wait"?"selected ":"";?>value="wait">Wait Staff</option>
+                <option <?php if(isset($_SESSION["oriprivilege"] )) echo $_SESSION["oriprivilege"] =="cook"?"selected ":"";?>value="cook">Cook Staff</option>
+                <option <?php if(isset($_SESSION["oriprivilege"] )) echo $_SESSION["oriprivilege"] =="manager"?"selected ":"";?>value="manager">Manager</option>
+                <option <?php if(isset($_SESSION["oriprivilege"] )) echo $_SESSION["oriprivilege"] =="admin"?"selected ":"";?>value="admin">System Admin</option>
             </select><br/>
 			
             <br/>
