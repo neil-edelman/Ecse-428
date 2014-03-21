@@ -31,8 +31,17 @@
 
 			<h2>Order Table</h2>
 			<p>Please enter the table associated with this order.</p>
-			<div><label>Table of Order:</label> <input type="text" name="tableid"/></div>
-
+			<div><label>Table of Order:</label>
+			<select name="tableid">
+			<?php
+			$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Tables`";	
+			$res = mysqli_query($db, $sqlgetorder);
+			while($row = $res->fetch_array(MYSQLI_NUM)){
+				echo "<option value=\"$row[0]\">$row[0]</option>";
+			}
+			?>
+            </select></div>
+			
 			<p></p>
 			<div><label></label><input type="submit" name="createorder" value="Create order"></div>
 			
@@ -46,30 +55,40 @@
 	if(isset($_REQUEST["createorder"])) {
 		if (!empty($tableid)) {
 
+			$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
+			if (mysqli_connect_errno()) {
+				echo "Failed to connect to MySQL: " . mysqli_connect_error();
+			}
+		
 			$sql1 = "SELECT * FROM `payomca_rms2`.`Tables` WHERE `tablenumber`='$tableid';";
 			$suchtables = mysqli_fetch_row(mysqli_query($server, $sql1));
 			
 			if ($suchtables != null ) {
-				$sql2 = "INSERT INTO `payomca_rms2`.`Order` (`orderid`, `tableid`, `situation`) VALUES ('$orderid', '$tableid', 'placed');";			
-				mysqli_query($db, $sql2);
+				$sql2 = "INSERT INTO `payomca_rms2`.`Order` (`tableid`, `situation`) VALUES ('$tableid', 'placed');";			
+				mysqli_query($server, $sql2);
 
-				$_SESSION['orderid'] = $orderid;	// Transferring $orderid to use on addtoorder.php
 				header("Location: addtoorder.php");
 			} else {
 				echo "Error: This Table does not appear to exist.";
 			}
 			
 		} else {
-			echo "Error: No Table ID given.";
+			echo "<br>Error: No Table ID given.<br>";
 		}
 	}
 	
 	// Allow user to update order.
 	echo "Updating Orders: please input the table whose order you wish to update.";
-	echo "<form method=\"post\"><div><label>Table of Order:</label> <input type=\"text\" name=\"tableupdate\"/></div>";
+	echo "<form method=\"post\"><div><label>Table of Order:</label> <select name=\"tableupdate\">";
+	$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Tables`";
+	$res = mysqli_query($db, $sqlgetorder);
+	while($row = $res->fetch_array(MYSQLI_NUM)){
+		echo "<option value=\"$row[0]\">$row[0]</option>";
+	}
+	echo "</select></div>";
 	echo "<p><input type=\"submit\" name=\"updateorder\" value=\"Update Order\"></form></p>\n\n";
 	isset($_REQUEST["tableupdate"]) and $tableupdate = $_REQUEST["tableupdate"];
-	
+		
 	if(isset($_REQUEST["updateorder"])) {
 		if (empty($tableupdate)) {
 			echo "Error: No table specified whose orders to edit.";
@@ -84,7 +103,7 @@
 				header("Location: chooseorder.php");
 			}
 		}
-	}	
+	}
 
 	?>
 		<p></p>

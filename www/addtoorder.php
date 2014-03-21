@@ -8,14 +8,16 @@
 
 	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
+
+	$a = mysqli_query($db, "SELECT MAX(orderid) FROM `payomca_rms2`.`Order`");	// Getting $orderid
+	$b = mysqli_fetch_row($a);
+	$orderid = $b[0];
 	
-	$containid = uniqid();
-	$orderid = $_SESSION['orderid'];	// Getting $orderid
-	$itemid = null;
+	$item = null;
 	$quantity = null;
 	$comment = null;
 	
-	isset($_REQUEST["itemid"]) and $itemid = $_REQUEST["itemid"];		// When the itemid field is set, store in in $itemid.
+	isset($_REQUEST["item"]) and $item = $_REQUEST["item"];		// When the item field is set, store in in $item.
 	isset($_REQUEST["quantity"]) and $quantity = $_REQUEST["quantity"];
 	isset($_REQUEST["comment"]) and $comment = $_REQUEST["comment"];
 
@@ -36,8 +38,17 @@
 
 			<h2>Item</h2>
 			<p>Please enter the ordered item's ID.</p>
-			<div><label>Item ID:</label> <input type="text" name="itemid"/></div>
-
+			<div><label>Item:</label>
+			<select name="item">
+                <?php				
+				$sqlgetorder = "SELECT * FROM `payomca_rms2`.`MenuItems`";	
+				$res = mysqli_query($db, $sqlgetorder);
+				while($row = $res->fetch_array(MYSQLI_NUM)){
+					echo "<option value=\"$row[0]\">$row[1]</option>";
+				}
+				?>
+            </select></div>
+					
 			<h2>Quantity</h2>  			 
 			<p>Please enter the requested quantity of the item.</p>
 			<div><label>Quantity:</label> <input type="text" name="quantity"/></div>
@@ -54,17 +65,12 @@
 
 <?php
 	if ($_SERVER["REQUEST_METHOD"] == "POST") {
-		if (empty($itemid) || empty($quantity)) {
-			echo "Error: One or more required field unfilled.";
+		if (empty($item) || empty($quantity)) {
+			echo "Error: One or more required fields unfilled.";
 		} else {
 
-			$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
-			if (mysqli_connect_errno()) {
-				echo "Failed to connect to MySQL: " . mysqli_connect_error();
-			}
-
-			$sql = "INSERT INTO payomca_rms2 . OrderContain (containid, orderid, itemid, quantity, comment) VALUES ('$containid', '$orderid', '$itemid', '$quantity', '$comment');";
-			$result = mysqli_query($server, $sql);
+			$sqlinsert = "INSERT INTO payomca_rms2 . OrderContain (orderid, itemid, quantity, comment) VALUES ('$orderid', '$item', '$quantity', '$comment');";
+			$result = mysqli_query($db, $sqlinsert);
 			if ($result >= 1 ) {
 				echo "Item successfully added to the order!";
 			}
