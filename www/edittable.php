@@ -29,10 +29,14 @@
 	}
 
 			/* if the things are set, get them into vars */
-	isset($_REQUEST["intablenumber"])	and $intablenumber 	= strip_tags(stripslashes($_REQUEST["intablenumber"])) and $tablenumber = $intablenumber;
-	isset($_REQUEST["inmaxsize"]) 		and $inmaxsize    	= strip_tags(stripslashes($_REQUEST["inmaxsize"])) and $maxsize = $inmaxsize;
-	isset($_REQUEST["incurrentsize"])	and $incurrentsize  = strip_tags(stripslashes($_REQUEST["incurrentsize"])) and $currentsize = $incurrentsize;
-	isset($_REQUEST["infirstrun"])		and $infirstrun   	= strip_tags(stripslashes($_REQUEST["infirstrun"])) and $firstrun = $infirstrun;
+	isset($_REQUEST["intablenumber"])	and $intablenumber 	= strip_tags(stripslashes($_REQUEST["intablenumber"])) 
+		and $tablenumber = $intablenumber;
+	isset($_REQUEST["inmaxsize"]) 		and $inmaxsize    	= strip_tags(stripslashes($_REQUEST["inmaxsize"])) 
+		and $maxsize = $inmaxsize;
+	isset($_REQUEST["incurrentsize"])	and $incurrentsize  = strip_tags(stripslashes($_REQUEST["incurrentsize"])) 
+		and $currentsize = $incurrentsize;
+	isset($_REQUEST["infirstrun"])		and $infirstrun   	= strip_tags(stripslashes($_REQUEST["infirstrun"])) 
+		and $firstrun = $infirstrun;
 
 	$is_ready = false;
 	if(   isset($tablenumber)
@@ -109,17 +113,17 @@
             <div>
 			<label>New Table ID:</label>
 <input type="text" name="intablenumber"
-value = "<?php if(isset($intablenumber)) echo $intablenumber;?>" 	
+value = "<?php if(isset($_SESSION['oritable'])) echo $_SESSION['oritable'];?>" 	
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>New Table Maximum Size:</label>
 <input type="text" name="inmaxsize"
-value = "<?php if(isset($inmaxsize)) echo $inmaxsize;?>" 
+value = "<?php if(isset($_SESSION['orimaxsize'])) echo $_SESSION['orimaxsize'];?>" 
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>New Table Size:</label>
 <input type="text" name="incurrentsize"
-value = "<?php if(isset($incurrentsize)) echo $incurrentsize;?>"  
+value = "<?php if(isset($_SESSION['oricurrentsize'])) echo $_SESSION['oricurrentsize'];?>"  
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <br/>
