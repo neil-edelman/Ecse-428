@@ -5,16 +5,17 @@
  *
  * @author jonathan
  */
+
 class modifyitems {
 
     private $status = "okay";
 
-    final public function new_item($itemid, $itemname, $itemcost, $description, $db) {
+    final public function new_item($itemname, $itemcost, $description, $db) {
         $created = null;
         try {
-            $stmt = $db->prepare("INSERT INTO `MenuItems` (`Item ID`, `Name`, `Cost`, `Description`) "
-                    . "VALUES (?, ?, ?, ?)") or throw_exception("prepare");
-            $stmt->bind_param("isis", $itemid, $itemname, $itemcost, $description) or throw_exception("binding");
+            $stmt = $db->prepare("INSERT INTO `MenuItems` (`Name`, `Cost`, `Description`) "
+                    . "VALUES (?, ?, ?)") or throw_exception("prepare");
+            $stmt->bind_param("sis", $itemname, $itemcost, $description) or throw_exception("binding");
             $stmt->execute() or throw_exception("execute");
             $created = $itemname;
         } catch (Exception $e) {
@@ -28,13 +29,15 @@ class modifyitems {
     }
 
     final public function edit_item($item_number, $itemid, $itemname, $itemcost, $description, $db) {
-        $created = null;
+        $created = NULL;
         try {
-            $stmt = $db->prepare("UPDATE MenuItems SET `Item ID`= ?, `Name`= ?, `Cost`= ?, `Description`= ? WHERE `Item ID` = ?") or throw_exception("prepare");
+            //echo "edit_item: " . $item_number . "--" . $itemid . "--" . $itemname . "--" . $itemcost . "--" . $description;
+            $stmt = $db->prepare("UPDATE payomca_rms2.MenuItems SET `Item ID`= ?, `Name`= ?, `Cost`= ?, `Description`= ? WHERE `Item ID` = ?") or throw_exception("prepare");
             $stmt->bind_param("isisi", $itemid, $itemname, $itemcost, $description, $item_number) or throw_exception("binding");
             $stmt->execute() or throw_exception("execute");
+            //echo "Stupid2\n";
             $created = $itemid;
-        } catch (Exception $e) {
+        } catch (Exception $e) {            
             $errno = ($stmt ? $stmt->errno : $db->errno);
             $error = ($stmt ? $stmt->error : $db->error);
             $this->status = "new_item " . $e->getMessage() . " failed: (" . $errno . ") " . $error;
@@ -56,7 +59,7 @@ class modifyitems {
 
     public function get_all_items($db, $ordering) {
         if ($ordering == "default") {
-            $sqlQuery = "SELECT * FROM payomca_rms.MenuItems";
+            $sqlQuery = "SELECT * FROM payomca_rms2.MenuItems";
         } else {
             $sqlQuery = "SELECT * FROM MenuItems ORDER BY " . $ordering;
         }
@@ -87,7 +90,7 @@ class modifyitems {
             }
 
             $table = $table . "<td><form id= \"name\" method=\"post\" action=\"edititem.php\">
-                                   <input name=\"intable\" type=\"hidden\" value=\"$row[0]\">                                   
+                                   <input name=\"initem\" type=\"hidden\" value=\"$row[0]\">                                   
                                    <input name=\"submit\" type=\"submit\" value=\"Edit Table\">
                                    </form></td>";
 

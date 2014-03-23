@@ -22,7 +22,7 @@ Login Page
             if ($_SERVER["REQUEST_METHOD"] == "POST"){
 				setcookie("superCookie", "", time()-3600);
 				// Create connection
-				$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+				$server= mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 
 				// Check connection
 				if (mysqli_connect_errno()) {
@@ -33,7 +33,7 @@ Login Page
 				$result = mysqli_query($server, $sqlQuery);
 
 				if (mysqli_num_rows($result) == 1) {
-					$sqlSession = "DELETE FROM payomca_rms . SessionID WHERE SessionID . ID = '$mycookie';";
+					$sqlSession = "DELETE FROM payomca_rms2 . SessionID WHERE SessionID . ID = '$mycookie';";
 					mysqli_query($server, $sqlSession);
 
 					header("Location: loginpage.php");

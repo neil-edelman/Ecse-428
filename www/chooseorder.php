@@ -10,29 +10,23 @@
 	$info = $s->user_info($user) or header_error("user info error");
 	
 	$tableupdate = $_SESSION['tableupdate'];	// Getting the table from the previous page.
-	
-		echo $tableupdate;
 
 	// Let's count how many Orders exist for this Table.
-	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms");
+	$server = mysqli_connect("localhost","payomca_rms","mushroom","payomca_rms2");
 	if (mysqli_connect_errno()) {
 		echo "Failed to connect to MySQL during orderid generation: " . mysqli_connect_error();
 	}		
-	$sqlgetorder = "SELECT * FROM `payomca_rms`.`Order` WHERE `tableid`=$tableupdate;";	
+	$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Order` WHERE `tableid`=$tableupdate;";	
 	$stmt = mysqli_prepare ($server, $sqlgetorder);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_store_result($stmt);
     $countorders = mysqli_stmt_num_rows($stmt);		// Count how many Orders this Table has.
 	
-		echo $countorders;
-	
 	// Let's get the Orders themselves.
 	$itsorders = mysqli_query($server, $sqlgetorder);
 	
 	isset($_REQUEST["orderrank"]) and $orderrank = $_REQUEST["orderrank"];
-	
-	echo "The Table you selected has $countorders Orders associated with it. Which to update?";
-	
+
 ?>
 <!DOCTYPE html>
 
@@ -51,7 +45,22 @@
 
 			<h2>Select the Order</h2>
 			<p>Please choose which Order associated with this table to update.</p>
-			<div><label>Order:</label> <input type="text" name="orderrank"/></div>
+			
+			<?php
+				echo "<p>The Table you selected has $countorders Orders associated with it. Which to update?</p>";
+			?>
+			
+			<div><label>Order:</label>
+			<select name="orderrank">
+				<option value="X" disabled="disabled" selected="selected">Please select an Order</option>
+                <?php
+				$sqlgetorder = "SELECT * FROM `payomca_rms2`.`Order` WHERE `tableid`='$tableupdate'";	
+				$res = mysqli_query($db, $sqlgetorder);
+				while($row = $res->fetch_array(MYSQLI_NUM)){
+					echo "<option value=\"$row[0]\">$row[0]</option>";
+				}
+				?>
+            </select></div>
 
 			<p></p>
 			<div><label></label><input type="submit" name="select" value="Submit"></div>
@@ -64,15 +73,12 @@
 		
 <?php
 	if(isset($_REQUEST["select"])) {
-		if (!empty($orderrank) && $orderrank<=$countorders) {	
-			for ($i = 1; $i <= $orderrank; $i++) {
-				$theorder = mysqli_fetch_row($itsorders);
-			}
+		if (!empty($orderrank) && $orderrank!='X') {	
+			$_SESSION['idorder'] = $orderrank;
 			$_SESSION['itemnumber'] = 1;
-			$_SESSION['idorder'] = $theorder[0];
 			header("Location: updateorder.php");
 		} else {
-			echo "Error: You must select which order. This number must be smaller than the number of orders.";
+			echo "Error: You must select which order.";
 		}
 	}
 ?>

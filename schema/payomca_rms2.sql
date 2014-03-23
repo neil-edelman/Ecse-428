@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 19, 2014 at 04:33 PM
+-- Generation Time: Mar 22, 2014 at 06:14 PM
 -- Server version: 5.5.34-cll-lve
 -- PHP Version: 5.3.28
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `payomca_rms`
+-- Database: `payomca_rms2`
 --
 
 -- --------------------------------------------------------
@@ -55,27 +55,28 @@ CREATE TABLE IF NOT EXISTS `MenuItems` (
   `Cost` int(11) NOT NULL,
   `Description` varchar(800) NOT NULL,
   PRIMARY KEY (`Item ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44446 ;
 
 --
 -- Dumping data for table `MenuItems`
 --
 
-INSERT INTO `MenuItems` (`Name`, `Cost`, `Description`) VALUES
-('fdffd', 6, 'dvdv'),
-('yumm yumm', 56, 'yummmmm'),
-('dragon succotash', 6, 'hhhhhhhhhhhhhhhhhhhhh'),
-('Frog legs', 56, 'mmmmm'),
-('', 0, ''),
-('Chicken', 3, 'Premium chicken egg'),
-('hot dog blaster', 89, 'god'),
-('banana bomb', 77, 'Explosive banana whip'),
-('Snake', 150, 'Rattle snake extract'),
-('Badger Meat', 87, 'BEST MEAT EVER!!!!'),
-('Pineapple', 23, 'sweet pineapple'),
-('whip2', 23, 'whipping stuff ++'),
-('Noodles', 1, 'spagetti'),
-('6666', 6666, '66666');
+INSERT INTO `MenuItems` (`Item ID`, `Name`, `Cost`, `Description`) VALUES
+(36, 'fdffd', 6, 'dvdv'),
+(89, 'yumm yumm', 56, 'yummmmm'),
+(3, 'dragon succotash', 6, 'hhhhhhhhhhhhhhhhhhhhh'),
+(90, 'Frog legs', 56, 'Tender frog legs'),
+(91, '', 0, ''),
+(100, 'Chicken', 3, 'Premium chicken egg'),
+(7, 'hot dog blaster', 89, 'god'),
+(8, 'banana bomb', 77, 'Explosive banana whip'),
+(45, 'Blueberry Pancakes', 10, 'Pancakes with blueberries topped with whipped cream'),
+(34, 'Badger Meat', 87, 'BEST MEAT EVER!!!!'),
+(78, 'Fried Kangaroo', 6, 'Pan-fried beer-battered chunks of kangaroo'),
+(79, 'whip2', 23, 'whipping stuff ++'),
+(44444, 'Noodles', 1, 'spagetti'),
+(6666, '6666', 6666, '66666'),
+(44445, 'Racoon', 12, 'Raccon that eats garbage meat');
 
 -- --------------------------------------------------------
 
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `Order` (
   `tableid` int(11) NOT NULL,
   `situation` varchar(15) NOT NULL,
   PRIMARY KEY (`orderid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=52 ;
 
 --
 -- Dumping data for table `Order`
@@ -115,10 +116,23 @@ INSERT INTO `Order` (`orderid`, `tableid`, `situation`) VALUES
 (18, 53, 'placed'),
 (20, 22, 'ready'),
 (19, 17, 'placed'),
-(21, 1, 'done'),
+(21, 99, 'ready'),
 (22, 300, 'unavailable'),
 (13, 99, 'placed'),
-(12, 99, 'placed');
+(12, 99, 'placed'),
+(51, 1, 'placed'),
+(50, 2, 'placed'),
+(49, 65, 'placed'),
+(48, 20, 'placed'),
+(47, 20, 'placed'),
+(46, 1, 'placed'),
+(45, 1, 'placed'),
+(44, 9, 'placed'),
+(43, 1, 'placed'),
+(42, 1, 'placed'),
+(41, 1, 'placed'),
+(40, 1, 'placed'),
+(39, 2, 'placed');
 
 -- --------------------------------------------------------
 
@@ -127,53 +141,54 @@ INSERT INTO `Order` (`orderid`, `tableid`, `situation`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `OrderContain` (
-  `containid` varchar(20) NOT NULL,
+  `containid` int(11) NOT NULL AUTO_INCREMENT,
   `orderid` int(11) NOT NULL,
   `itemid` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `comment` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`containid`),
-  UNIQUE KEY `containid` (`containid`),
-  UNIQUE KEY `containid_2` (`containid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`containid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=44 ;
 
 --
 -- Dumping data for table `OrderContain`
 --
 
 INSERT INTO `OrderContain` (`containid`, `orderid`, `itemid`, `quantity`, `comment`) VALUES
-('531786941813a', 9, 11, 111, 'No Salt Please.'),
-('5317868e5f168', 9, 22, 222, '2222'),
-('5312381d463cb', 3, 8, 1, ''),
-('53123816494d3', 3, 2, 2, 'Wants water by the side'),
-('5312356f40da2', 2, 1, 3, 'Mustard please'),
-('5312387ff40ac', 4, 2, 3, 'Testing Comments Like These'),
-('53123b20dcccd', 5, 3, 2, 'Extra ketchup'),
-('53123b267d9b0', 5, 5, 3, ''),
-('53123d08888e4', 6, 5, 4, 'No sugar!'),
-('53123d0bb49f4', 6, 3, 2, 'Simple'),
-('53138789301ed', 7, 3, 2, 'nomnom'),
-('5313bba8d96e6', 4, 1, 17, 'Do NOT put salt!'),
-('5313dedca96ea', 7, 4, 2, 'yum'),
-('531786971caf1', 9, 3, 33, '333'),
-('5317869985e27', 9, 4, 44, '444'),
-('531cf8fb0cef4', 14, 4, 2, 'BLAH'),
-('531d166cde4ff', 14, 12, 1, 'BLAAAHHH'),
-('531d185819ef1', 15, 10, 3, 'No salt please'),
-('531d193f961a7', 15, 100, 100, 'ADDED?'),
-('531d258a50cd2', 16, 6, 99, 'Extra ketchups'),
-('531d2592ccd09', 16, 2, 3, ''),
-('531d2d876f16b', 17, 1, 2, 'No mustard'),
-('531d2d8de188e', 17, 4, 1, 'Extra sauce'),
-('531d326d92d03', 18, 2, 1, 'Test'),
-('531ea659c4ca1', 20, 3, 3, '3'),
-('531ea65ddfc08', 20, 2, 2, '2'),
-('531f211770662', 21, 1, 1, '1'),
-('531f28689299d', 22, 1, 2, 'No ketchup'),
-('53249452f067c', 24, 9, 99, ''),
-('5324945140921', 24, 8, 88, '888'),
-('53249447dd34e', 23, 5, 55, '555'),
-('532494441b865', 23, 4, 44, '444');
+(1, 9, 11, 111, 'No Salt Please.'),
+(2, 9, 22, 222, '2222'),
+(3, 3, 8, 1, ''),
+(4, 3, 2, 2, 'Wants water by the side'),
+(5, 2, 1, 3, 'Mustard please'),
+(6, 4, 2, 3, 'Testing Comments Like These'),
+(7, 5, 3, 2, 'Extra ketchup'),
+(8, 5, 5, 3, ''),
+(9, 6, 5, 4, 'No sugar!'),
+(10, 6, 3, 2, 'Simple'),
+(11, 7, 3, 2, 'nomnom'),
+(12, 4, 1, 17, 'Do NOT put salt!'),
+(13, 7, 4, 2, 'yum'),
+(14, 9, 3, 33, '333'),
+(15, 9, 4, 44, '444'),
+(16, 14, 4, 2, 'BLAH'),
+(17, 14, 12, 1, 'BLAAAHHH'),
+(18, 15, 10, 3, 'No salt please'),
+(19, 15, 100, 100, 'ADDED?'),
+(20, 16, 6, 99, 'Extra ketchups'),
+(21, 16, 2, 3, ''),
+(22, 17, 1, 2, 'No mustard'),
+(23, 17, 4, 1, 'Extra sauce'),
+(24, 18, 2, 1, 'Test'),
+(25, 20, 3, 3, '3'),
+(26, 20, 2, 2, '2'),
+(27, 21, 90, 5, 'with pepper'),
+(28, 22, 1, 2, 'No ketchup'),
+(29, 24, 9, 99, ''),
+(30, 24, 8, 88, '888'),
+(31, 23, 5, 55, '555'),
+(32, 23, 4, 44, '444'),
+(40, 43, 3, 2, 'With cheese'),
+(43, 44, 3, 3, '3'),
+(42, 43, 34, 5, 'with salt');
 
 -- --------------------------------------------------------
 
@@ -188,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `SessionID` (
   `activity` datetime NOT NULL,
   PRIMARY KEY (`session_id`),
   KEY `username` (`username`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `SessionID`
@@ -197,8 +212,8 @@ CREATE TABLE IF NOT EXISTS `SessionID` (
 INSERT INTO `SessionID` (`session_id`, `username`, `ip`, `activity`) VALUES
 ('9879lq9dfn9gh773ks7e14o5c3', 'user', '142.157.35.20', '2014-02-11 16:19:08'),
 ('h542f4dievf08s3puof1ni2qn1', 'qqq', '142.157.35.77', '2014-03-11 16:01:48'),
-('2qla4c5i2djskr40j5ndjnnql4', 'payom', '142.157.72.65', '2014-03-11 16:58:27'),
-('rkaunnpv92d9s7f0t86r3l3de5', 'JonathanBouchard', '216.221.58.22', '2014-03-19 19:53:08'),
+('u5atmjmd31fms09mh7btdoeou7', 'zzz', '192.154.144.103', '2014-03-21 04:08:27'),
+('rkaunnpv92d9s7f0t86r3l3de5', 'JonathanBouchard', '142.157.112.130', '2014-03-20 16:51:49'),
 ('3urb7r9hr6hg20e9i6vuhmrij0', 'PayomPayomPayom', '192.171.42.176', '2014-03-14 21:58:41'),
 ('cpavrsf96dje9s041ejo3vvvf7', 'zzz', '192.222.147.39', '2014-03-16 12:36:04'),
 ('idcuem5ai50t1c96cc4le3egp0', 'zzz', '192.222.147.39', '2014-03-16 13:51:27'),
@@ -209,7 +224,13 @@ INSERT INTO `SessionID` (`session_id`, `username`, `ip`, `activity`) VALUES
 ('kmqt5uhq3lguv5nvr0vkan8ml4', 'sasau', '142.157.45.93', '2014-03-18 19:12:04'),
 ('48ko2bhim503dfbqgvqjvobb10', 'sasau', '206.248.162.216', '2014-03-19 02:36:53'),
 ('lg1hi41q0od8c5t5sj5smigbu7', 'sasau', '108.175.224.142', '2014-03-19 17:19:41'),
-('hanq1hkkrjdp9ig111po89i0o6', 'lol', '142.157.147.116', '2014-03-19 23:25:57');
+('hanq1hkkrjdp9ig111po89i0o6', 'lol', '142.157.147.116', '2014-03-19 23:25:57'),
+('v1lsi2iorsm3ialgb7n0drt1j7', 'aaa', '142.157.169.60', '2014-03-20 15:22:08'),
+('8a23rkrpqfqhm6fq2uf0v4lpi3', 'zzz', '142.157.169.60', '2014-03-20 15:32:39'),
+('7td2hdnnm54peum1f2u50kerv3', 'payom', '142.157.72.132', '2014-03-20 21:32:23'),
+('h0ppf2h3jika9e8bugig7bc2a2', 'zzz', '142.157.144.10', '2014-03-20 20:48:24'),
+('fo5nh16p8t48p98290l6rlu0v5', 'payom', '132.206.67.70', '2014-03-21 20:21:08'),
+('kvg7ipok8hl6guhmjel6d9q0o1', 'zzz', '142.157.98.23', '2014-03-21 19:35:27');
 
 -- --------------------------------------------------------
 
@@ -224,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `Shifts` (
   `checkout` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
 
 --
 -- Dumping data for table `Shifts`
@@ -259,7 +280,9 @@ INSERT INTO `Shifts` (`id`, `username`, `checkin`, `checkout`) VALUES
 (28, 'PayomPayomPayom', '2014-03-17 23:43:31', '2014-03-17 23:44:07'),
 (29, 'lol', '2014-03-18 15:46:57', '2014-03-18 15:47:02'),
 (30, 'lol', '2014-03-18 18:40:26', '2014-03-19 23:04:02'),
-(31, 'lol', '2014-03-19 23:04:11', '2014-03-19 23:04:13');
+(31, 'lol', '2014-03-19 23:04:11', '2014-03-19 23:04:13'),
+(32, 'zzz', '2014-03-16 10:39:23', '2014-03-21 04:07:38'),
+(33, 'zzz', '2014-03-21 04:07:46', '2014-03-22 00:13:52');
 
 -- --------------------------------------------------------
 
@@ -268,20 +291,20 @@ INSERT INTO `Shifts` (`id`, `username`, `checkin`, `checkout`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `Tables` (
-  `tablenumber` int(11) NOT NULL,
+  `tablenumber` int(11) NOT NULL AUTO_INCREMENT,
   `maxsize` int(11) NOT NULL,
   `currentsize` int(11) NOT NULL,
   `status` enum('vacant','occupied') NOT NULL DEFAULT 'vacant',
   PRIMARY KEY (`tablenumber`),
   UNIQUE KEY `tablenumber` (`tablenumber`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=302 ;
 
 --
 -- Dumping data for table `Tables`
 --
 
 INSERT INTO `Tables` (`tablenumber`, `maxsize`, `currentsize`, `status`) VALUES
-(65, 32, 22, 'occupied'),
+(64, 32, 21, 'occupied'),
 (2, 2, 0, 'vacant'),
 (6, 4, 0, 'vacant'),
 (1, 7, 0, 'vacant'),
@@ -299,9 +322,9 @@ INSERT INTO `Tables` (`tablenumber`, `maxsize`, `currentsize`, `status`) VALUES
 (102, 8, 0, 'vacant'),
 (103, 10, 0, 'vacant'),
 (300, 3, 1, 'occupied'),
-(105, 78, 5, 'occupied'),
-(232, 2323, 222, 'occupied'),
-(0, 0, 0, 'vacant');
+(105, 78, 0, 'vacant'),
+(232, 2323, 0, 'vacant'),
+(301, 0, 0, 'vacant');
 
 -- --------------------------------------------------------
 
@@ -336,11 +359,11 @@ INSERT INTO `Users` (`username`, `password`, `FirstName`, `LastName`, `Email`, `
 ('baz', '$2a$07$a85f20f36fe5b97cf93c4uL8.74iUgE6l7nm.zzpHdIlQLs8FVKky', 'sfdg', 'sfgd', 'fgsd', 'wait', '0000-00-00 00:00:00'),
 ('lol', '$2a$07$bb34c8fc7c088db8ddadduCFWFGxXy7bQkbiXGG0rH/G/5KoTnAXK', 'Lola', 'Unicorn', 'lol@gmail.com', 'admin', '2014-03-19 23:10:13'),
 ('payom', '$2a$07$8d7199f9b6eaf96ce0087uzVuzXGsx5PY5qFsIZ6Q4z7knWop1g1W', 'payom', 'payom', 'payom@gmail.com', 'admin', '2014-03-11 15:34:43'),
-('zzz', '$2a$07$4c864e58f5e618f303c4fuxKFZl/ykmrjwFX.sEvQ65WSgeyGWSEC', 'zzz', 'zzz', 'zzz@zzz.zzz', 'admin', '2014-03-16 10:39:23'),
+('zzz', '$2a$07$4c864e58f5e618f303c4fuxKFZl/ykmrjwFX.sEvQ65WSgeyGWSEC', 'zzz', 'zzz', 'zzz@zzz.zzz', 'admin', NULL),
 ('aaa', '$2a$07$636a6aed075c47efba722etSnkmVSYIdf3GiK6pwVC.SYO1otdm9C', 'aaa', 'aaa', 'aaa@aaa.aaa', 'cook', '2014-03-16 08:27:58'),
 ('qqq', '$2a$07$368ec152e849142cafc89OMUo7m1lz1xE7Gsnymt13FHYtyFkap6y', 'qqq', 'qqq', 'qqq@qqq.com', 'wait', '2014-03-11 15:45:41'),
 ('bob', '$2a$07$977e780090e09d558d0ffufX8B6/PBwtYtUCFdlkUzsSuhmkoLlRW', 'bob', 'bob', 'bob@gmail.com', 'wait', NULL),
-('kk', '$2a$07$69f0729b65554423205c8ulQoiWRFyzvOYiinBsTREcUAh04XDwIm', 'kk', 'kk', 'pizza@gmail.com', 'wait', NULL),
+('ggg', '$2a$07$378aed52e20897b6ca07eu8To.fmvBTwPfCkPRZoOM1L1hcAqx.LW', 'kk', 'kk', 'okk@gmail.com', 'wait', NULL),
 ('sasau', '$2a$07$6f244e623ef60ac5979fcu7rSQACm5OerHdtTCedJe5YEfdoVj/Ey', 'Sasithra', 'Thanabalan', 'sasithra@gmail.com', 'cook', '2014-03-17 20:42:30'),
 ('wait', '$2a$07$34575780f250513f9e403u884H7WPeMshyPDe7sG2kz0jillRk5nC', 'Wait', 'No', 'wait@wait.com', 'wait', NULL),
 ('cook', '$2a$07$c8e8e629ea493da22ebdbevxtZ7tFRu23gGToElXjcRpGOG1RqINW', 'Steven', 'Seagal', 'cook@cook.com', 'cook', NULL);
