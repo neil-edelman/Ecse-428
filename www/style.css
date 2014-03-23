@@ -29,13 +29,10 @@ img.left {
 	clear: left;
 }
 
-/*div.left {
-	float: left;
-	clear: left;
-}*/
+/* this is not right, but good enough */
 div.right {
 	float: right;
-	clear: right;
+	clear: both;
 }
 
 /* forms */
@@ -98,7 +95,7 @@ div.file-rightfixed {
 		color: black;
 		font: small sans-serif;
 		margin: 1in;
-		width: 200px /*100%*/;
+		width: 300px /*100%*/;
 	}
 	a { color: blue; }
 	.noprint { display: none; }

@@ -10,7 +10,7 @@
 	// is_wait($info) or header_error("not authorised"); ?
 
 	/* if the things are set, get them into vars */
-	isset($_REQUEST["table"]) and $table  = strip_tags(stripslashes($_REQUEST["table"]));
+	isset($_REQUEST["table"]) and $table = strip_tags(stripslashes($_REQUEST["table"]));
 	isset($_REQUEST["check"]) and is_array($_REQUEST["check"]) and $check = $_REQUEST["check"];
 
 	/** hack to see wheater is checked; O(n) :[ can do better
@@ -65,38 +65,15 @@
 ?>
 <p class = "noprint">Table number <?php echo $table; ?>. Go <a href = "bill.php">back to table list</a>.</p>
 
-<p><div>
-<form>
-<label>View shifts of</label>
-<?php
-	/* this is less lame, but still lame -Neil
-	 if(isset($subject)) {
-	 $s->select_users("subject", $subject);
-	 } else {
-	 $s->select_users("subject");
-	 }*/
-	/* this is awesome */
-	$s->select_things("Users", "username", $username, "FirstName", $first, "LastName", $last);
-	echo "<select name = \"subject\">\n";
-	while($s->select_next()) {
-		echo "<option value = \"".$username."\"";
-		if($subject == $username) echo " selected";
-		echo ">".$last.", ".$first."</option>\n";
-	}
-	echo "</select>\n";
-	?>
-<br/>
-<label>&nbsp;</label><input type = "submit" value = "Go">
-</form>
-</div></p>
-
-
 <p>
 <div>
 <form>
 <input type = "hidden" name = "table" value = "<?php echo $table; ?>">
 
 <?php
+		/* total cost */
+		$total = 0;
+
 		try {
 			$order = $db->prepare("SELECT orderid "
 								  ."FROM `Order` "
@@ -120,17 +97,31 @@
 								 ."LIMIT 1") or throw_exception("prepare menu");
 			$menu->bind_param("i", $item) or throw_exception("binding menu");
 
+			$remove = $db->prepare("UPDATE `Order` SET situation = 'billed' "
+								   ."WHERE orderid = ? "
+								   ."LIMIT 1") or throw_exception("prepare remove");
+			$remove->bind_param("i", $orderid) or throw_exception("binding remove");
+
+			$bill = $db->prepare("INSERT INTO "
+								 ."Bills (date, revenue) "
+								 ."VALUES (CURDATE(), ?)") or throw_exception("prepare bill");
+			$bill->bind_param("d", $total) or throw_exception("binding bill");
+
+			// every order at the table that's "done"
+			//fixme: set an index on 'situation' to not bloat the db
 			while($order->fetch()) {
 
 				// is it checked?
 				$ordercheck = is_checked($check, $orderid);
 
-				//if(!$ordercheck) echo "<div class = \"noprint\">\n";
+				// if the order is not checked, don't print it on the printer
+				if(!$ordercheck) echo "<div class = \"noprint\">\n";
 
 				echo "<label>Order #".$orderid."</label>\n";
 
 				// provide the option to bill this on a new bill
 				if(!$ordercheck) echo "<input type = \"checkbox\" name = \"check[]\" value = \"".$orderid."\"/>\n";
+
 				echo "<br/>\n";
 				if(!$ordercheck) echo "<label>Contains</label>\n";
 
@@ -138,15 +129,19 @@
 				$contain->store_result();
 				$contain->bind_result($containid, $item, $quantity);
 
+				// contains all these elements, which are set/unset appropreately
 				while($contain->fetch()) {
 					$menu->execute() or throw_exception("execute menu");
 					$menu->store_result();
 					$menu->bind_result($menuname, $menucost, $menuitemid);
 					if($menu->fetch()) {
 						if($ordercheck) {
-							// update bill and remove from order
-							//echo "<div class = \"left\">".$menuname." - Qty. ".$quantity." Cost ".$menucost."</div>\n";
-							//echo "<div class = \"right\">".($menucost * $quantity)."</div>\n";
+							$cost   = $menucost * $quantity;
+							$total += $cost;
+
+							echo "".$menuname." - Qty. ".$quantity." Cost ".$menucost."\n";
+							echo "<div class = \"right\">".$cost."</div><br/>\n";
+
 						} else {
 							echo $quantity." ".$menuname." at ".$menucost."; ";
 						}
@@ -155,10 +150,13 @@
 							echo $quantity." unknown \"".$item."\"\n";
 						}
 					}
-					$menu->free_result(); /* fixme */
+					$menu->free_result(); /* fixme (it's difficult to do without finally) */
 				}
 
-				//if(!$ordercheck) echo "</div>\n";
+				// remove from order
+				if($ordercheck) $remove->execute() or throw_exception("execute remove");
+
+				if(!$ordercheck) echo "</div>\n";
 				echo "<br/>\n\n";
 
 				$contain->free_result(); /* fixme */
@@ -166,11 +164,21 @@
 
 			$order->free_result(); /* fixme */
 
+			// keep track of the bill
+			if(isset($check)) $bill->execute() or throw_exception("execute contain");
+
 		} catch(Exception $e) {
 			echo "<p>Error: ".htmlspecialchars($e->getMessage()).".</p>\n";
+			echo "<p>".$db->error."</p>\n";
 		}
 ?>
 </p>
+
+<?php
+	if(isset($check)) {
+		echo "Total cost:<div class = \"right\">".$total."</div><br/><br/>\n\n";
+	}
+?>
 
 <p class = "noprint">
 <label>&nbsp;</label><input type = "submit" value = "Go"><br/>
