@@ -128,9 +128,9 @@
 				$this->status = "get_user ".$e->getMessage()." failed: (".$errno.") ".$error;
 			}
 			$stmt and $stmt->close();
-			
+
 			if(!$logged) return null;
-			
+
 			/* update the active time to now */
 			try {
 				$stmt = $db->prepare("UPDATE SessionID SET activity = now() "
@@ -192,7 +192,7 @@
 			$_SESSION["username"]             = $user;
 			$ip       = $_SESSION["ip"]       = $_SERVER["REMOTE_ADDR"];
 			$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
-			
+
 			/* store on the server */
 			$loggedin = null;
 			try {
@@ -276,7 +276,9 @@
 
 			return $created;
 		}
-		
+
+
+
 		/** new table? assumes valid input and access
 		 @param tablenumber table ID
 		 @param maxsize maximum table size
@@ -289,7 +291,7 @@
 				$this->status = "new_table: database connection closed";
 				return null;
 			}
-			
+
 			$created = null;
 			try {
 				$stmt = $db->prepare("INSERT INTO `Tables` (`tablenumber`, `maxsize`, `currentsize`, `status`) "
@@ -305,9 +307,9 @@
 			$stmt and $stmt->close();
 
 			return $created;
-			
+
 		}
-		
+
 		/** edit user? assumes valid input and access
 		 @author Yi Qing */
 		final public function edit_user($oriusername, $username, $pass, $first, $last, $email, $privilege){
@@ -315,9 +317,9 @@
 				$this->status = "edit_user: database connection closed";
 				return null;
 			}
-			
+
 			$hash = $this->password_hash($pass);
-			
+
 			$edited = null;
 			try {
 				$stmt = $db->prepare("UPDATE Users SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE username = ?") or throw_exception("prepare");
@@ -333,13 +335,13 @@
 
 			return $edited;
 		}
-		
+
 		final public function edit_table($oritablenumber, $tablenumber, $maxsize, $currentsize, $status){
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "new_table: database connection closed";
 				return null;
 			}
-			
+
 			$edited = null;
 			try {
 				$stmt = $db->prepare("UPDATE Tables SET tablenumber = ?, maxsize = ?, currentsize= ?, status= ? WHERE tablenumber = ?") or throw_exception("prepare");
@@ -355,8 +357,54 @@
 
 			return $edited;
 		}
-		
-		
+
+		final public function update_password($ori_password, $hashed_ori, $new_pass, $ver_pass, $user, $first, $last, $email, $privilege) {
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "new_user: database connection closed";
+				return null;
+			}
+
+			if($this->password_verify($ori_password, $hashed_ori)){
+				echo "MATCH!</br>";
+				echo $new_pass."</br>";
+				echo $ver_pass."</br>";
+
+				if($new_pass != NULL && $ver_pass != NULL && ($new_pass == $ver_pass)){
+					$hashed_new = $this->password_hash($new_pass);
+					echo $hashed_new."</br>";
+				}
+			}
+
+			$created = null;
+			try {
+				/* checkin defaults to NULL which is very good */
+				$stmt = $db->prepare("UPDATE Users "
+												."SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE password = ?") or throw_exception("prepare");
+
+				$stmt->bind_param("sssssss", $user, $hashed_new, $first, $last, $email, $privilege, $hashed_ori) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$created = true;
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "new_user ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+
+			$stmt and $stmt->close();
+
+			return $created;
+		}
+
+
+		final public function edit_password($plain_old, $hash_old, $plain_new, $ver_new){
+			$hashed = NULL;
+
+
+			return $hashed;
+		}
+
+
 		/** gets the info associated with a user (or null)
 		 @return the user info as an associative array
 		 @author Neil */
@@ -613,12 +661,13 @@
 			return $this->status;
 		}
 
+
 		/** this is an alias of versions > 5.3
 		 @param plain the unhashed password
 		 @param hash the hashed password (viz on the server)
 		 @return whether the password is valid
 		 @author Neil */
-		final private static function password_verify($plain, $hash) {		
+		final private static function password_verify($plain, $hash) {
 			return crypt($plain, $hash) == $hash;
 		}
 
@@ -643,7 +692,7 @@
 		return $info["Privilege"] == "admin" || $info["Privilege"] == "manager";
 	}
 
-	/** 
+	/**
 	 @param info the assoc array returned from user_info
 	 @return wheather you are checked in
 	 @author Neil */

@@ -1,20 +1,20 @@
 <?php
 
 	include "session.php";
-	
+
 	$s = new Session();
 
 	$db = $s->link_database() or header_error("database error");
 	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
 	is_admin($info) or header_error("not authorised");
-	
+
 	/* Save the original table value from the POST of the source page */
 	isset($_POST['intable']) and $_SESSION["oritable"] = $_POST['intable'] and $tablenumber = $_SESSION["oritable"];
 	isset($_POST['inmaxsize']) and $_SESSION["orimaxsize"]	= $_POST['inmaxsize'];
 	isset($_POST['incurrsize']) and $_SESSION["oricurrentsize"]	= $_POST['incurrsize'];
 	isset($_POST['instatus']) and $_SESSION["oristatus"]	= $_POST['instatus'];
-	
+
         if(isset($_SESSION['submitted'])){
             $submitted = $_SESSION['submitted'];
             unset($_SESSION['submitted']);
@@ -25,7 +25,7 @@
 	isset($_REQUEST["maxsize"]) 	and $maxsize    	= strip_tags(stripslashes($_REQUEST["maxsize"]));
 	isset($_REQUEST["currentsize"])	and $currentsize   	= strip_tags(stripslashes($_REQUEST["currentsize"]));
 	isset($_REQUEST["status"])     	and $status			= strip_tags(stripslashes($_REQUEST["status"]));
-	
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,21 +43,21 @@
 			<?php
 			echo "Previous Table Number: &quot;".$_SESSION["oritable"][0]."&quot;<br/>\n";
 			?>
-			
+
             <div>
 			<label>New Table ID:</label>
 <input type="text" name="tablenumber"
-value = "<?php if(isset($tablenumber)) echo $tablenumber;?>" 	
+value = "<?php if(isset($tablenumber)) echo $tablenumber;?>"
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>New Table Maximum Size:</label>
 <input type="text" name="maxsize"
-value = "<?php if(isset($maxsize)) echo $maxsize;?>" 
+value = "<?php if(isset($maxsize)) echo $maxsize;?>"
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <label>New Table Size:</label>
 <input type="text" name="currentsize"
-value = "<?php if(isset($currentsize)) echo $currentsize;?>"  
+value = "<?php if(isset($currentsize)) echo $currentsize;?>"
 maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 
             <br/>
@@ -73,7 +73,7 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 			</p>
 			</div>
         </form>
-		
+
 		<?php
 			$is_ready = false;
 			if(   isset($tablenumber)
@@ -109,26 +109,26 @@ maxlength = "<?php echo Session::INTEGER_MAX;?>"/><br/>
 				}else{
 					$status = 'vacant';
 				}
-				
+
 			}
 			if($is_ready) {
 				if($s->edit_table($_SESSION["oritable"], $tablenumber, $maxsize, $currentsize, $status)){
-					
+
 					/* Clear out temporary Session variables*/
 					unset($_SESSION['oritable']);
 					unset($_SESSION['orimaxsize']);
 					unset($_SESSION['oricurrentsize']);
 					unset($_SESSION['oristatus']);
 					$_SESSION['submitted'] = true;
-					
+
 					Header('Location: '.$_SERVER['PHP_SELF']);
 				} else {
 					echo "Table not edited: ".$s->status()."<br/>\n";
 				}
 			}
         ?>
-		
+
 	</body>
-	
-	
+
+
 </html>
