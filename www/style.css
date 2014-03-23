@@ -29,6 +29,15 @@ img.left {
 	clear: left;
 }
 
+/*div.left {
+	float: left;
+	clear: left;
+}*/
+div.right {
+	float: right;
+	clear: right;
+}
+
 /* forms */
 div label {
     display: inline-block;
@@ -89,7 +98,7 @@ div.file-rightfixed {
 		color: black;
 		font: small sans-serif;
 		margin: 1in;
-		width: 100%;
+		width: 200px /*100%*/;
 	}
 	a { color: blue; }
 	.noprint { display: none; }

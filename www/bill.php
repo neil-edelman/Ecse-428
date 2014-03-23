@@ -65,9 +65,37 @@
 ?>
 <p class = "noprint">Table number <?php echo $table; ?>. Go <a href = "bill.php">back to table list</a>.</p>
 
+<p><div>
+<form>
+<label>View shifts of</label>
+<?php
+	/* this is less lame, but still lame -Neil
+	 if(isset($subject)) {
+	 $s->select_users("subject", $subject);
+	 } else {
+	 $s->select_users("subject");
+	 }*/
+	/* this is awesome */
+	$s->select_things("Users", "username", $username, "FirstName", $first, "LastName", $last);
+	echo "<select name = \"subject\">\n";
+	while($s->select_next()) {
+		echo "<option value = \"".$username."\"";
+		if($subject == $username) echo " selected";
+		echo ">".$last.", ".$first."</option>\n";
+	}
+	echo "</select>\n";
+	?>
+<br/>
+<label>&nbsp;</label><input type = "submit" value = "Go">
+</form>
+</div></p>
+
+
+<p>
 <div>
 <form>
 <input type = "hidden" name = "table" value = "<?php echo $table; ?>">
+
 <?php
 		try {
 			$order = $db->prepare("SELECT orderid "
@@ -97,12 +125,9 @@
 				// is it checked?
 				$ordercheck = is_checked($check, $orderid);
 
-				if($ordercheck) echo "<p>\n";
-				else            echo "<p class = \"noprint\">\n";
+				//if(!$ordercheck) echo "<div class = \"noprint\">\n";
 
-				echo "<label>Order #".$orderid."</label>";
-				if($ordercheck) echo "(checked) ";
-				else echo "(unchecked) ";
+				echo "<label>Order #".$orderid."</label>\n";
 
 				// provide the option to bill this on a new bill
 				if(!$ordercheck) echo "<input type = \"checkbox\" name = \"check[]\" value = \"".$orderid."\"/>\n";
@@ -118,38 +143,35 @@
 					$menu->store_result();
 					$menu->bind_result($menuname, $menucost, $menuitemid);
 					if($menu->fetch()) {
-						echo $quantity." ".$menuname." at ".$menucost."; ";
 						if($ordercheck) {
 							// update bill and remove from order
+							//echo "<div class = \"left\">".$menuname." - Qty. ".$quantity." Cost ".$menucost."</div>\n";
+							//echo "<div class = \"right\">".($menucost * $quantity)."</div>\n";
 						} else {
+							echo $quantity." ".$menuname." at ".$menucost."; ";
 						}
 					} else {
-						echo $quantity." unknown \"".$item."\"; ";
+						if(!$ordercheck) {
+							echo $quantity." unknown \"".$item."\"\n";
+						}
 					}
 					$menu->free_result(); /* fixme */
 				}
 
-				echo "</p>\n";
+				//if(!$ordercheck) echo "</div>\n";
+				echo "<br/>\n\n";
 
 				$contain->free_result(); /* fixme */
 			}
 
 			$order->free_result(); /* fixme */
-			
-			echo "<p>check param: ";
-			if(isset($check)) {
-				foreach($check as $c) {
-					echo "contians ".$c."; ";
-				}
-			} else {
-				echo "is not there";
-			}
-			echo "</p>\n";
 
 		} catch(Exception $e) {
 			echo "<p>Error: ".htmlspecialchars($e->getMessage()).".</p>\n";
 		}
 ?>
+</p>
+
 <p class = "noprint">
 <label>&nbsp;</label><input type = "submit" value = "Go"><br/>
 <?php
