@@ -78,6 +78,8 @@ checked in -->
 
 <p>View <a href = "viewitems.php">Menu Items</a>.</p>
 
+<p><a href = "bill.php">Bill</a> a table.</p>
+
 <?php
 		if(is_admin($info)) {
 ?>
