@@ -79,3 +79,22 @@ div.file-rightfixed {
 	padding-top: 1em;
 	padding-bottom: 1em;
 }
+
+.noprint { }
+
+/* printing */
+@media print {
+	body {
+		background-color: white;
+		color: black;
+		font: small sans-serif;
+		margin: 1in;
+		width: 100%;
+	}
+	a { color: blue; }
+	.noprint { display: none; }
+	p.noscreen { display: block; }
+	div.file { display: none; }
+	div.file-leftfixed { display: none; }
+	div.file-rightfixed { display: none; }
+}
