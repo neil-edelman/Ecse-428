@@ -80,6 +80,8 @@ checked in -->
 
 <p><a href = "bill.php">Bill</a> a table.</p>
 
+<p> <a href = "changepass.php">Change Existing Password</a>.</p>
+
 <?php
 		if(is_admin($info)) {
 ?>
