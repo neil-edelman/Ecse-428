@@ -359,40 +359,56 @@
 			return $edited;
 		}
 
+		final public function password_match($newPass, $verPass){
+			if($newPass != NULL && $verPass != NULL && ($newPass == $verPass)){
+					return true;
+				} else{
+					return false;
+				}
+		}
+
 		final public function update_password($ori_password, $hashed_ori, $new_pass, $ver_pass, $user, $first, $last, $email, $privilege) {
+
+			$created = false;
 
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "new_user: database connection closed";
 				return null;
 			}
 
-			if($this->password_verify($ori_password, $hashed_ori)){
-				echo "MATCH!</br>";
-				echo $new_pass."</br>";
-				echo $ver_pass."</br>";
 
-				if($new_pass != NULL && $ver_pass != NULL && ($new_pass == $ver_pass)){
+			if($this->password_verify($ori_password, $hashed_ori)){
+				/*echo "MATCH!</br>";*/
+
+				if($this->password_match($new_pass, $ver_pass)) {
 					$hashed_new = $this->password_hash($new_pass);
 					echo $hashed_new."</br>";
+
+					try {
+					/* checkin defaults to NULL which is very good */
+					$stmt = $db->prepare("UPDATE Users "
+												."SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE password = ?")
+												or throw_exception("prepare");
+					$stmt->bind_param("sssssss", $user, $hashed_new, $first, $last, $email, $privilege, $hashed_ori) or throw_exception("binding");
+					$stmt->execute() or throw_exception("execute");
+
+					$created = true;
+
+				} catch(Exception $e) {
+					$errno = ($stmt ? $stmt->errno : $db->errno);
+					$error = ($stmt ? $stmt->error : $db->error);
+					$this->status = "new_user ".$e->getMessage()." failed: (".$errno.") ".$error;
 				}
+
+				$stmt and $stmt->close();
+
+				} else {
+					echo "<h4>New password does not match re-entered password. Please Try again!</br></h4>";
+				}
+
+			} else {
+				echo "<h4>Password does not match existing password on record. Please try again!</br></h4>";
 			}
-
-			$created = null;
-			try {
-				/* checkin defaults to NULL which is very good */
-				$stmt = $db->prepare("UPDATE Users "
-												."SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE password = ?") or throw_exception("prepare");
-
-				$stmt->bind_param("sssssss", $user, $hashed_new, $first, $last, $email, $privilege, $hashed_ori) or throw_exception("binding");
-				$stmt->execute() or throw_exception("execute");
-				$created = true;
-			} catch(Exception $e) {
-				$errno = ($stmt ? $stmt->errno : $db->errno);
-				$error = ($stmt ? $stmt->error : $db->error);
-				$this->status = "new_user ".$e->getMessage()." failed: (".$errno.") ".$error;
-			}
-
-			$stmt and $stmt->close();
 
 			return $created;
 		}
@@ -683,7 +699,7 @@
 
 			return $ret;
 		}
-		
+
 		/** fixme: username should be an index in database
 		 fixme: callback fn!(!! this is a hack!)
 		 @return true if success
