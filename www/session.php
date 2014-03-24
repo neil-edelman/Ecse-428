@@ -5,7 +5,7 @@
 		const SERVER   = "127.0.0.1"; /* :3306? not working */
 		const USERNAME = "payomca_rms";
 		const PASSWORD = "mushroom";
-		const DATABASE = "payomca_rms";
+		const DATABASE = "payomca_rms2";
 		/* 60s/m * 60m/h * 12h (seconds); yum yum yum */
 		const COOKIE_TIME = 43200;
 		/* 60s/m * 60m/h * 4h (seconds) */
@@ -17,8 +17,9 @@
 		const FIRST_MAX    = 32; /* should be WAY higher; I have friends > 32 */
 		const LAST_MAX     = 32; /* lol */
 		const EMAIL_MAX    = 64; /* too short */
-		const INTEGER_MAX	   = 11; /* For tables */
-		
+		const INTEGER_MAX  = 11; /* For tables */
+		const NAME_MAX     = 30;
+                const DESCRIPTION_MAX = 800;
 		/* prevents multiple sessions being created */
 		private static $session = null;
 
@@ -28,6 +29,7 @@
 		 active because destroy_session() doesn't do like it says exactly;
 		 this is not needed when having multipage? */
 		private $active = true;
+		private $things = null;
 
 		/** session_start is called idempotently at the BEGINNING;
 		 you should not call session_start() (it's done already)
@@ -127,9 +129,9 @@
 				$this->status = "get_user ".$e->getMessage()." failed: (".$errno.") ".$error;
 			}
 			$stmt and $stmt->close();
-			
+
 			if(!$logged) return null;
-			
+
 			/* update the active time to now */
 			try {
 				$stmt = $db->prepare("UPDATE SessionID SET activity = now() "
@@ -191,7 +193,7 @@
 			$_SESSION["username"]             = $user;
 			$ip       = $_SESSION["ip"]       = $_SERVER["REMOTE_ADDR"];
 			$activity = $_SESSION["activity"] = gmdate("Y-m-d H:i:s");
-			
+
 			/* store on the server */
 			$loggedin = null;
 			try {
@@ -275,7 +277,9 @@
 
 			return $created;
 		}
-		
+
+
+
 		/** new table? assumes valid input and access
 		 @param tablenumber table ID
 		 @param maxsize maximum table size
@@ -288,7 +292,7 @@
 				$this->status = "new_table: database connection closed";
 				return null;
 			}
-			
+
 			$created = null;
 			try {
 				$stmt = $db->prepare("INSERT INTO `Tables` (`tablenumber`, `maxsize`, `currentsize`, `status`) "
@@ -304,39 +308,120 @@
 			$stmt and $stmt->close();
 
 			return $created;
-			
+
 		}
-		
-		/** new table? assumes valid input and access
-		 @param tablenumber table ID
-		 @param maxsize maximum table size
-		 @param currentsize current size
-		 @param status table status: vacant, occupied
-		 @return the table ID created or null
+
+		/** edit user? assumes valid input and access
 		 @author Yi Qing */
+		final public function edit_user($oriusername, $username, $pass, $first, $last, $email, $privilege){
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "edit_user: database connection closed";
+				return null;
+			}
+
+			$hash = $this->password_hash($pass);
+
+			$edited = null;
+			try {
+				$stmt = $db->prepare("UPDATE Users SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE username = ?") or throw_exception("prepare");
+				$stmt->bind_param("sssssss", $username, $hash, $first, $last, $email, $privilege, $oriusername) or throw_exception("binding");
+				$stmt->execute() or throw_exception("execute");
+				$edited = $username;
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "edit_user ".$e->getMessage()." failed: (".$errno.") ".$error;
+			}
+			$stmt and $stmt->close();
+
+			return $edited;
+		}
+
 		final public function edit_table($oritablenumber, $tablenumber, $maxsize, $currentsize, $status){
 			if(!($db = $this->db) || !$this->active) {
 				$this->status = "new_table: database connection closed";
 				return null;
 			}
-			
-			$created = null;
+
+			$edited = null;
 			try {
 				$stmt = $db->prepare("UPDATE Tables SET tablenumber = ?, maxsize = ?, currentsize= ?, status= ? WHERE tablenumber = ?") or throw_exception("prepare");
 				$stmt->bind_param("iiisi", $tablenumber, $maxsize, $currentsize, $status, $oritablenumber) or throw_exception("binding");
 				$stmt->execute() or throw_exception("execute");
-				$created = $tablenumber;
+				$edited = $tablenumber;
 			} catch(Exception $e) {
 				$errno = ($stmt ? $stmt->errno : $db->errno);
 				$error = ($stmt ? $stmt->error : $db->error);
-				$this->status = "new_table ".$e->getMessage()." failed: (".$errno.") ".$error;
+				$this->status = "edit_table ".$e->getMessage()." failed: (".$errno.") ".$error;
 			}
 			$stmt and $stmt->close();
 
+			return $edited;
+		}
+
+		final public function password_match($newPass, $verPass){
+			if($newPass != NULL && $verPass != NULL && ($newPass == $verPass)){
+					return true;
+				} else{
+					return false;
+				}
+		}
+
+		final public function update_password($ori_password, $hashed_ori, $new_pass, $ver_pass, $user, $first, $last, $email, $privilege) {
+
+			$created = false;
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "new_user: database connection closed";
+				return null;
+			}
+
+
+			if($this->password_verify($ori_password, $hashed_ori)){
+				/*echo "MATCH!</br>";*/
+
+				if($this->password_match($new_pass, $ver_pass)) {
+					$hashed_new = $this->password_hash($new_pass);
+					echo $hashed_new."</br>";
+
+					try {
+					/* checkin defaults to NULL which is very good */
+					$stmt = $db->prepare("UPDATE Users "
+												."SET username = ?, password = ?, FirstName= ?, LastName= ?, Email= ?, Privilege= ? WHERE password = ?")
+												or throw_exception("prepare");
+					$stmt->bind_param("sssssss", $user, $hashed_new, $first, $last, $email, $privilege, $hashed_ori) or throw_exception("binding");
+					$stmt->execute() or throw_exception("execute");
+
+					$created = true;
+
+				} catch(Exception $e) {
+					$errno = ($stmt ? $stmt->errno : $db->errno);
+					$error = ($stmt ? $stmt->error : $db->error);
+					$this->status = "new_user ".$e->getMessage()." failed: (".$errno.") ".$error;
+				}
+
+				$stmt and $stmt->close();
+
+				} else {
+					echo "<h4>New password does not match re-entered password. Please Try again!</br></h4>";
+				}
+
+			} else {
+				echo "<h4>Password does not match existing password on record. Please try again!</br></h4>";
+			}
+
 			return $created;
 		}
-		
-		
+
+
+		final public function edit_password($plain_old, $hash_old, $plain_new, $ver_new){
+			$hashed = NULL;
+
+
+			return $hashed;
+		}
+
+
 		/** gets the info associated with a user (or null)
 		 @return the user info as an associative array
 		 @author Neil */
@@ -451,10 +536,11 @@
 		}
 
 		/** display a selection of users; intended to be used inside form
-		 fixme: callback fn!
+		 fixme: callback fn! <- fixed! @see select_things
 		 @param title    the name of the key
 		 @param selected optional, the selected value
 		 @return true if success, false means status
+		 @depreciated @see select_things
 		 @author Neil */
 		final public function select_users($title, $selected = null) {
 
@@ -488,6 +574,130 @@
 			}
 
 			return true;
+		}
+
+		/** selects anything, this is a preamble to @see select_next
+		 eg
+		 $s->select_things("Users", "username", $username, "FirstName", $first, "LastName", $last);
+		 echo "<select name = \"subject\">\n";
+		 while($s->select_next()) {
+			echo "<option value = \"".$username."\"";
+			if($subject == $username) echo " selected";
+			echo ">".$last.", ".$first."</option>\n";
+		 }
+		 echo "</select>\n";
+		 Will print a user list named "subject."
+		 @param dbtable the table in the database as a string
+		 @param dbname0 the index of the table as a string
+		 @param dbvar0 the variable that the index goes into
+		 @param dbname1
+		 @param dbvar1
+		 @param dbname2
+		 @param dbvar2
+		 @param dbname3
+		 @param dbvar3 optional things to get with it; if you use this, dbname*
+		               must have a dbvar*
+		 @return stmt used to call select_next or null on error in which case a
+		              status will be thrown
+		 @author Neil */
+		final public function select_things($dbtable,
+											$dbname0, &$dbvar0,
+											$dbname1 = null, &$dbvar1 = null,
+											$dbname2 = null, &$dbvar2 = null,
+											$dbname3 = null, &$dbvar3 = null) {
+
+			if($this->things) {
+				$this->status = "select_things: didn't finish selecting the last things";
+				return false;
+			}
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "select_things: database connection closed";
+				return false;
+			}
+
+			try {
+				/* magic */
+				$args = 1;
+				$str = "SELECT ".$dbname0;
+				$argc = func_num_args() - 3;
+				if($argc >= 2) {
+					$str .= ", ".$dbname1;
+					$argc -= 2;
+					$args++;
+					if($argc >= 2) {
+						$str .= ", ".$dbname2;
+						$argc -= 2;
+						$args++;
+						if($argc >= 2) {
+							$str .= ", ".$dbname3;
+							$args++;
+						}
+					}
+				}
+				$str .= " FROM ".$dbtable;
+				/* prepare the statement! */
+				$stmt = $db->prepare($str) or throw_exception("prepare");
+				$stmt->execute() or throw_exception("execute");
+				/* haha */
+				switch($args) {
+					case 1:
+						$stmt->bind_result($dbvar0);
+						break;
+					case 2:
+						$stmt->bind_result($dbvar0, $dbvar1);
+						break;
+					case 3:
+						$stmt->bind_result($dbvar0, $dbvar1, $dbvar2);
+						break;
+					case 4:
+						$stmt->bind_result($dbvar0, $dbvar1, $dbvar2, $dbvar3);
+						break;
+					default:
+						throw_exception("invalid");
+				}
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "select_users ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
+			}
+
+			$this->things = $stmt;
+			return true;
+		}
+
+		/** called after select_things until is false
+		 @param stmt the stmt returned from select_things
+		 @author Neil */
+		final public function select_next() {
+
+			if(!($db = $this->db) || !$this->active) {
+				$this->status = "select_next: database connection closed";
+				return false;
+			}
+			if(!$this->things) {
+				$this->status = "select_next: nothing to select";
+				return false;
+			}
+
+			$ret = false;
+			try {
+				if($this->things->fetch()) {
+					$ret = true;
+				} else {
+					/* the end of the list */
+					$this->things->close();
+					$this->things = null;
+				}
+			} catch(Exception $e) {
+				$errno = ($stmt ? $stmt->errno : $db->errno);
+				$error = ($stmt ? $stmt->error : $db->error);
+				$this->status = "select_next ".$e->getMessage()." failed: (".$errno.") ".$error;
+				return false;
+			}
+
+			return $ret;
 		}
 
 		/** fixme: username should be an index in database
@@ -593,12 +803,13 @@
 			return $this->status;
 		}
 
+
 		/** this is an alias of versions > 5.3
 		 @param plain the unhashed password
 		 @param hash the hashed password (viz on the server)
 		 @return whether the password is valid
 		 @author Neil */
-		final private static function password_verify($plain, $hash) {		
+		final private static function password_verify($plain, $hash) {
 			return crypt($plain, $hash) == $hash;
 		}
 
@@ -623,7 +834,7 @@
 		return $info["Privilege"] == "admin" || $info["Privilege"] == "manager";
 	}
 
-	/** 
+	/**
 	 @param info the assoc array returned from user_info
 	 @return wheather you are checked in
 	 @author Neil */

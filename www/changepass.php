@@ -13,12 +13,11 @@ include "session.php";
   $newpass = NULL;
   $verpass = NULL;
 
+
   isset($_REQUEST["oldPass"])  and $_REQUEST["oldPass"] != "" and $oldpass = $_REQUEST["oldPass"];
   isset($_REQUEST["newPass"])  and $_REQUEST["newPass"] != "" and $newpass = $_REQUEST["newPass"];
   isset($_REQUEST["verPass"])  and $_REQUEST["verPass"] != "" and $verpass = $_REQUEST["verPass"];
 
-  $salt = bin2hex(openssl_random_pseudo_bytes(22, $isCrypto));
-  $isCrypto or die("No cryptography on this server.");
 ?>
 
 <!DOCTYPE html>
@@ -30,13 +29,32 @@ include "session.php";
     <link rel = "shortcut icon" href = "favicon.ico" type = "image/x-icon">
     <link rel = "stylesheet" type = "text/css" href = "style.css">
         <title>Change Password</title>
+<script type="text/javascript">
+
+  function validate(){
+
+    var oldPassword = document.getElementById("oldPass").value;
+    var newPassword = document.getElementById("newPass").value;
+    var verPassword = document.getElementById("verPass").value;
+
+    if (   oldPassword.length == 0
+        || newPassword.length == 0
+        || verPassword.length == 0) {
+        alert("Required fields are not complete");
+        return false;
+    } else {
+        alert("All fields filled in");
+    }
+  }
+
+</script>
 </head>
 
 <body>
 
     <h1>Change Password</h1>
 
-      <form method="post">
+      <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         <div><label>Old Password: </label>
         <input type="text" name="oldPass"
                 maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/></div>
@@ -50,26 +68,43 @@ include "session.php";
                 maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/></div>
 
       <p></p>
-     <input type = "submit" value = "Change Password"/>
+     <div><input type = "submit" value = "Change Password" onclick = "validate()"/></div>
       <br/>
-      <p></p>
-      <input type = "reset" value = "Reset"/>
+      <div><input type = "reset" value = "Reset"/></div>
+   <p>
+      Go back to <a href = "mainmenu.php">Main Menu</a>.
+   </p>
+
     </form>
 
     <?php
 
-      echo $password."</br>";
+  /*    echo $password."</br>";
       echo $oldpass."</br>";
       echo $newpass."</br>";
-      echo $verpass."</br>";
+      echo $verpass."</br>";*/
+      $isModified = false;
+
+      if(isset($oldpass) && isset($newpass) && isset($verpass)){
+          $isModified = true;
+         /*echo "All fields are filled in. </br>";*/
+
+          if((strlen($newpass) > Session::PASSWORD_MAX) || (strlen($verpass) > Session::PASSWORD_MAX) ) {
+          $isModified = false;
+          echo "Password is too long.<br/>\n";
+          }
 
 
+      if($isModified){
+        /*echo "Can be modified!</br>";*/
+        if($s->update_password($oldpass, $password, $newpass, $verpass, $user, $info["FirstName"], $info["LastName"], $info["Email"], $info["Privilege"])){
+          echo "<h4> Password successfully modified!</br></h4>";
+        } else {
+          echo "<h4> Password not modified.</br></h4>";
+          /*echo $s->status();*/
+        }
+      }
 
-      if($s->update_password($oldpass, $password, $newpass, $verpass, $user, $info["FirstName"], $info["LastName"], $info["Email"], $info["Privilege"])){
-          echo "Account created";
-      } else {
-          echo "Something went wrong. </br>";
-          echo $s->status();
       }
 
     ?>
