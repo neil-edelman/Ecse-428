@@ -94,11 +94,21 @@ function hide(a) {
 	maxlength = "<?php echo Session::USERNAME_MAX;?>"/><br/><br/>
 -->
 <?php
+	/* this is less lame, but still lame -Neil
 	if(isset($subject)) {
 		$s->select_users("subject", $subject);
 	} else {
 		$s->select_users("subject");
+	}*/
+	/* this is awesome */
+	$s->select_things("Users", "username", $username, "FirstName", $first, "LastName", $last);
+	echo "<select name = \"subject\">\n";
+	while($s->select_next()) {
+		echo "<option value = \"".$username."\"";
+		if($subject == $username) echo " selected";
+		echo ">".$last.", ".$first."</option>\n";
 	}
+	echo "</select>\n";
 ?>
 <br/>
 <label>&nbsp;</label><input type = "submit" value = "Go">
@@ -118,15 +128,15 @@ function hide(a) {
 			/* prepare statements */
 			$in = $db->prepare("UPDATE Shifts SET checkin = ? "
 							   ."WHERE id = ? "
-							   ."LIMIT 1") or throw_exception("prepare in");
+							   ."LIMIT 1") or throw_exception("prepare checkin");
 			$in->bind_param("si", $datetime, $id) or throw_exception("binding checkin");
 			$out = $db->prepare("UPDATE Shifts SET checkout = ? "
 								."WHERE id = ? "
-								."LIMIT 1") or throw_exception("prepare out");
+								."LIMIT 1") or throw_exception("prepare checkout");
 			$out->bind_param("si", $datetime, $id) or throw_exception("binding checkout");
 			$del = $db->prepare("DELETE FROM Shifts "
 								."WHERE id = ? "
-								."LIMIT 1") or throw_exception("prepare out");
+								."LIMIT 1") or throw_exception("prepare delete");
 			$del->bind_param("i", $id) or throw_exception("binding delete");
 
 			/* values submitted? */

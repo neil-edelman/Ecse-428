@@ -76,7 +76,9 @@ checked in -->
 
 <p>View <a href = "vieworders.php">an existing Order</a>.</p>
 
-<p><a href = "changepass.php">Change existing Password.</a>.</p>
+<p>View <a href = "viewitems.php">Menu Items</a>.</p>
+
+<p> <a href = "changepass.php">Change Existing Password</a>.</p>
 
 <?php
 		if(is_admin($info)) {
@@ -88,7 +90,13 @@ checked in -->
 
 <p><a href = "addaccount.php">Add account</a>.</p>
 
+<p><a href = "viewusers.php">Edit Users</a>.</p>
+
 <p><a href = "shifts.php">View and edit shifts</a>.</p>
+
+<p><a href = "viewrevenues.php">View revenues</a>.</p>
+
+<p><a href = "mostpopular.php">View most popular items</a>.</p>
 
 <?php
 		}
