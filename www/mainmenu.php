@@ -60,7 +60,6 @@ checked in -->
 	     .$info["LastName"]." (".$info["username"].".)</p>\n\n";
 ?>
 
-<p>View <a href = "viewpersonal.php">Account Information</a>.</p>
 
 <?php
 	if(is_checkedin($info)) {
@@ -68,17 +67,21 @@ checked in -->
 
 <!-- all the functions that depend on check in -->
 
-<p><a href = "viewtables.php">View Tables</a></p>
-
-<p><a href = "ordersmenu.php">Orders Menu</a></p>
+<h2>User tasks</h2>
 
 <p>Create <a href = "createorder.php">a new Order</a>.</p>
 
-<p>View <a href = "vieworders.php">an existing Order</a>.</p>
+<p>View/Change <a href = "vieworders.php">an Order</a>.</p>
+
+<p><a href = "bill.php">Bill</a> a table.</p>
+
+<p><a href = "viewtables.php">View Tables</a></p>
 
 <p>View <a href = "viewitems.php">Menu Items</a>.</p>
 
-<p><a href = "bill.php">Bill</a> a table.</p>
+<h2>User Configuration</h2>
+
+<p>View <a href = "viewpersonal.php">Account Information</a>.</p>
 
 <p> <a href = "changepass.php">Change Existing Password</a>.</p>
 
@@ -88,13 +91,19 @@ checked in -->
 
 <!-- admin and checked in -->
 
+<h2>Admin Menu</h2>
+
 <p><a href = "createtable.php">Create Tables</a></p>
+
+<h3>User administration</h3>
 
 <p><a href = "addaccount.php">Add account</a>.</p>
 
 <p><a href = "viewusers.php">Edit Users</a>.</p>
 
 <p><a href = "shifts.php">View and edit shifts</a>.</p>
+
+<h3>Statistics</h3>
 
 <p><a href = "viewrevenues.php">View revenues</a>.</p>
 

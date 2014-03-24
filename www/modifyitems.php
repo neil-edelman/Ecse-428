@@ -15,7 +15,7 @@ class modifyitems {
         try {
             $stmt = $db->prepare("INSERT INTO `MenuItems` (`Name`, `Cost`, `Description`) "
                     . "VALUES (?, ?, ?)") or throw_exception("prepare");
-            $stmt->bind_param("sis", $itemname, $itemcost, $description) or throw_exception("binding");
+            $stmt->bind_param("sds", $itemname, $itemcost, $description) or throw_exception("binding");
             $stmt->execute() or throw_exception("execute");
             $created = $itemname;
         } catch (Exception $e) {
@@ -33,7 +33,7 @@ class modifyitems {
         try {
             //echo "edit_item: " . $item_number . "--" . $itemid . "--" . $itemname . "--" . $itemcost . "--" . $description;
             $stmt = $db->prepare("UPDATE payomca_rms2.MenuItems SET `Item ID`= ?, `Name`= ?, `Cost`= ?, `Description`= ? WHERE `Item ID` = ?") or throw_exception("prepare");
-            $stmt->bind_param("isisi", $itemid, $itemname, $itemcost, $description, $item_number) or throw_exception("binding");
+            $stmt->bind_param("isdsi", $itemid, $itemname, $itemcost, $description, $item_number) or throw_exception("binding");
             $stmt->execute() or throw_exception("execute");
             //echo "Stupid2\n";
             $created = $itemid;
@@ -91,7 +91,7 @@ class modifyitems {
 
             $table = $table . "<td><form id= \"name\" method=\"post\" action=\"edititem.php\">
                                    <input name=\"initem\" type=\"hidden\" value=\"$row[0]\">                                   
-                                   <input name=\"submit\" type=\"submit\" value=\"Edit Table\">
+                                   <input name=\"submit\" type=\"submit\" value=\"Edit Item\">
                                    </form></td>";
 
             $table = $table . "</tr>";

@@ -8,10 +8,9 @@
            return $result;
         }
 
+        public function display_order_details($db, $details, $orderid) {
 
-        public function display_order_details($details, $orderid) {
-
-          $order = $order . " For Order ID: ". $orderid . "<br/>";
+          $order = " For Order ID: ". $orderid . "<br/>";
 
           $order = $order . "<table>";
 
@@ -19,7 +18,7 @@
                   ."<br/"
                   . "<thead>"
                   . "<tr>"
-                    . "<th bgcolor=\"silver\"> Item ID </th>"
+                    . "<th bgcolor=\"silver\"> Item Name </th>"
                     . "<th bgcolor=\"silver\"> Quantity </th>"
                     . "<th bgcolor=\"silver\"> Comment </th>"
                  . "</tr>"
@@ -28,14 +27,22 @@
           $order = $order . "<tbody>";
 
           while ($rows = $details->fetch_array(MYSQLI_NUM)) {
-              $order = $order . "<tbody><tr>";
-                if($rows[1] == $orderid){
-                  for ($number_of_columns = 2;  $number_of_columns < 5;  $number_of_columns++) {
+            if($rows[1] == $orderid){
+            $order = $order . "<tbody><tr>";
+
+            $sqlQuery = "SELECT name FROM `MenuItems` WHERE `Item ID`='$rows[2]'";
+           
+            $rows2 = mysqli_query($db, $sqlQuery);
+            $rows2 = $rows2->fetch_array(MYSQLI_NUM);
+
+            $order = $order . "<td>$rows2[0]</td>";
+                  for ($number_of_columns = 3;  $number_of_columns < 5;  $number_of_columns++) {
                     $order = $order . "<td>$rows[$number_of_columns]</td>";
                   }
+                  $order = $order . "</tr>";
                 }
 
-                $order = $order . "</tr>";
+                
 
             }
 

@@ -9,9 +9,7 @@
 	$user = $s->get_user() or header_error("user timeout error");
 	$info = $s->user_info($user) or header_error("user info error");
 
-	$a = mysqli_query($db, "SELECT MAX(orderid) FROM `payomca_rms2`.`Order`");	// Getting $orderid
-	$b = mysqli_fetch_row($a);
-	$orderid = $b[0];
+	$orderid = $_SESSION['orderidX'];
 	
 	$item = null;
 	$quantity = null;

@@ -40,8 +40,7 @@
                                    <input name=\"orderid\" type=\"hidden\" value=\"$row[0]\">
                                    <input name=\"submit\" type=\"submit\" value=\"View Details\">
                                    </form></td>";
-                echo $orderid;
-
+                                   
                 $returnstring = $returnstring . "</tr>";
            }
            $returnstring = $returnstring . "</tbody></table>";

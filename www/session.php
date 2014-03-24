@@ -382,7 +382,7 @@
 
 				if($this->password_match($new_pass, $ver_pass)) {
 					$hashed_new = $this->password_hash($new_pass);
-					echo $hashed_new."</br>";
+					/*echo $hashed_new."</br>";*/
 
 					try {
 					/* checkin defaults to NULL which is very good */

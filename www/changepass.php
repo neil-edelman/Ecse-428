@@ -56,15 +56,15 @@ include "session.php";
 
       <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         <div><label>Old Password: </label>
-        <input type="text" name="oldPass"
+        <input type="password" name="oldPass"
                 maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/></div>
 
         <div><label>New Password: </label>
-        <input type="text" name="newPass"
+        <input type="password" name="newPass"
                 maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/></div>
 
       <div><label>Re-enter Password: </label>
-        <input type="text" name="verPass"
+        <input type="password" name="verPass"
                 maxlength = "<?php echo Session::PASSWORD_MAX;?>"/><br/></div>
 
       <p></p>

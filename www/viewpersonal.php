@@ -27,8 +27,6 @@
 <?php
 	echo "<li>Username: " . $info["username"] . "</li>\n";
 
-	echo "<li>Password (encrypted) (It also has info on the seed; DO NOT SHOW THIS EVER -Neil): " . $info["password"] . "</li>\n";
-
 	echo "<li>First Name: " . $info["FirstName"] . "</li>\n";
 
 	echo "<li>Last Name: " . $info["LastName"] . "</li>\n";

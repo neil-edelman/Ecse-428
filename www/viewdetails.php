@@ -24,8 +24,8 @@
 
         <?php
              $row[0] = $_REQUEST['orderid'];
-             echo $g->display_order_details($details, $row[0]);
-
+             echo $g->display_order_details($db, $details, $row[0]);
+			$_SESSION['orderidX'] = $row[0];
              $details->close();
         ?>
 

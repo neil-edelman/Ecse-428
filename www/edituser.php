@@ -123,15 +123,6 @@
 		
 		<form method="post">
             <h1>Edit User</h1>
-			<label>Currently: <br/></label>
-			<?php
-			echo "Original User username: 	 &quot;".$_SESSION["oriusername"]."&quot;<br/>\n";
-			echo "Original User firstname: 	 &quot;".$_SESSION["orifirst"]."&quot;<br/>\n";
-			echo "Original User lastname: 	 &quot;".$_SESSION["orilast"]."&quot;<br/>\n";
-			echo "Original User inemail: 		 &quot;".$_SESSION["oriemail"]."&quot;<br/>\n";
-			echo "Original User privilege: 	 &quot;".$_SESSION["oriprivilege"]."&quot;<br/>\n";
-			?>
-			<br/>
 			
             <div>
 			<label>New Username:</label>

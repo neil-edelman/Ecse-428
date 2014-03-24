@@ -67,6 +67,12 @@
 				$sql2 = "INSERT INTO `payomca_rms2`.`Order` (`tableid`, `situation`) VALUES ('$tableid', 'placed');";			
 				mysqli_query($server, $sql2);
 
+				$a = mysqli_query($db, "SELECT MAX(orderid) FROM `payomca_rms2`.`Order`");	// Getting $orderid
+				$b = mysqli_fetch_row($a);
+				$orderid = $b[0];
+				
+				$_SESSION['orderidX'] = $orderid;
+				
 				header("Location: addtoorder.php");
 			} else {
 				echo "Error: This Table does not appear to exist.";
